@@ -1,0 +1,41 @@
+# SPEC — MVP: exportar uma conversa do Claude para o Lunoda
+
+> Fase F1 do ROADMAP. Decisões de base: DEC-001 a DEC-007.
+
+## Problema
+Hoje o dono copia à mão cada pedido e cada resposta de uma conversa do claude.ai para dentro do Lunoda, bloco a bloco (resultado típico: `mapsmith 12`, 7 blocos montados ao longo de 4 horas). É lento, sujeito a erro de cópia (markdown perdido, bloco esquecido) e desestimula registrar conversas inteiras.
+
+## Critérios de aceite (verificáveis)
+- [ ] **Teste de ouro do MD:** dado `mapsmith 12.json`, o exportador Lunoda MD gera um arquivo idêntico byte a byte a `mapsmith 12.md` (fuso fixado em America/Sao_Paulo no teste).
+- [ ] **Ida e volta do JSON:** dado `mapsmith 12.json` lido para o modelo, o exportador Lunoda JSON devolve a mesma estrutura (mesmas chaves, ordem dos blocos, `subtitle`, `version`, `content`), salvo os IDs, se regenerados.
+- [ ] **IDs:** todo ID gerado tem 12 caracteres `[0-9a-z]`, e os 8 primeiros decodificam para um instante a até 1 s do momento da geração.
+- [ ] **Adaptador Claude, fixture simples:** dada uma resposta bruta salva de `chat_conversations/{uuid}?tree=True&rendering_mode=messages&render_all_tools=true`, o adaptador devolve `Conversation` com os turnos na ordem, `text` em markdown e `thinking` preenchido quando a fixture tem item `thinking`.
+- [ ] **Adaptador Claude, fixture com ramo:** numa conversa com um pedido editado, só o ramo até `current_leaf_message_uuid` aparece.
+- [ ] **Conversa terminada em pedido sem resposta:** gera o bloco Prompt final sem bloco de resposta (como o bloco 7 do `mapsmith 12`).
+- [ ] **Formato desconhecido:** fixture com campo essencial ausente gera erro com a mensagem «formato da conversa do Claude mudou», nunca um arquivo parcial.
+- [ ] **No navegador:** com uma conversa aberta em `claude.ai/chat/<uuid>`, clicar no ícone e em «Exportar» baixa `<título-sanitizado>.json` e `<título-sanitizado>.md`.
+- [ ] **No Lunoda:** o `.json` baixado importa sem erro e mostra os blocos na ordem, com subtítulos «Prompt»/«Claude» e versões por turno (conferência do dono).
+- [ ] **Fora de conversa:** em qualquer outra página, o popup diz «abra uma conversa do Claude» e não oferece exportar.
+- [ ] **Privacidade:** o build não faz nenhuma requisição a domínio que não seja `claude.ai` (conferir no manifesto e na aba Rede).
+
+## Plataformas e formatos afetados
+Adaptador Claude (novo); exportadores Lunoda JSON e Lunoda MD (novos); modelo canônico (novo — esboço no CONTEXT).
+
+## Decisões de design
+- Pensamento e arquivos já são capturados no modelo (DEC-005); no MVP o exportador **não** os inclui — as opções chegam na F2. Exceção: se o dono decidir os pontos 2 e 3 do STATUS antes da F1 começar, entram já.
+- Título da entrada = título da conversa no Claude; nome do arquivo = título sanitizado para Windows.
+- `createdAt`/`updatedAt` da entrada = horário da exportação (como no processo manual). Guardar as datas originais da conversa num campo próprio é ideia para a F2.
+
+## Fora de escopo
+Outras plataformas, várias conversas por vez, ramos alternativos, conteúdo de artefatos, binários, opções no popup, Firefox, publicação na Web Store.
+
+## Passos
+1. Scaffold WXT + TypeScript strict + Vitest + ESLint/Prettier; `npm run build` e `npm test` verdes vazios.
+2. `core/ids.ts` e `core/dates.ts` com testes (ID base36; data local `dd/mm/aa HH:MM`).
+3. `core/model.ts` com os tipos.
+4. Exportador Lunoda MD + teste de ouro (par `mapsmith 12` ou par sintético — STATUS).
+5. Exportador Lunoda JSON + teste de ida e volta.
+6. Botão de depuração «salvar resposta bruta» (só em desenvolvimento) para capturar as fixtures reais do Claude.
+7. Adaptador Claude + testes com as fixtures (simples, com ramo, com pensamento, formato quebrado).
+8. Popup: detecção da conversa, botão exportar, download, mensagens de erro.
+9. Conferência no navegador e importação no Lunoda pelo dono.

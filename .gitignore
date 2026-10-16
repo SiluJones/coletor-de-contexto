@@ -1,0 +1,20 @@
+# .gitignore — lixo de SO / editor. NAO ignore .claude/, meta/ nem logs/ (versionados de proposito).
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# Node / TypeScript / WXT (stack da DEC-006)
+node_modules/
+.output/
+.wxt/
+dist/
+coverage/
+*.log
+.env
+.env.*
+*.zip
+
+# Respostas brutas capturadas em depuracao: conteudo privado ate serem anonimizadas e movidas para src/tests/fixtures/
+raw-dumps/
