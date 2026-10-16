@@ -130,3 +130,24 @@ Nenhum dado sai do navegador; sem servidor, analytics ou telemetria. A coleta ac
 
 ### Consequências
 Exportar em lote, se vier, também será disparado à mão, com intervalo entre requisições.
+
+---
+
+## DEC-008 — Pensamento, arquivos e versão no formato Lunoda
+**Data:** 2026-10-16 · **Status:** aceita (decidido pelo dono)
+
+### Contexto
+A DEC-004 e a DEC-005 deixaram três pontos para o dono: o significado de `version`, onde o pensamento entra no Lunoda e o padrão das opções no primeiro uso.
+
+### Decisão
+- `version` é o número do turno: pedido, pensamento e resposta do mesmo turno têm a mesma versão.
+- O pensamento, quando exportado, vira um bloco próprio com `subtitle: "Pensamento"`, entre o pedido e a resposta: Prompt vN → Pensamento vN → Claude vN.
+- Primeiro uso: pensamento **desligado**, arquivos **ligados** (`DEFAULT_EXPORT_OPTIONS` em `src/core/model.ts`).
+- Arquivos (proposta do chat, aceita junto): lista no fim do `content` do bloco da mensagem a que pertencem, depois de uma linha em branco — `**Arquivos anexados:**` no bloco Prompt, `**Arquivos gerados:**` no bloco da resposta —, um item por arquivo: `` - `nome.ext` — tipo, tamanho ``.
+
+### Alternativas consideradas
+- **Pensamento dentro do bloco da resposta** — um bloco a menos, mas mistura dois textos de natureza diferente no mesmo `content`.
+- **`version` para respostas regeneradas** — ficaria sem número de turno; ramos alternativos, se vierem, ganham outro mecanismo (IDEAS, «Ramos como versões»).
+
+### Consequências
+Ainda não testado no Lunoda: se ele aceita `subtitle` «Pensamento» e o `content` com a lista de arquivos (STATUS, Backlog). O formato da lista é o mais fácil de ajustar depois: muda só o exportador.

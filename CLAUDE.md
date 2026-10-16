@@ -8,8 +8,9 @@
 Leia `meta/CEREBRO.md` → o doc de contexto do projeto (ex.: `meta/CONTEXT.md`) → `meta/STATUS.md` antes de agir. Confirme em uma frase o que entendeu.
 
 ## Build / validação
-- Build: `npm run build` (WXT) — **ainda não existe**: nasce no passo 1 da F1 (`specs/261016-mvp-exportar-conversa-claude.md`).
-- Testes/validação: `npm test` (Vitest) — rode antes de commitar mudança de código. Também nasce na F1.
+- Validação completa: `npm run check` (typecheck + lint + Prettier + testes + build) — rode antes de commitar mudança de código; tem de sair com 0 erros.
+- Partes: `npm run build` (WXT → `.output/chrome-mv3/`) · `npm test` (Vitest) · `npm run lint` · `npm run typecheck` · `npm run format` (corrige o Prettier).
+- Instalação limpa: `npm ci` (usa o `package-lock.json`). Projeto WXT sem entrypoint falha no `npm install` (armadilha 8 do CONTEXT).
 - Mudança só de doc (meta/) NÃO precisa de build; a rede é o `git diff`.
 - Adicione seus comandos de build/teste ao `allow` de `.claude/settings.json`.
 

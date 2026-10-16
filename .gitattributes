@@ -1,0 +1,6 @@
+# Tudo em LF no repositorio E na copia de trabalho, inclusive no Windows com core.autocrlf ligado.
+# Motivo: o teste de ouro compara o MD gerado byte a byte com a fixture (DEC-004); CRLF na fixture
+# quebraria o teste sem nenhum defeito no codigo.
+* text=auto eol=lf
+*.png binary
+*.ico binary

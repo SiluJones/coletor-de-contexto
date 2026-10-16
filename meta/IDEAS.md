@@ -10,7 +10,7 @@
 Além do Claude, coletar do ChatGPT, do Gemini e de outras. Viável: ChatGPT por API interna, Gemini só por DOM (mais frágil). Planejado na F3 do ROADMAP.
 
 ### 2026-10 — Capturar o pensamento da IA
-Incluir o processo de pensamento quando a plataforma o expõe. Coberto por DEC-005; falta decidir padrão e posição no Lunoda (STATUS).
+Incluir o processo de pensamento quando a plataforma o expõe. Coberto por DEC-005 e DEC-008: bloco próprio «Pensamento», desligado por padrão.
 
 ### 2026-10 — Arquivos anexados e gerados
 Registrar os arquivos que o usuário anexa e os que a IA gera — ou ignorá-los. Coberto por DEC-005 (referência sim, binário não).
@@ -34,7 +34,7 @@ No build de desenvolvimento, um botão que baixa o JSON cru da API. É o jeito m
 Várias conversas num único `.json` do Lunoda (várias `entries`), disparado à mão e com intervalo entre requisições (DEC-007).
 
 ### 2026-10-16 — Ramos como versões
-Exportar respostas regeneradas ou pedidos editados (ramos da árvore) em vez de só o ramo atual. Pode ser o uso «verdadeiro» do campo `version` do Lunoda — depende do ponto de decisão 1 do STATUS.
+Exportar respostas regeneradas ou pedidos editados (ramos da árvore) em vez de só o ramo atual. Como `version` já é o número do turno (DEC-008), os ramos precisariam de outro mecanismo — por exemplo, um bloco a mais com subtítulo «Claude (alternativa 2)».
 
 ### 2026-10-16 — Copiar para a área de transferência
 Além de baixar, copiar o MD (ou só a última resposta) com um clique — útil para colar num handoff.

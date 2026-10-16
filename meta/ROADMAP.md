@@ -5,18 +5,18 @@
 
 ---
 
-## 🟡 F0 — Fundação *(em curso)*
+## 🟢 F0 — Fundação *(concluída)*
 **Objetivo:** ideia desenvolvida, decisões tomadas, contexto documentado, repositório criado.
 **Critério de conclusão:** primeiro commit no repositório com os `meta/` preenchidos.
 - [x] Documentação de contexto e DEC-001 a DEC-007 (2026-10-16).
 - [x] Spec do MVP.
-- [ ] `git init` + primeiro commit.
+- [x] `git init` + primeiro commit (`52538ff`).
 
-## 🔵 F1 — MVP: uma conversa do Claude → Lunoda
+## 🟡 F1 — MVP: uma conversa do Claude → Lunoda *(em curso)*
 **Objetivo:** com uma conversa aberta no claude.ai, um clique baixa `.json` (importável no Lunoda) e `.md`.
 **Critério de conclusão:** critérios de aceite de `specs/261016-mvp-exportar-conversa-claude.md` todos verdes, incluindo o teste de ouro do MD e a importação manual no Lunoda.
-- [ ] Scaffold WXT + TypeScript + Vitest + ESLint/Prettier.
-- [ ] Modelo canônico (`core/model.ts`), geração de IDs e datas.
+- [x] Scaffold WXT + TypeScript + Vitest + ESLint/Prettier (wo0001).
+- [x] Modelo canônico (`core/model.ts`), geração de IDs e datas (wo0001).
 - [ ] Adaptador Claude via API interna, só o ramo atual.
 - [ ] Exportadores Lunoda JSON e Lunoda MD.
 - [ ] Popup: detectar conversa, botão exportar, mensagens de erro claras.

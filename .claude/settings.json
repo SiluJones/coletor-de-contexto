@@ -1,8 +1,30 @@
 {
   "permissions": {
     "allow": [
-      "Read", "Write", "Edit", "Grep", "Glob",
-      "Bash(git status:*)", "Bash(git diff:*)", "Bash(git add:*)", "Bash(git commit:*)", "Bash(git push:*)"
+      "Read",
+      "Write",
+      "Edit",
+      "Grep",
+      "Glob",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git log:*)",
+      "Bash(git ls-files:*)",
+      "Bash(sha1sum:*)",
+      "Bash(date:*)",
+      "Bash(npm install:*)",
+      "Bash(npm ci:*)",
+      "Bash(npm run:*)",
+      "Bash(npm test:*)",
+      "Bash(npm view:*)",
+      "Bash(npx vitest:*)",
+      "Bash(npx wxt:*)",
+      "Bash(npx prettier:*)",
+      "Bash(npx eslint:*)",
+      "Bash(npx tsc:*)"
     ],
     "deny": ["Bash(rm -rf:*)"],
     "additionalDirectories": ["../"]

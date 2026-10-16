@@ -11,6 +11,8 @@ Hoje o dono copia à mão cada pedido e cada resposta de uma conversa do claude.
 - [ ] **IDs:** todo ID gerado tem 12 caracteres `[0-9a-z]`, e os 8 primeiros decodificam para um instante a até 1 s do momento da geração.
 - [ ] **Adaptador Claude, fixture simples:** dada uma resposta bruta salva de `chat_conversations/{uuid}?tree=True&rendering_mode=messages&render_all_tools=true`, o adaptador devolve `Conversation` com os turnos na ordem, `text` em markdown e `thinking` preenchido quando a fixture tem item `thinking`.
 - [ ] **Adaptador Claude, fixture com ramo:** numa conversa com um pedido editado, só o ramo até `current_leaf_message_uuid` aparece.
+- [ ] **Pensamento:** com `includeThinking: true`, um turno com pensamento gera Prompt vN → Pensamento vN → Claude vN; com `false` (padrão), nenhum bloco «Pensamento».
+- [ ] **Arquivos:** com `includeFiles: true` (padrão), um pedido com anexo termina com `**Arquivos anexados:**` e um item por arquivo; com `false`, o conteúdo fica só com o texto.
 - [ ] **Conversa terminada em pedido sem resposta:** gera o bloco Prompt final sem bloco de resposta (como o bloco 7 do `mapsmith 12`).
 - [ ] **Formato desconhecido:** fixture com campo essencial ausente gera erro com a mensagem «formato da conversa do Claude mudou», nunca um arquivo parcial.
 - [ ] **No navegador:** com uma conversa aberta em `claude.ai/chat/<uuid>`, clicar no ícone e em «Exportar» baixa `<título-sanitizado>.json` e `<título-sanitizado>.md`.
@@ -22,7 +24,8 @@ Hoje o dono copia à mão cada pedido e cada resposta de uma conversa do claude.
 Adaptador Claude (novo); exportadores Lunoda JSON e Lunoda MD (novos); modelo canônico (novo — esboço no CONTEXT).
 
 ## Decisões de design
-- Pensamento e arquivos já são capturados no modelo (DEC-005); no MVP o exportador **não** os inclui — as opções chegam na F2. Exceção: se o dono decidir os pontos 2 e 3 do STATUS antes da F1 começar, entram já.
+- Pensamento e arquivos já são capturados no modelo (DEC-005). Os exportadores recebem `ExportOptions` e respeitam os dois campos desde o MVP; o padrão é `DEFAULT_EXPORT_OPTIONS` (pensamento desligado, arquivos ligados — DEC-008). O controle no popup chega na F2; até lá vale o padrão.
+- Formato do pensamento e da lista de arquivos no Lunoda: CONTEXT, «Formato Lunoda» (DEC-008).
 - Título da entrada = título da conversa no Claude; nome do arquivo = título sanitizado para Windows.
 - `createdAt`/`updatedAt` da entrada = horário da exportação (como no processo manual). Guardar as datas originais da conversa num campo próprio é ideia para a F2.
 

@@ -14,7 +14,8 @@ Extensão de navegador (Chrome, Manifest V3) que transforma uma conversa aberta 
 - **Persistência:** `chrome.storage.local` só para preferências (nunca para conversas).
 - **Testes:** Vitest com fixtures (respostas brutas salvas das APIs) e teste de ouro contra o par `mapsmith 12`.
 - **Distribuição:** `.zip` carregado como extensão descompactada no início; Chrome Web Store é decisão futura (IDEAS).
-- **Estado:** stack decidida, **ainda sem código** (F1 do ROADMAP).
+- **Versões:** exatas no `package.json` (sem `^`). Trocar versão é decisão com motivo, não atualização de passagem.
+- **Validação única:** `npm run check` = typecheck + lint + Prettier + testes + build.
 
 ## Estrutura do Projeto
 ```
@@ -25,10 +26,10 @@ coletor-de-contexto/
 │   └── workorders/              # WOs chat → Code
 ├── specs/                       # uma spec por feature (AAMMDD-nome.md)
 ├── logs/                        # um arquivo por dia (AAAA-MM-DD.md)
-└── src/                         # (planejado, F1)
+└── src/                         # F1 (scaffold: wo0001)
     ├── entrypoints/             # popup, content script, background (convenção WXT)
     ├── adapters/                # claude.ts · chatgpt.ts · gemini.ts → Conversation
-    ├── core/                    # model.ts (modelo canônico), ids.ts, dates.ts
+    ├── core/                    # model.ts (modelo canônico), ids.ts, dates.ts; testes *.test.ts ao lado
     ├── exporters/               # lunoda-json.ts · lunoda-md.ts
     └── tests/fixtures/          # respostas brutas + par de ouro Lunoda
 ```
@@ -88,6 +89,8 @@ interface FileRef { name: string; kind: string; size?: number; textContent?: str
 - **Um bloco por mensagem.** Pedido do usuário → `subtitle: "Prompt"`; resposta → `subtitle: "Claude"` (nome da IA). `version` = número do turno: Prompt v1, Claude v1, Prompt v2…
 - **IDs:** 12 caracteres = `Date.now().toString(36)` (8) + 4 caracteres aleatórios em base36. Ex.: `mtke7wavx3ge` decodifica para 2026-09-02T17:51:44.455Z, 4 ms depois do `createdAt` da entrada.
 - `content` é o markdown cru da mensagem.
+- **Pensamento** (quando exportado — DEC-008): bloco próprio com `subtitle: "Pensamento"` e a mesma `version` do turno, entre o pedido e a resposta: Prompt v1 → Pensamento v1 → Claude v1.
+- **Arquivos** (exportados por padrão — DEC-008): lista no fim do `content` do bloco da mensagem a que pertencem, depois de uma linha em branco — `**Arquivos anexados:**` no bloco Prompt, `**Arquivos gerados:**` no bloco da resposta — com um item por arquivo: `` - `nome.ext` — tipo, tamanho ``.
 
 **MD:**
 - Front matter: `title`, `id`, `created`, `updated` (ISO UTC, entre aspas) e `blocks` (número).
@@ -102,6 +105,7 @@ interface FileRef { name: string; kind: string; size?: number; textContent?: str
 - Modelo canônico próprio; o Lunoda é um exportador, não o modelo — DEC-003.
 - Saída JSON e MD espelham o par `mapsmith 12` — DEC-004.
 - Pensamento e arquivos: sempre capturados, exportados por opção; arquivo nunca em binário — DEC-005.
+- `version` = turno; pensamento em bloco próprio; primeiro uso com pensamento desligado e arquivos ligados — DEC-008.
 - TypeScript + WXT + Vitest — DEC-006.
 - Tudo local, sob demanda, sem backend, sem varredura em segundo plano — DEC-007.
 
@@ -113,6 +117,9 @@ interface FileRef { name: string; kind: string; size?: number; textContent?: str
 5. **Perder os dois espaços no fim da linha** — editor ou formatter que remove espaço final quebra o layout do MD → excluir os exporters e as fixtures `.md` do trim automático e cobrir no teste de ouro.
 6. **Varrer o histórico em segundo plano** — automação contínua de endpoint interno é área cinzenta nos Termos de Uso e chama limitação de taxa → só sob demanda, uma conversa por clique no MVP (DEC-007).
 7. **Título como nome de arquivo cru** — título com `: ? / \ * " < > |` quebra o download no Windows → sanitizar o nome do arquivo, nunca o `title` do conteúdo.
+8. **`npm install` antes de existir entrypoint** — o `postinstall` roda `wxt prepare`, que falha com «No entrypoints found» se `src/entrypoints/` estiver vazio → em projeto novo, criar os arquivos antes de instalar.
+9. **Subir o TypeScript para a versão mais nova** — em 2026-10-16 o `typescript-eslint` 8.71 exigia `typescript <6.1.0`, e a mais nova era a 7.0 → o projeto fixa a 6.0; só subir quando o `typescript-eslint` aceitar (`npm view typescript-eslint peerDependencies`).
+10. **Formatar Markdown com Prettier ou editor que apaga espaço final** — destrói a quebra de linha do MD do Lunoda → `.prettierignore` exclui `**/*.md` e o `.editorconfig` desliga o trim em `*.md`; não remover nenhum dos dois.
 
 ## 📁 Arquivos Críticos (não mexer sem contexto)
 - `meta/CEREBRO.md` — comportamento do assistente; mudança aqui muda como todo turno trabalha.

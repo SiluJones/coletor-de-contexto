@@ -1,0 +1,8 @@
+# Markdown fica fora do Prettier: o MD do Lunoda depende de dois espacos no fim da linha
+# (armadilha 5 do CONTEXT), e os meta/ sao escritos a mao.
+**/*.md
+.output/
+.wxt/
+node_modules/
+coverage/
+src/tests/fixtures/
