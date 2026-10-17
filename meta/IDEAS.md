@@ -24,9 +24,6 @@ Hoje o Lunoda importa só `.json`. Os marcadores `<!-- CONTEUDO:INICIO/FIM -->` 
 ### 2026-10-16 — Modo «continuar entrada»
 Exportar só os turnos novos de uma conversa já exportada e anexá-los à entrada existente do Lunoda, preservando os IDs dos blocos antigos. Combina com o uso real: projetos longos com conversas que continuam.
 
-### 2026-10-16 — Preencher `p-ia` sozinho
-Marcar a propriedade «IA Utilizada» com a opção da plataforma de origem (`o4` Claude, `o5` Gemini, `o6` ChatGPT). Formato medido no par `sintetico-lunoda-ia` (CONTEXT, «Formato Lunoda»): `p-ia` na entrada e só nos blocos da IA. Falta o dono dizer se a marcação nos blocos foi herança do Lunoda ou manual (STATUS).
-
 ### 2026-10-16 — Exportar uma pasta de Projeto do claude.ai inteira
 Várias conversas num único `.json` do Lunoda (várias `entries`), disparado à mão e com intervalo entre requisições (DEC-007).
 
@@ -43,7 +40,10 @@ Reconhecer nas respostas o bloco «Próximo / Peça no próximo turno» e expô-
 O WXT gera build para Firefox a partir do mesmo código; custo baixo depois do MVP.
 
 ### 2026-10-16 — Outros formatos de saída
-Markdown simples (sem os marcadores do Lunoda), Obsidian com front matter próprio, HTML. Cada um é só mais um exportador (DEC-003).
+Markdown simples (sem os marcadores do Lunoda), Obsidian com front matter próprio, HTML. Cada um é só mais um exportador (DEC-003). **Pedido do dono (2026-10-16):** um formato «original/simples», em `.md` e `.json`. Recomendação do chat: Markdown legível (título, link, data e `## Você` / `## Claude` por turno) e JSON do CDC (o modelo canônico inteiro, com tudo que foi capturado — bom para arquivo e para reprocessar). Planejado na F2.
+
+### 2026-10-16 — Incluir as chamadas de ferramenta (opção)
+As respostas de trabalho do Claude têm centenas de `tool_use`/`tool_result` (até 696 numa captura). Hoje ficam de fora (DEC-011); uma opção poderia listá-las resumidas (nome da ferramenta + uma linha) para quem quiser o rastro completo.
 
 ---
 
@@ -56,6 +56,8 @@ Markdown simples (sem os marcadores do Lunoda), Obsidian com front matter própr
 
 ## ✅ Concluídas
 - **Botão de depuração «salvar resposta bruta»** — implementado na wo0003 (DEC-010), visível em todo build durante a F1.
+- **Preencher `p-ia` sozinho** — implementado na wo0004 (DEC-011): na entrada e nos blocos da IA, como o dono marcava à mão.
+- **Link da conversa na descrição do Lunoda** (ideia do dono, 2026-10-16) — implementado na wo0004 (DEC-011).
 
 ---
 
@@ -68,3 +70,4 @@ Markdown simples (sem os marcadores do Lunoda), Obsidian com front matter própr
 - **[2026-10-16]** As Instruções e o `CLAUDE.md` gerados vieram com o nome do projeto como placeholder (`[NOME]`, `<NOME DO PROJETO>`) e o README com o título «projeto», embora o Projeto do claude.ai já se chamasse «Coletor de Contexto (CDC)». O formulário de montagem poderia preencher o nome nos três.
 - **[2026-10-16]** Seção «Feedback para o ASU» removida deste IDEAS: o projeto não usa o modo ASU, e seção sem uso só ocupa leitura.
 - **[2026-10-16]** O pedido de abertura listava `SPEC.md` entre os arquivos a preencher, mas no kit ele é modelo. Solução adotada: modelo especializado em `meta/SPEC.md` e a spec real em `specs/`. O kit poderia dizer isso no próprio pedido de abertura.
+- **[2026-10-17]** A skill `apply-wo` do kit manda gravar o relatório em arquivo no fim, depois do push; quando o Code PARA (divergência na Edição 0 da wo0004), ele não gravou nada e o dono teve de copiar a tela para o chat. Ajuste local: a skill e o `CLAUDE.md` dizem que a parada também gera relatório em arquivo, antes do menu. O kit poderia trazer isso de fábrica.

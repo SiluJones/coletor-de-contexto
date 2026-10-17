@@ -36,7 +36,8 @@
 
 Comece vazia e escreva quando doer duas vezes: técnica que você precisou explicar de novo é candidata. Formato livre — uma linha por item, com o nome do lugar onde ela vale. Se um item virar regra geral do projeto, promova-o para o corpo do CEREBRO e deixe aqui só o caso particular.
 
-- _(vazio — o primeiro item entra na primeira vez que uma técnica precisar ser repetida)_
+- **Ponte do chat (pasta vinculada): reenviar arquivo pelo MESMO caminho de origem pode entregar uma cópia antiga.** Medido em 2026-10-17, duas vezes seguidas: a wo0004 regerada chegou ao disco na versão anterior (a primeira fez a Edição 0 do Code parar, como devia). Com um nome de origem NOVO a cópia chegou certa. Regra: todo envio que substitui arquivo já enviado sai de um nome novo (ex.: `<nome>-<sha1 curto>.md`), cai numa pasta temporária, é copiado no lugar pelo shell da máquina, e o `sha1sum` do disco é conferido contra o gerado ANTES de citar o arquivo.
+- **Simular a WO a partir do texto dela pega erro do autor.** Nas wo0001 a wo0004 a simulação (código numa cópia do repo + edições de doc aplicadas por script que lê os blocos da WO) achou: um `postinstall` que falha sem entrypoint, o Prettier no `.claude/`, uma frase de `git status` incompleta e o `vitest -u` engolindo o caminho seguinte. Cada um teria parado a aplicação.
 
 ## Princípios de trabalho
 

@@ -47,10 +47,12 @@
     {
       "id": "mvbhe28093k8",
       "title": "Conversa sintética — contar palavras",
-      "description": "",
+      "description": "https://claude.ai/chat/00000000-0000-4000-8000-000000000000",
       "propertyValues": {
         "p-tags": [],
-        "p-ia": []
+        "p-ia": [
+          "o4"
+        ]
       },
       "propertyAutoFlags": {},
       "blocks": [
@@ -73,7 +75,11 @@
           "subtitle": "Claude",
           "version": 1,
           "content": "No Linux ou no macOS, use o `wc`:\n\n```bash\nwc -w notas.txt\n```\n\nA saída é o número de palavras seguido do nome do arquivo.  \nPara várias pastas, combine com `find`.",
-          "blockProps": {}
+          "blockProps": {
+            "p-ia": [
+              "o4"
+            ]
+          }
         },
         {
           "id": "mvbhe2845yxw",
@@ -87,7 +93,11 @@
           "subtitle": "Claude",
           "version": 2,
           "content": "No PowerShell:\n\n| Comando | O que conta |\n|---|---|\n| `Get-Content notas.txt -Raw` + `Measure-Object -Word` | palavras |\n| `(Get-Content notas.txt).Count` | linhas |\n\nDeixei um script pronto.\n\n**Arquivos gerados:**\n- `contar.ps1` — text/x-powershell, 312 B",
-          "blockProps": {}
+          "blockProps": {
+            "p-ia": [
+              "o4"
+            ]
+          }
         },
         {
           "id": "mvbhe286xt5t",

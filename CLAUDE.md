@@ -13,6 +13,8 @@ Leia `meta/CEREBRO.md` → o doc de contexto do projeto (ex.: `meta/CONTEXT.md`)
 - Instalação limpa: `npm ci` (usa o `package-lock.json`). Projeto WXT sem entrypoint falha no `npm install` (armadilha 8 do CONTEXT).
 - Mudou `src/exporters/`? Rode também o oráculo privado do Lunoda (DEC-009): `CDC_LUNODA_ORACLE_DIR=../oraculo-lunoda npx vitest run src/exporters/lunoda-golden.test.ts` — pares exportados pelo Lunoda em `CDC/oraculo-lunoda/`, fora do repo. O `npm test` comum pula esse bloco.
 - `src/adapters/claude/fetch-raw.ts` é injetado na aba do claude.ai: nada de import ou constante de fora dentro de `fetchClaudeConversationRaw` (armadilha 14 do CONTEXT).
+- Mudou `src/adapters/claude/`? Rode também as capturas reais (DEC-011): `CDC_CLAUDE_CAPTURES_DIR=../capturas-claude/cdc-raw npx vitest run src/adapters/claude/normalize.test.ts` — respostas brutas do claude.ai fora do repo; nenhuma pode virar turno vazio.
+- **Parou (divergência na Edição 0, âncora não achada, validação vermelha)? O relatório em arquivo sai do mesmo jeito, ANTES do menu de opções** — `../AAMMDD-HHMM-code-cdc-apply-<wo>.txt` com o que foi conferido, o que divergiu (esperado × obtido, com o comando) e o que NÃO foi feito. É o que o chat lê; sem ele, o dono tem de copiar a tela.
 - Mudança só de doc (meta/) NÃO precisa de build; a rede é o `git diff`.
 - Adicione seus comandos de build/teste ao `allow` de `.claude/settings.json`.
 

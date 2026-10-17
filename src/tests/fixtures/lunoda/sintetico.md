@@ -4,14 +4,20 @@ id: "mvbhe28093k8"
 created: "2026-10-16T21:30:00.000Z"
 updated: "2026-10-16T21:30:00.000Z"
 blocks: 6
+ia_utilizada:
+  - "Claude"
 ---
 # Conversa sintética — contar palavras
+
+> **Descrição/Resumo:** https://claude.ai/chat/00000000-0000-4000-8000-000000000000
 
 <!-- ENTRADA -->
 **ID:** `mvbhe28093k8`  
 **Criado em:** 16/10/26 18:30  
 **Modificado em:** 16/10/26 18:30  
 **Total de blocos:** 6  
+
+**IA Utilizada:** Claude  
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -54,6 +60,8 @@ Resposta curta: wc -w, com um exemplo.
 **Subtítulo:** Claude  
 **Versão:** v1  
 
+**IA Utilizada:** Claude  
+
 **Conteúdo:**
 
 <!-- CONTEUDO:INICIO bloco=3 -->
@@ -88,6 +96,8 @@ E no Windows, sem instalar nada?
 <!-- BLOCO 5 -->
 **Subtítulo:** Claude  
 **Versão:** v2  
+
+**IA Utilizada:** Claude  
 
 **Conteúdo:**
 

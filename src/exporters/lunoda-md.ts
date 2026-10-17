@@ -6,9 +6,10 @@
  * linha em Markdown); separador de 40 × U+2501 depois do cabecalho e de cada bloco; front matter em
  * ISO UTC e corpo em hora local `dd/mm/aa HH:MM`; conteudo do bloco copiado sem nenhuma alteracao;
  * propriedade marcada (medido so com UMA propriedade e UM valor: «IA Utilizada = Claude») aparece no
- * front matter, no cabecalho e em cada bloco que a tem no `blockProps`.
- * Nao verificado (o oraculo nao tem): titulo com aspas, descricao preenchida, duas propriedades ou
- * dois valores marcados ao mesmo tempo, nome de propriedade com acento (chave do front matter).
+ * front matter, no cabecalho e em cada bloco que a tem no `blockProps`; descricao preenchida (medida
+ * com uma linha so) aparece como citacao logo depois do titulo.
+ * Nao verificado (o oraculo nao tem): titulo com aspas, descricao com quebra de linha, duas
+ * propriedades ou dois valores marcados ao mesmo tempo, nome de propriedade com acento.
  */
 
 import { formatLunodaLocal } from '../core/dates';
@@ -101,6 +102,7 @@ export function renderLunodaMd(
     '---',
     `# ${entry.title}`,
     '',
+    ...(entry.description === '' ? [] : [`> **Descrição/Resumo:** ${entry.description}`, '']),
     '<!-- ENTRADA -->',
     `**ID:** \`${entry.id}\`  `,
     `**Criado em:** ${formatLunodaLocal(entry.createdAt, timeZone)}  `,

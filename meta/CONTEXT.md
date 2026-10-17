@@ -28,8 +28,8 @@ coletor-de-contexto/
 ├── logs/                        # um arquivo por dia (AAAA-MM-DD.md)
 └── src/                         # F1 (scaffold: wo0001)
     ├── entrypoints/             # popup, content script, background (convenção WXT)
-    ├── adapters/claude/         # url.ts (reconhece a conversa) · fetch-raw.ts (busca bruta, injetada na aba); normalizador → Conversation vem depois das capturas
-    ├── popup/                   # partes puras do popup (raw-dump.ts: nome e resumo da captura bruta)
+    ├── adapters/claude/         # url.ts (reconhece a conversa) · fetch-raw.ts (busca bruta, injetada na aba) · normalize.ts (resposta → Conversation)
+    ├── popup/                   # partes puras do popup: export.ts (resposta → .json + .md do Lunoda) · raw-dump.ts (captura bruta)
     ├── core/                    # model.ts (modelo canônico), ids.ts, dates.ts; testes *.test.ts ao lado
     ├── exporters/               # lunoda-types.ts · lunoda-build.ts (Conversation → entrada) · lunoda-json.ts · lunoda-md.ts
     └── tests/                   # synthetic-conversation.ts + fixtures/ (par sintético do Lunoda; respostas do Claude, sintéticas, depois das capturas)
@@ -50,7 +50,7 @@ página aberta ──► adapter da plataforma ──► Conversation (modelo ca
 ```
 
 1. **Detecção:** o popup identifica a plataforma pela URL da aba (`claude.ai/chat/<uuid>`, `chatgpt.com/c/<id>`, `gemini.google.com/app/<id>`).
-2. **Aquisição (adapter):** roda no contexto da página, com os cookies da sessão do usuário: o popup injeta `fetchClaudeConversationRaw` na aba com `chrome.scripting.executeScript` (permissão `activeTab`, sem host_permission permanente — DEC-010). No Claude, chama `GET /api/organizations` (acha a org com capacidade `chat`) e depois `GET /api/organizations/{org}/chat_conversations/{uuid}?tree=True&rendering_mode=messages&render_all_tools=true`. Segundo o HISTORY §1 (ainda NÃO medido aqui — as capturas brutas medem), essa resposta traz, por mensagem, um array `content` com itens `text`, `thinking` e `tool_use`/`tool_result`, além de anexos e arquivos. Sem `rendering_mode=messages` a resposta só tem texto achatado e perde partes — **não remova o parâmetro**. Endpoints não oficiais (ver Armadilhas).
+2. **Aquisição (adapter):** roda no contexto da página, com os cookies da sessão do usuário: o popup injeta `fetchClaudeConversationRaw` na aba com `chrome.scripting.executeScript` (permissão `activeTab`, sem host_permission permanente — DEC-010). No Claude, chama `GET /api/organizations` (acha a org com capacidade `chat`) e depois `GET /api/organizations/{org}/chat_conversations/{uuid}?tree=True&rendering_mode=messages&render_all_tools=true`. O formato da resposta foi medido em capturas reais (seção «Formato da resposta do Claude», abaixo). Sem `rendering_mode=messages` a resposta só tem texto achatado e perde partes — **não remova o parâmetro**. Endpoints não oficiais (ver Armadilhas).
 3. **Ramo atual:** a conversa é uma árvore (edições e regenerações criam ramos). O adapter segue o caminho da raiz até a folha atual (`current_leaf_message_uuid`) e descarta os outros ramos no MVP.
 4. **Normalização:** tudo vira o modelo canônico abaixo — o único contrato entre adapters e exporters.
 5. **Exportação:** o exporter decide o que entra conforme as opções (pensamento sim/não, arquivos sim/não) e gera o arquivo. O modelo **sempre** guarda tudo; filtrar é papel do exporter (DEC-005).
@@ -101,6 +101,16 @@ interface FileRef { name: string; kind: string; size?: number; textContent?: str
 - O Lunoda importa só o JSON hoje; o MD é para leitura humana e para um importador futuro — os marcadores HTML já o tornam parseável.
 - **Propriedade marcada** (medido com «IA Utilizada = Claude»): `"p-ia": ["o4"]` em `propertyValues` da entrada e, só nos blocos «Claude», em `blockProps`. No MD: `ia_utilizada:` + `  - "Claude"` no front matter (depois de `blocks:`); `**IA Utilizada:** Claude  ` + linha em branco no cabeçalho (antes do separador) e em cada bloco marcado (entre `**Versão:**` e `**Conteúdo:**`). Não medido: duas propriedades ou dois valores ao mesmo tempo, nome de propriedade com acento.
 - **Importação** (medido): o Lunoda importa o `.json` gerado sem erro, aceita o bloco «Pensamento» e as listas de arquivos, e **mantém** os IDs e o `createdAt`; editar a entrada muda o `updatedAt`. Exportar de volta sem editar devolve o arquivo byte a byte.
+- **Descrição preenchida** (medido, uma linha): no MD vira `> **Descrição/Resumo:** <texto>` + linha em branco, entre o `# título` + linha em branco e o `<!-- ENTRADA -->`; o front matter não muda. O exportador põe ali o link da conversa (DEC-011).
+
+### Formato da resposta do Claude — medido em 4 capturas reais (2026-10-16)
+- Raiz: `uuid`, `name` (título; pode vir vazio), `created_at`/`updated_at` (ISO com microssegundos), `model`, `current_leaf_message_uuid`, `chat_messages[]` e campos que o projeto ignora (`settings`, `project_uuid`, `is_starred`…).
+- Mensagem: `uuid`, `sender` (`human` | `assistant`), `parent_message_uuid` (a raiz aponta para `00000000-0000-4000-8000-000000000000`), `index`, `created_at`, `content[]`, `attachments[]`, `files[]`, `truncated`, `stop_reason` (só da IA).
+- **O campo `text` da mensagem vem VAZIO.** O texto está nos itens `content[].type === "text"` (`text`), intercalados com `thinking`, `tool_use` e `tool_result`; os pedaços de texto sempre vêm separados por ferramenta ou pensamento e se juntam com linha em branco.
+- **Pensamento completo não vem:** em 747 itens `thinking`, o campo `thinking` estava vazio (464 com `thinking_hidden: true`); vêm só `summaries[].summary` — os títulos curtos que o claude.ai mostra recolhidos. O bloco «Pensamento» é feito deles.
+- Ramos: 2 das 4 capturas tinham pedido editado; o ramo da tela vai da raiz até `current_leaf_message_uuid`.
+- Duas mensagens seguidas da IA acontecem (continuação depois de `stop_reason: tool_use`, ou mensagem vazia de resposta abortada): viram UMA resposta.
+- Arquivos: do usuário em `attachments[]` (`file_name`, `file_type`, `file_size`, `extracted_content`) e `files[]` (`file_kind` como `image`, `file_name`, `size_bytes`); gerados pela IA em `files[]` da mensagem dela (`file_kind: blob`, `download_source`). O exportador nunca leva `extracted_content`.
 
 ## Arquitetura — pontos-chave
 - Extensão MV3, não userscript nem app desktop — DEC-001.
@@ -111,6 +121,7 @@ interface FileRef { name: string; kind: string; size?: number; textContent?: str
 - `version` = turno; pensamento em bloco próprio; primeiro uso com pensamento desligado e arquivos ligados — DEC-008.
 - TypeScript + WXT + Vitest — DEC-006.
 - Tudo local, sob demanda, sem backend, sem varredura em segundo plano — DEC-007.
+- Normalizador do Claude sobre o formato medido; descrição = link; «IA Utilizada» na entrada e nos blocos da IA; arquivo com o nome da conversa — DEC-011.
 
 ## Armadilhas Conhecidas (o que NÃO fazer)
 1. **Tratar endpoint interno como contrato** — `/api/organizations/...` (Claude) e `/backend-api/...` (ChatGPT) não são documentados e mudam sem aviso → isolar cada um num adapter, com fixture e teste, e mostrar erro claro («formato da plataforma mudou») em vez de exportar meia conversa.
@@ -127,6 +138,8 @@ interface FileRef { name: string; kind: string; size?: number; textContent?: str
 12. **Arquivo de configuração fora do Prettier entrar no `prettier --check`** — o `.claude/settings.json` entregue pelo chat reprovou o `npm run check` da wo0001, e o dono escolheu formatá-lo → todo JSON/TS que o chat entrega passa antes pelo `prettier --check` com a config do repositório (o `.prettierrc.json`), inclusive o que vai para `.claude/`.
 13. **Conversa real como fixture** — o repositório é público (DEC-009) → fixture versionada é sempre sintética; par real do Lunoda vive em `CDC/oraculo-lunoda/` e captura bruta do Claude em `CDC/capturas-claude/`, as duas fora do repo.
 14. **Usar algo de fora no corpo de `fetchClaudeConversationRaw`** — o `executeScript` serializa a função como texto e a recria na página; import, constante do módulo ou função vizinha viram `ReferenceError` só no navegador → tudo dentro do corpo; o teste «funciona reconstruída só a partir do próprio texto» pega isso antes.
+15. **Ler o campo `text` da mensagem do Claude** — vem vazio em toda mensagem medida; exportaria conversas em branco sem erro nenhum → o texto vem de `content[]`; o teste das capturas reais (`CDC_CLAUDE_CAPTURES_DIR`) reprova turno vazio.
+16. **`vitest -u` (ou `--update`) ANTES dos caminhos** — no Vitest 5 a flag engole o caminho seguinte como valor: `-u A B` roda só o B, `--update A` roda a suíte inteira e regrava toda fixture divergente (medido em 2026-10-16) → flag sempre no FIM (`npx vitest run A B --update`) e conferir os hashes das fixtures logo depois.
 
 ## 📁 Arquivos Críticos (não mexer sem contexto)
 - `meta/CEREBRO.md` — comportamento do assistente; mudança aqui muda como todo turno trabalha.

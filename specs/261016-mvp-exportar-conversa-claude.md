@@ -9,7 +9,7 @@ Hoje o dono copia à mão cada pedido e cada resposta de uma conversa do claude.
 - [ ] **Oráculo do Lunoda (privado, DEC-009):** para cada par `.json` + `.md` exportado pelo Lunoda na pasta `CDC_LUNODA_ORACLE_DIR`, `renderLunodaJson(parseLunodaJson(json))` devolve o `.json` e `renderLunodaMd` devolve o `.md`, os dois byte a byte (fuso America/Sao_Paulo). Pares em `CDC/oraculo-lunoda/`, fora do repo: `mapsmith 12`, `sintetico-lunoda`, `sintetico-lunoda-ia` (este com «IA Utilizada» marcada).
 - [ ] **Par sintético (versionado):** a conversa de `src/tests/synthetic-conversation.ts` gera `src/tests/fixtures/lunoda/sintetico.json` e `.md` sem diferença de byte, e o `.json` lido de volta reproduz os dois.
 - [ ] **IDs:** todo ID gerado tem 12 caracteres `[0-9a-z]`, e os 8 primeiros decodificam para um instante a até 1 s do momento da geração.
-- [ ] **Captura bruta (passo 6):** numa conversa do claude.ai, o botão «Salvar resposta bruta (depuração)» baixa `Downloads/cdc-raw/claude-<uuid>-<carimbo>.json` com o corpo exato da API; fora de conversa, o popup não mostra o botão. Erro de sessão ou de rede vira mensagem no popup, nunca arquivo.
+- [ ] **Captura bruta (passo 6):** numa conversa do claude.ai, o botão «Salvar resposta bruta (depuração)» baixa `Downloads/cdc-raw/<título> — claude-<uuid8>-<carimbo>.json` com o corpo exato da API (título na frente: pedido do dono, 2026-10-16); fora de conversa, o popup não mostra o botão. Erro de sessão ou de rede vira mensagem no popup, nunca arquivo.
 - [ ] **Adaptador Claude, fixture simples:** dada uma resposta bruta salva de `chat_conversations/{uuid}?tree=True&rendering_mode=messages&render_all_tools=true`, o adaptador devolve `Conversation` com os turnos na ordem, `text` em markdown e `thinking` preenchido quando a fixture tem item `thinking`.
 - [ ] **Adaptador Claude, fixture com ramo:** numa conversa com um pedido editado, só o ramo até `current_leaf_message_uuid` aparece.
 - [ ] **Pensamento:** com `includeThinking: true`, um turno com pensamento gera Prompt vN → Pensamento vN → Claude vN; com `false` (padrão), nenhum bloco «Pensamento».
@@ -27,7 +27,9 @@ Adaptador Claude (novo); exportadores Lunoda JSON e Lunoda MD (novos); modelo ca
 ## Decisões de design
 - Pensamento e arquivos já são capturados no modelo (DEC-005). Os exportadores recebem `ExportOptions` e respeitam os dois campos desde o MVP; o padrão é `DEFAULT_EXPORT_OPTIONS` (pensamento desligado, arquivos ligados — DEC-008). O controle no popup chega na F2; até lá vale o padrão.
 - Formato do pensamento e da lista de arquivos no Lunoda: CONTEXT, «Formato Lunoda» (DEC-008).
-- Título da entrada = título da conversa no Claude; nome do arquivo = título sanitizado para Windows.
+- Título da entrada = título da conversa no Claude; nome do arquivo = título sanitizado para Windows (`<título>.json` e `<título>.md`).
+- Descrição da entrada = link da conversa; «IA Utilizada» marcada na entrada e nos blocos da IA (DEC-011, como o dono fazia à mão).
+- O bloco «Pensamento» usa os resumos do pensamento (`summaries`), porque a API web não devolve o raciocínio completo (CONTEXT, «Formato da resposta do Claude»).
 - `createdAt`/`updatedAt` da entrada = horário da exportação (como no processo manual). Guardar as datas originais da conversa num campo próprio é ideia para a F2.
 
 ## Fora de escopo

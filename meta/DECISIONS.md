@@ -196,3 +196,28 @@ O normalizador do Claude (passo 7 da spec) depende do formato da resposta de `ch
 ### Consequências
 A função injetada tem de ser autocontida (armadilha 14 do CONTEXT; um teste a recria só do próprio texto). Há um ciclo a mais — capturas do dono — antes do botão «Exportar».
 
+---
+
+## DEC-011 — Normalizador do Claude sobre o formato medido; o que vai para o Lunoda
+**Data:** 2026-10-16 · **Status:** aceita (itens de nome, descrição e «IA Utilizada» pedidos pelo dono)
+
+### Contexto
+As 4 capturas reais (CONTEXT, «Formato da resposta do Claude») mostraram que o texto da mensagem não está no campo `text` e que o pensamento completo não vem. O dono pediu o título da conversa na frente do nome do arquivo, sugeriu o link na descrição do Lunoda e contou que marcava «IA Utilizada» à mão nos blocos da IA.
+
+### Decisão
+- Ramo atual: da raiz até `current_leaf_message_uuid`. Texto: itens `content[].text`, juntos com linha em branco. Ferramentas (`tool_use`/`tool_result`) ficam de fora.
+- Pensamento: o texto completo quando vier; senão, os resumos (`summaries`) em lista. Hoje só vêm os resumos.
+- Mensagens vazias ficam de fora; respostas seguidas da IA viram uma resposta só.
+- Arquivos: só referência (nome, tipo, tamanho); `extracted_content` nunca vai para a exportação.
+- Lunoda: descrição = link da conversa; «IA Utilizada» marcada na entrada e nos blocos da IA.
+- Nome de arquivo: `<título>.json` e `<título>.md`, com o título seguro para o Windows; a captura bruta vira `<título> — claude-<uuid8>-<carimbo>.json`.
+- Teste com as capturas reais fora do repo, por `CDC_CLAUDE_CAPTURES_DIR` (mesmo desenho do oráculo do Lunoda, DEC-009).
+
+### Alternativas consideradas
+- **Ler `text` da mensagem** — vem vazio: exportaria conversas em branco sem erro.
+- **Incluir as chamadas de ferramenta** — em conversas de trabalho são centenas por resposta (até 696 numa captura); viram ruído. Fica como opção futura (IDEAS).
+- **Uuid no nome do arquivo** — atrapalha a ordem por título que o dono usa; o link vai na descrição.
+
+### Consequências
+A exportação reproduz o que a tela mostra, menos o raciocínio completo, que a API web não entrega. Mudança no formato do claude.ai aparece como erro «Formato da conversa do Claude mudou», e o teste das capturas reais reprova turno vazio.
+

@@ -3,12 +3,22 @@
  *
  * Ordem dos blocos por turno: Prompt vN -> [Pensamento vN] -> <IA> vN. O pensamento so entra com
  * `includeThinking`; as listas de arquivos so entram com `includeFiles`.
+ * A descricao da entrada e o link da conversa, e a propriedade «IA Utilizada» vem marcada na entrada e
+ * nos blocos da IA — o mesmo que o dono fazia a mao no Lunoda (DEC-011).
  */
 
 import type { Conversation, ExportOptions, FileRef, Message } from '../core/model';
 import { PLATFORM_LABEL } from '../core/model';
+import type { Platform } from '../core/model';
 import type { LunodaBlock, LunodaDocument, LunodaEntry } from './lunoda-types';
 import { defaultLunodaProperties } from './lunoda-types';
+
+/** Opcao de «IA Utilizada» (`p-ia`) de cada plataforma, nas propriedades padrao do Lunoda. */
+export const PLATFORM_IA_OPTION: Record<Platform, string> = {
+  claude: 'o4',
+  gemini: 'o5',
+  chatgpt: 'o6',
+};
 
 /** Dependencias injetaveis da montagem (relogio e IDs), para os testes serem deterministicos. */
 export interface BuildContext {
@@ -75,9 +85,12 @@ export function buildLunodaEntry(
 ): LunodaEntry {
   const entryId = ctx.newId();
   const aiLabel = PLATFORM_LABEL[conversation.platform];
+  const iaOption = PLATFORM_IA_OPTION[conversation.platform];
   const blocks: LunodaBlock[] = [];
   const push = (subtitle: string, version: number, content: string): void => {
-    blocks.push({ id: ctx.newId(), subtitle, version, content, blockProps: {} });
+    // So o bloco da IA leva «IA Utilizada»; Prompt e Pensamento ficam sem (como o dono marcava).
+    const blockProps = subtitle === aiLabel ? { 'p-ia': [iaOption] } : {};
+    blocks.push({ id: ctx.newId(), subtitle, version, content, blockProps });
   };
 
   for (const turn of conversation.turns) {
@@ -93,8 +106,8 @@ export function buildLunodaEntry(
   return {
     id: entryId,
     title: conversation.title,
-    description: '',
-    propertyValues: { 'p-tags': [], 'p-ia': [] },
+    description: conversation.url,
+    propertyValues: { 'p-tags': [], 'p-ia': [iaOption] },
     propertyAutoFlags: {},
     blocks,
     createdAt: ctx.now,

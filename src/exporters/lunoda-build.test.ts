@@ -98,6 +98,20 @@ describe('buildLunodaEntry', () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
+  it('poe o link na descricao e marca «IA Utilizada» na entrada e so nos blocos da IA', () => {
+    const entry = buildLunodaEntry(SYNTHETIC_CONVERSATION, both, ctx());
+    expect(entry.description).toBe(SYNTHETIC_CONVERSATION.url);
+    expect(entry.propertyValues['p-ia']).toEqual(['o4']);
+    expect(entry.blocks.map((b) => [b.subtitle, b.blockProps])).toEqual([
+      ['Prompt', {}],
+      ['Pensamento', {}],
+      ['Claude', { 'p-ia': ['o4'] }],
+      ['Prompt', {}],
+      ['Claude', { 'p-ia': ['o4'] }],
+      ['Prompt', {}],
+    ]);
+  });
+
   it('documento traz as propriedades padrao sem compartilhar referencia', () => {
     const a = buildLunodaDocument([]);
     const b = buildLunodaDocument([]);

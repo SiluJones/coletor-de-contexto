@@ -18,15 +18,15 @@
 - [x] Scaffold WXT + TypeScript + Vitest + ESLint/Prettier (wo0001).
 - [x] Modelo canônico (`core/model.ts`), geração de IDs e datas (wo0001).
 - [x] Captura bruta da conversa do Claude, para medir o formato real (wo0003).
-- [ ] Adaptador Claude via API interna, só o ramo atual.
+- [x] Adaptador Claude via API interna, só o ramo atual (wo0004).
 - [x] Exportadores Lunoda JSON e Lunoda MD (wo0002).
-- [ ] Popup: detectar conversa, botão exportar, mensagens de erro claras.
+- [x] Popup: detectar conversa, botão exportar, mensagens de erro claras (wo0004; falta a conferência do dono).
 
 ## 🔵 F2 — Fidelidade e opções
 **Objetivo:** controlar o que entra no arquivo.
 - Opções de pensamento e arquivos (DEC-005), lembradas entre usos.
 - Conteúdo textual de artefatos gerados.
-- `p-ia` automático, nome de arquivo configurável, copiar para a área de transferência.
+- Nome de arquivo configurável, copiar para a área de transferência (`p-ia` automático entrou na F1, DEC-011). Formatos «simples» pedidos pelo dono: Markdown legível e JSON do CDC, escolhidos no popup.
 
 ## 🔵 F3 — Outras plataformas
 **Objetivo:** ChatGPT (API interna) e Gemini (DOM) produzindo o mesmo modelo canônico.
