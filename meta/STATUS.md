@@ -16,7 +16,7 @@
 - Botão «Exportar» da F1: o dono exportou «CDC 1» e o Lunoda importou; a reexportação do Lunoda é igual (só título e `updatedAt` mudam). Exportações em `CDC/exportacoes-cdc/`.
 
 ## 🔧 Em Progresso
-- **F2 — primeira leva (wo0005):** caixas de formato (Lunoda, Markdown simples, JSON do CDC) e de opção (pensamento, arquivos), lembradas entre usos (DEC-012). Falta o Code aplicar e o dono conferir no navegador.
+- **F2 — primeira leva (wo0005):** caixas de formato (Lunoda, Markdown simples, JSON do CDC) e de opção (pensamento, arquivos), lembradas entre usos (DEC-012). Aplicada pelo Code (`a8cd810`, 90 testes, `npm run check` verde); falta o dono conferir no navegador.
 
 ## ❌ Quebrado / Com Problema
 - Nada conhecido.
@@ -27,4 +27,4 @@
 - [ ] Dono: dizer de onde veio `CDC/261016-2317.txt` (página HTML do claude.ai, 268 KB) — sem uso para o projeto até agora.
 
 ## 💬 Última conversa
-**2026-10-17** — F1 fechada pelo dono. wo0005: Markdown simples, JSON do CDC (conversa inteira) e opções no popup lembradas em `chrome.storage.local` (DEC-012). Próximo: o Code aplica; o dono confere no navegador.
+**2026-10-17** — F1 fechada pelo dono. wo0005: Markdown simples, JSON do CDC (conversa inteira) e opções no popup lembradas em `chrome.storage.local` (DEC-012). Code aplicou a wo0005 (`a8cd810`, empurrado). Próximo: o dono confere no navegador.
