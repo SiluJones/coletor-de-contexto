@@ -15,3 +15,5 @@
 - DEC-008: `version` = turno, pensamento em bloco próprio, padrão pensamento desligado e arquivos ligados.
 - Exportadores Lunoda (wo0002): `buildLunodaEntry` (modelo → entrada, com pensamento e listas de arquivos), `renderLunodaJson`, `parseLunodaJson` e `renderLunodaMd`; reproduzem o `mapsmith 12` byte a byte.
 - Par sintético versionado (`src/tests/fixtures/lunoda/`) e oráculo privado por `CDC_LUNODA_ORACLE_DIR` (DEC-009); `@types/node` 22.20.5; 27 testes.
+- MD do Lunoda com propriedades marcadas (front matter, cabeçalho e blocos), medido no par `sintetico-lunoda-ia` (wo0003).
+- Captura bruta do Claude (wo0003, DEC-010): popup reconhece `claude.ai/chat/<uuid>`, injeta a busca na aba e baixa o corpo exato para `Downloads/cdc-raw/`; permissões `activeTab`, `scripting`, `downloads`; 50 testes.

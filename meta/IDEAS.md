@@ -25,10 +25,7 @@ Hoje o Lunoda importa só `.json`. Os marcadores `<!-- CONTEUDO:INICIO/FIM -->` 
 Exportar só os turnos novos de uma conversa já exportada e anexá-los à entrada existente do Lunoda, preservando os IDs dos blocos antigos. Combina com o uso real: projetos longos com conversas que continuam.
 
 ### 2026-10-16 — Preencher `p-ia` sozinho
-Marcar a propriedade «IA Utilizada» com a opção da plataforma de origem (`o4` Claude, `o5` Gemini, `o6` ChatGPT). No `mapsmith 12` ela veio vazia; depende do teste no Lunoda (STATUS).
-
-### 2026-10-16 — Botão de depuração «salvar resposta bruta»
-No build de desenvolvimento, um botão que baixa o JSON cru da API. É o jeito mais barato de gerar fixtures reais e de diagnosticar quando a plataforma muda o formato.
+Marcar a propriedade «IA Utilizada» com a opção da plataforma de origem (`o4` Claude, `o5` Gemini, `o6` ChatGPT). Formato medido no par `sintetico-lunoda-ia` (CONTEXT, «Formato Lunoda»): `p-ia` na entrada e só nos blocos da IA. Falta o dono dizer se a marcação nos blocos foi herança do Lunoda ou manual (STATUS).
 
 ### 2026-10-16 — Exportar uma pasta de Projeto do claude.ai inteira
 Várias conversas num único `.json` do Lunoda (várias `entries`), disparado à mão e com intervalo entre requisições (DEC-007).
@@ -58,7 +55,7 @@ Markdown simples (sem os marcadores do Lunoda), Obsidian com front matter própr
 ---
 
 ## ✅ Concluídas
-- (nenhuma ainda)
+- **Botão de depuração «salvar resposta bruta»** — implementado na wo0003 (DEC-010), visível em todo build durante a F1.
 
 ---
 

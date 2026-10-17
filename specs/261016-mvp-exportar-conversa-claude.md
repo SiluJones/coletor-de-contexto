@@ -6,9 +6,10 @@
 Hoje o dono copia à mão cada pedido e cada resposta de uma conversa do claude.ai para dentro do Lunoda, bloco a bloco (resultado típico: `mapsmith 12`, 7 blocos montados ao longo de 4 horas). É lento, sujeito a erro de cópia (markdown perdido, bloco esquecido) e desestimula registrar conversas inteiras.
 
 ## Critérios de aceite (verificáveis)
-- [ ] **Oráculo do Lunoda (privado, DEC-009):** para cada par `.json` + `.md` exportado pelo Lunoda na pasta `CDC_LUNODA_ORACLE_DIR`, `renderLunodaJson(parseLunodaJson(json))` devolve o `.json` e `renderLunodaMd` devolve o `.md`, os dois byte a byte (fuso America/Sao_Paulo). Primeiro par: `mapsmith 12`, na pasta-pai do repo.
+- [ ] **Oráculo do Lunoda (privado, DEC-009):** para cada par `.json` + `.md` exportado pelo Lunoda na pasta `CDC_LUNODA_ORACLE_DIR`, `renderLunodaJson(parseLunodaJson(json))` devolve o `.json` e `renderLunodaMd` devolve o `.md`, os dois byte a byte (fuso America/Sao_Paulo). Pares em `CDC/oraculo-lunoda/`, fora do repo: `mapsmith 12`, `sintetico-lunoda`, `sintetico-lunoda-ia` (este com «IA Utilizada» marcada).
 - [ ] **Par sintético (versionado):** a conversa de `src/tests/synthetic-conversation.ts` gera `src/tests/fixtures/lunoda/sintetico.json` e `.md` sem diferença de byte, e o `.json` lido de volta reproduz os dois.
 - [ ] **IDs:** todo ID gerado tem 12 caracteres `[0-9a-z]`, e os 8 primeiros decodificam para um instante a até 1 s do momento da geração.
+- [ ] **Captura bruta (passo 6):** numa conversa do claude.ai, o botão «Salvar resposta bruta (depuração)» baixa `Downloads/cdc-raw/claude-<uuid>-<carimbo>.json` com o corpo exato da API; fora de conversa, o popup não mostra o botão. Erro de sessão ou de rede vira mensagem no popup, nunca arquivo.
 - [ ] **Adaptador Claude, fixture simples:** dada uma resposta bruta salva de `chat_conversations/{uuid}?tree=True&rendering_mode=messages&render_all_tools=true`, o adaptador devolve `Conversation` com os turnos na ordem, `text` em markdown e `thinking` preenchido quando a fixture tem item `thinking`.
 - [ ] **Adaptador Claude, fixture com ramo:** numa conversa com um pedido editado, só o ramo até `current_leaf_message_uuid` aparece.
 - [ ] **Pensamento:** com `includeThinking: true`, um turno com pensamento gera Prompt vN → Pensamento vN → Claude vN; com `false` (padrão), nenhum bloco «Pensamento».
@@ -38,7 +39,7 @@ Outras plataformas, várias conversas por vez, ramos alternativos, conteúdo de 
 3. `core/model.ts` com os tipos.
 4. Exportador Lunoda MD + teste de ouro (par `mapsmith 12` ou par sintético — STATUS).
 5. Exportador Lunoda JSON + teste de ida e volta.
-6. Botão de depuração «salvar resposta bruta» (só em desenvolvimento) para capturar as fixtures reais do Claude.
+6. Botão de depuração «salvar resposta bruta» para capturar respostas reais do Claude (visível em todo build durante a F1 — DEC-010).
 7. Adaptador Claude + testes com as fixtures (simples, com ramo, com pensamento, formato quebrado).
 8. Popup: detecção da conversa, botão exportar, download, mensagens de erro.
 9. Conferência no navegador e importação no Lunoda pelo dono.

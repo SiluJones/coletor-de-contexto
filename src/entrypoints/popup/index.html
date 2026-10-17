@@ -4,9 +4,36 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Coletor de Contexto</title>
+    <style>
+      body {
+        width: 320px;
+        margin: 0;
+        padding: 12px 14px;
+        font:
+          13px/1.4 system-ui,
+          sans-serif;
+      }
+      h1 {
+        font-size: 14px;
+        margin: 0 0 8px;
+      }
+      #status[data-kind='ok'] {
+        color: #1a7f37;
+      }
+      #status[data-kind='error'] {
+        color: #cf222e;
+      }
+      button {
+        width: 100%;
+        padding: 6px;
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
-    <main id="app"></main>
+    <h1>Coletor de Contexto</h1>
+    <p id="status">Verificando a aba…</p>
+    <button id="raw" type="button" hidden>Salvar resposta bruta (depuração)</button>
     <script type="module" src="./main.ts"></script>
   </body>
 </html>

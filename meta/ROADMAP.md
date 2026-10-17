@@ -17,6 +17,7 @@
 **Critério de conclusão:** critérios de aceite de `specs/261016-mvp-exportar-conversa-claude.md` todos verdes, incluindo o teste de ouro do MD e a importação manual no Lunoda.
 - [x] Scaffold WXT + TypeScript + Vitest + ESLint/Prettier (wo0001).
 - [x] Modelo canônico (`core/model.ts`), geração de IDs e datas (wo0001).
+- [x] Captura bruta da conversa do Claude, para medir o formato real (wo0003).
 - [ ] Adaptador Claude via API interna, só o ramo atual.
 - [x] Exportadores Lunoda JSON e Lunoda MD (wo0002).
 - [ ] Popup: detectar conversa, botão exportar, mensagens de erro claras.

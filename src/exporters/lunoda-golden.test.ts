@@ -28,8 +28,9 @@ describe('par sintetico versionado', () => {
     { includeThinking: true, includeFiles: true },
     { newId: syntheticIds(), now: SYNTHETIC_NOW },
   );
-  const json = renderLunodaJson(buildLunodaDocument([entry]));
-  const md = renderLunodaMd(entry, 'America/Sao_Paulo');
+  const doc0 = buildLunodaDocument([entry]);
+  const json = renderLunodaJson(doc0);
+  const md = renderLunodaMd(entry, doc0.properties, 'America/Sao_Paulo');
 
   it('json bate com a fixture', async () => {
     await expect(json).toMatchFileSnapshot(`${FIXTURE_DIR}/sintetico.json`);
@@ -42,7 +43,7 @@ describe('par sintetico versionado', () => {
   it('json lido de volta reproduz o mesmo json e o mesmo md', () => {
     const doc = parseLunodaJson(json);
     expect(renderLunodaJson(doc)).toBe(json);
-    expect(renderLunodaMd(doc.entries[0]!, 'America/Sao_Paulo')).toBe(md);
+    expect(renderLunodaMd(doc.entries[0]!, doc.properties, 'America/Sao_Paulo')).toBe(md);
   });
 });
 
@@ -66,6 +67,6 @@ describe.skipIf(!oracleDir)('oraculo privado do Lunoda (CDC_LUNODA_ORACLE_DIR)',
     const md = readFileSync(join(oracleDir!, `${name}.md`), 'utf8');
     const doc = parseLunodaJson(json);
     expect(renderLunodaJson(doc)).toBe(json);
-    expect(renderLunodaMd(doc.entries[0]!, 'America/Sao_Paulo')).toBe(md);
+    expect(renderLunodaMd(doc.entries[0]!, doc.properties, 'America/Sao_Paulo')).toBe(md);
   });
 });

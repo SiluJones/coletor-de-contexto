@@ -28,10 +28,11 @@ coletor-de-contexto/
 ├── logs/                        # um arquivo por dia (AAAA-MM-DD.md)
 └── src/                         # F1 (scaffold: wo0001)
     ├── entrypoints/             # popup, content script, background (convenção WXT)
-    ├── adapters/                # claude.ts · chatgpt.ts · gemini.ts → Conversation
+    ├── adapters/claude/         # url.ts (reconhece a conversa) · fetch-raw.ts (busca bruta, injetada na aba); normalizador → Conversation vem depois das capturas
+    ├── popup/                   # partes puras do popup (raw-dump.ts: nome e resumo da captura bruta)
     ├── core/                    # model.ts (modelo canônico), ids.ts, dates.ts; testes *.test.ts ao lado
     ├── exporters/               # lunoda-types.ts · lunoda-build.ts (Conversation → entrada) · lunoda-json.ts · lunoda-md.ts
-    └── tests/                   # synthetic-conversation.ts + fixtures/ (par sintético do Lunoda; respostas brutas na F1)
+    └── tests/                   # synthetic-conversation.ts + fixtures/ (par sintético do Lunoda; respostas do Claude, sintéticas, depois das capturas)
 ```
 
 ## Convenções de Código
@@ -49,7 +50,7 @@ página aberta ──► adapter da plataforma ──► Conversation (modelo ca
 ```
 
 1. **Detecção:** o popup identifica a plataforma pela URL da aba (`claude.ai/chat/<uuid>`, `chatgpt.com/c/<id>`, `gemini.google.com/app/<id>`).
-2. **Aquisição (adapter):** roda no contexto da página, com os cookies da sessão do usuário. No Claude, chama `GET /api/organizations` (acha a org com capacidade `chat`) e depois `GET /api/organizations/{org}/chat_conversations/{uuid}?tree=True&rendering_mode=messages&render_all_tools=true`. Essa resposta traz, por mensagem, um array `content` com itens `text`, `thinking` e `tool_use`/`tool_result`, além de anexos e arquivos. Sem `rendering_mode=messages` a resposta só tem texto achatado e perde partes — **não remova o parâmetro**. Endpoints não oficiais (ver Armadilhas).
+2. **Aquisição (adapter):** roda no contexto da página, com os cookies da sessão do usuário: o popup injeta `fetchClaudeConversationRaw` na aba com `chrome.scripting.executeScript` (permissão `activeTab`, sem host_permission permanente — DEC-010). No Claude, chama `GET /api/organizations` (acha a org com capacidade `chat`) e depois `GET /api/organizations/{org}/chat_conversations/{uuid}?tree=True&rendering_mode=messages&render_all_tools=true`. Segundo o HISTORY §1 (ainda NÃO medido aqui — as capturas brutas medem), essa resposta traz, por mensagem, um array `content` com itens `text`, `thinking` e `tool_use`/`tool_result`, além de anexos e arquivos. Sem `rendering_mode=messages` a resposta só tem texto achatado e perde partes — **não remova o parâmetro**. Endpoints não oficiais (ver Armadilhas).
 3. **Ramo atual:** a conversa é uma árvore (edições e regenerações criam ramos). O adapter segue o caminho da raiz até a folha atual (`current_leaf_message_uuid`) e descarta os outros ramos no MVP.
 4. **Normalização:** tudo vira o modelo canônico abaixo — o único contrato entre adapters e exporters.
 5. **Exportação:** o exporter decide o que entra conforme as opções (pensamento sim/não, arquivos sim/não) e gera o arquivo. O modelo **sempre** guarda tudo; filtrar é papel do exporter (DEC-005).
@@ -80,7 +81,7 @@ interface Message {
 interface FileRef { name: string; kind: string; size?: number; textContent?: string; }
 ```
 
-### Formato Lunoda — medido no par `mapsmith 12.json` / `.md` (2026-10-16)
+### Formato Lunoda — medido nos pares do oráculo (`mapsmith 12`, `sintetico-lunoda`, `sintetico-lunoda-ia`; 2026-10-16)
 **JSON:**
 - Raiz: `{ "properties": [...], "entries": [...] }`. O arquivo é exatamente `JSON.stringify(doc, null, 2)`: LF, acentos crus (sem `\u`) e **sem quebra de linha no fim** (medido: o `mapsmith 12.json` é reproduzido byte a byte assim).
 - `properties` padrão: `p-tags` "Tags" (opções `o1` Ideia/yellow, `o2` Pesquisa/blue, `o3` Geral/slate) e `p-ia` "IA Utilizada" (`o4` Claude/violet, `o5` Gemini/green, `o6` ChatGPT/orange).
@@ -98,6 +99,8 @@ interface FileRef { name: string; kind: string; size?: number; textContent?: str
 - Separador: linha com **40 × `━`** (U+2501), após o cabeçalho e após cada bloco (7 blocos → 8 separadores).
 - Cada bloco: `## [Bloco N] <subtítulo> · v<versão>`, `<!-- BLOCO N -->`, Subtítulo/Versão (dois espaços no fim), `**Conteúdo:**`, e o conteúdo entre `<!-- CONTEUDO:INICIO bloco=N -->` e `<!-- CONTEUDO:FIM bloco=N -->`.
 - O Lunoda importa só o JSON hoje; o MD é para leitura humana e para um importador futuro — os marcadores HTML já o tornam parseável.
+- **Propriedade marcada** (medido com «IA Utilizada = Claude»): `"p-ia": ["o4"]` em `propertyValues` da entrada e, só nos blocos «Claude», em `blockProps`. No MD: `ia_utilizada:` + `  - "Claude"` no front matter (depois de `blocks:`); `**IA Utilizada:** Claude  ` + linha em branco no cabeçalho (antes do separador) e em cada bloco marcado (entre `**Versão:**` e `**Conteúdo:**`). Não medido: duas propriedades ou dois valores ao mesmo tempo, nome de propriedade com acento.
+- **Importação** (medido): o Lunoda importa o `.json` gerado sem erro, aceita o bloco «Pensamento» e as listas de arquivos, e **mantém** os IDs e o `createdAt`; editar a entrada muda o `updatedAt`. Exportar de volta sem editar devolve o arquivo byte a byte.
 
 ## Arquitetura — pontos-chave
 - Extensão MV3, não userscript nem app desktop — DEC-001.
@@ -122,7 +125,8 @@ interface FileRef { name: string; kind: string; size?: number; textContent?: str
 10. **Formatar Markdown com Prettier ou editor que apaga espaço final** — destrói a quebra de linha do MD do Lunoda → `.prettierignore` exclui `**/*.md` e o `.editorconfig` desliga o trim em `*.md`; não remover nenhum dos dois.
 11. **Esperar que o `npm run dev` abra um Chrome sozinho** — no WXT 0.21 o `web-ext` é dependência opcional e não vem instalado; sem ele o dev server só avisa «Load .output\chrome-mv3-dev as an unpacked extension manually» (medido em 2026-10-16) → carregar à mão em `chrome://extensions` no Chrome de uso diário. É o certo para este projeto: o adaptador usa a sessão logada do claude.ai, que um perfil novo aberto pelo `web-ext` não teria.
 12. **Arquivo de configuração fora do Prettier entrar no `prettier --check`** — o `.claude/settings.json` entregue pelo chat reprovou o `npm run check` da wo0001, e o dono escolheu formatá-lo → todo JSON/TS que o chat entrega passa antes pelo `prettier --check` com a config do repositório (o `.prettierrc.json`), inclusive o que vai para `.claude/`.
-13. **Conversa real como fixture** — o repositório é público (DEC-009) → fixture versionada é sempre sintética; par real do Lunoda vive fora do repo e entra só pelo `CDC_LUNODA_ORACLE_DIR`.
+13. **Conversa real como fixture** — o repositório é público (DEC-009) → fixture versionada é sempre sintética; par real do Lunoda vive em `CDC/oraculo-lunoda/` e captura bruta do Claude em `CDC/capturas-claude/`, as duas fora do repo.
+14. **Usar algo de fora no corpo de `fetchClaudeConversationRaw`** — o `executeScript` serializa a função como texto e a recria na página; import, constante do módulo ou função vizinha viram `ReferenceError` só no navegador → tudo dentro do corpo; o teste «funciona reconstruída só a partir do próprio texto» pega isso antes.
 
 ## 📁 Arquivos Críticos (não mexer sem contexto)
 - `meta/CEREBRO.md` — comportamento do assistente; mudança aqui muda como todo turno trabalha.

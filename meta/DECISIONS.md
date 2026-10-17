@@ -173,3 +173,26 @@ O repositório no GitHub é público. O único exemplo do que o Lunoda grava, o 
 
 ### Consequências
 O `npm test` comum não prova fidelidade; quem mexe em `src/exporters/` roda também o oráculo (comando no `CLAUDE.md`). Medido em 2026-10-16: `mapsmith 12.json` e `.md` reproduzidos byte a byte.
+
+---
+
+## DEC-010 — Claude: busca injetada na aba e captura bruta antes do normalizador
+**Data:** 2026-10-16 · **Status:** aceita
+
+### Contexto
+O normalizador do Claude (passo 7 da spec) depende do formato da resposta de `chat_conversations`, que o projeto só conhece por relato de terceiro (HISTORY §1). Escrevê-lo em cima disso seria deduzir um formato não lido, e o erro apareceria em silêncio: arquivo exportado faltando partes.
+
+### Decisão
+- A busca roda DENTRO da aba do claude.ai: o popup injeta `fetchClaudeConversationRaw` com `chrome.scripting.executeScript` — mesma origem e mesma sessão da página. Permissões: `activeTab`, `scripting`, `downloads`; nenhuma host_permission permanente.
+- Primeiro, a captura bruta (passo 6): o botão «Salvar resposta bruta (depuração)» baixa o corpo exato da API para `Downloads/cdc-raw/`; o dono move para `CDC/capturas-claude/`, fora do repo. O normalizador é escrito sobre capturas reais, e as fixtures versionadas do Claude serão sintéticas no MESMO formato (DEC-009).
+- O botão fica visível em todo build durante a F1: o único usuário é o dono, e o build de desenvolvimento só funciona com o dev server rodando. Sai antes de qualquer publicação.
+- O oráculo do Lunoda mudou para `CDC/oraculo-lunoda/` (a DEC-009 citava a pasta-pai).
+
+### Alternativas consideradas
+- **Fetch feito pelo próprio popup, com host_permission do claude.ai** — mais permissão permanente, e a origem da extensão pode ser tratada pelo site como terceira (cookies, verificação anti-robô).
+- **Content script fixo no claude.ai** — rodaria em toda página do site sem o usuário pedir.
+- **Normalizador já, pela memória do formato** — exatamente a dedução que o método proíbe.
+
+### Consequências
+A função injetada tem de ser autocontida (armadilha 14 do CONTEXT; um teste a recria só do próprio texto). Há um ciclo a mais — capturas do dono — antes do botão «Exportar».
+

@@ -11,7 +11,8 @@ Leia `meta/CEREBRO.md` → o doc de contexto do projeto (ex.: `meta/CONTEXT.md`)
 - Validação completa: `npm run check` (typecheck + lint + Prettier + testes + build) — rode antes de commitar mudança de código; tem de sair com 0 erros.
 - Partes: `npm run build` (WXT → `.output/chrome-mv3/`) · `npm test` (Vitest) · `npm run lint` · `npm run typecheck` · `npm run format` (corrige o Prettier).
 - Instalação limpa: `npm ci` (usa o `package-lock.json`). Projeto WXT sem entrypoint falha no `npm install` (armadilha 8 do CONTEXT).
-- Mudou `src/exporters/`? Rode também o oráculo privado do Lunoda (DEC-009): `CDC_LUNODA_ORACLE_DIR=.. npx vitest run src/exporters/lunoda-golden.test.ts` — pares exportados pelo Lunoda na pasta-pai, fora do repo. O `npm test` comum pula esse bloco.
+- Mudou `src/exporters/`? Rode também o oráculo privado do Lunoda (DEC-009): `CDC_LUNODA_ORACLE_DIR=../oraculo-lunoda npx vitest run src/exporters/lunoda-golden.test.ts` — pares exportados pelo Lunoda em `CDC/oraculo-lunoda/`, fora do repo. O `npm test` comum pula esse bloco.
+- `src/adapters/claude/fetch-raw.ts` é injetado na aba do claude.ai: nada de import ou constante de fora dentro de `fetchClaudeConversationRaw` (armadilha 14 do CONTEXT).
 - Mudança só de doc (meta/) NÃO precisa de build; a rede é o `git diff`.
 - Adicione seus comandos de build/teste ao `allow` de `.claude/settings.json`.
 
