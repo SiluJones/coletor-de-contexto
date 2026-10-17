@@ -6,14 +6,14 @@
 O botão «Exportar» da F1 só baixa o par do Lunoda, sempre com o padrão (pensamento desligado, arquivos ligados). O dono pediu formatos «original/simples», em `.md` e `.json`, para ler e guardar a conversa sem os marcadores do Lunoda (nota 261016-2318), e escolher o que entra sem mexer no código.
 
 ## Critérios de aceite (verificáveis)
-- [ ] Dada a resposta sintética do Claude, o Markdown simples é idêntico à fixture `src/tests/fixtures/claude/sintetico-claude.simples.md`.
-- [ ] Dada a resposta sintética, o JSON do CDC é idêntico a `sintetico-claude.cdc.json`, e o seu `conversation` é igual ao `normalizeClaudeConversation` da mesma resposta.
-- [ ] O JSON do CDC traz pensamento e arquivos mesmo com as duas opções desligadas.
-- [ ] Com o padrão do primeiro uso, o botão gera só os 2 arquivos do Lunoda, iguais aos da F1 (fixtures `sintetico-claude.lunoda.*` sem mudança).
-- [ ] Nenhum formato marcado → nenhum download e o aviso «Marque ao menos um formato.».
-- [ ] Preferência salva com tipo errado ou campo faltando → completada com o padrão, sem erro.
-- [ ] No navegador: marcar os três formatos e as duas opções baixa 4 arquivos que começam pelo título da conversa; fechar e reabrir o popup mantém as caixas marcadas.
-- [ ] O `.json` do Lunoda gerado com pensamento ligado importa no Lunoda.
+- [x] Dada a resposta sintética do Claude, o Markdown simples é idêntico à fixture `src/tests/fixtures/claude/sintetico-claude.simples.md`.
+- [x] Dada a resposta sintética, o JSON do CDC é idêntico a `sintetico-claude.cdc.json`, e o seu `conversation` é igual ao `normalizeClaudeConversation` da mesma resposta.
+- [x] O JSON do CDC traz pensamento e arquivos mesmo com as duas opções desligadas.
+- [x] Com o padrão do primeiro uso, o botão gera só os 2 arquivos do Lunoda, iguais aos da F1 (fixtures `sintetico-claude.lunoda.*` sem mudança).
+- [x] Nenhum formato marcado → nenhum download e o aviso «Marque ao menos um formato.». *(Teste cobre a lista vazia; o aviso no navegador não foi visto.)*
+- [x] Preferência salva com tipo errado ou campo faltando → completada com o padrão, sem erro.
+- [x] No navegador: marcar os três formatos e as duas opções baixa 4 arquivos que começam pelo título da conversa; fechar e reabrir o popup mantém as caixas marcadas.
+- [x] O `.json` do Lunoda gerado com pensamento ligado importa no Lunoda.
 
 ## Plataformas e formatos afetados
 - Adaptador Claude: o normalizador passa a levar o `model` da conversa.

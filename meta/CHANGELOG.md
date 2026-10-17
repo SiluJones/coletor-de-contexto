@@ -22,3 +22,4 @@
 - F1 conferida pelo dono (2026-10-17): conversa real exportada pelo botão e importada no Lunoda.
 - Formatos «simples» (wo0005, DEC-012): Markdown simples para ler (`<título> (simples).md`) e JSON do CDC com a conversa inteira (`<título>.cdc.json`).
 - Popup com caixas de formato e de opção (pensamento, arquivos), lembradas em `chrome.storage.local`; permissão `storage`; 90 testes.
+- Formatos e opções da F2 conferidos pelo dono (2026-10-17): 4 arquivos, caixas lembradas, `.json` com pensamento importado no Lunoda e devolvido igual.

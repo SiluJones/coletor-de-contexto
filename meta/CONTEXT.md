@@ -101,7 +101,7 @@ interface FileRef { name: string; kind: string; size?: number; textContent?: str
 - Cada bloco: `## [Bloco N] <subtítulo> · v<versão>`, `<!-- BLOCO N -->`, Subtítulo/Versão (dois espaços no fim), `**Conteúdo:**`, e o conteúdo entre `<!-- CONTEUDO:INICIO bloco=N -->` e `<!-- CONTEUDO:FIM bloco=N -->`.
 - O Lunoda importa só o JSON hoje; o MD é para leitura humana e para um importador futuro — os marcadores HTML já o tornam parseável.
 - **Propriedade marcada** (medido com «IA Utilizada = Claude»): `"p-ia": ["o4"]` em `propertyValues` da entrada e, só nos blocos «Claude», em `blockProps`. No MD: `ia_utilizada:` + `  - "Claude"` no front matter (depois de `blocks:`); `**IA Utilizada:** Claude  ` + linha em branco no cabeçalho (antes do separador) e em cada bloco marcado (entre `**Versão:**` e `**Conteúdo:**`). Não medido: duas propriedades ou dois valores ao mesmo tempo, nome de propriedade com acento.
-- **Importação** (medido): o Lunoda importa o `.json` gerado sem erro, aceita o bloco «Pensamento» e as listas de arquivos, e **mantém** os IDs e o `createdAt`; editar a entrada muda o `updatedAt`. Exportar de volta sem editar devolve o arquivo byte a byte.
+- **Importação** (medido): o Lunoda importa o `.json` gerado sem erro, aceita o bloco «Pensamento» e as listas de arquivos, e **mantém** os IDs e o `createdAt`; editar a entrada muda o `updatedAt`. Exportar de volta sem editar devolve o arquivo byte a byte. Conferido também com blocos «Pensamento» (par `CDC 1 - Lunoda c pensamento`, 2026-10-17).
 - **Descrição preenchida** (medido, uma linha): no MD vira `> **Descrição/Resumo:** <texto>` + linha em branco, entre o `# título` + linha em branco e o `<!-- ENTRADA -->`; o front matter não muda. O exportador põe ali o link da conversa (DEC-011).
 
 ### Formato da resposta do Claude — medido em 4 capturas reais (2026-10-16)
@@ -116,7 +116,7 @@ interface FileRef { name: string; kind: string; size?: number; textContent?: str
 ### Formatos do próprio CDC (DEC-012)
 - **Markdown simples** — `<título> (simples).md`: `# título`; lista com Link, IA (modelo), Criada em · Exportada em, Turnos; por turno `---`, `## Você · N` (texto + «Arquivos anexados») e `## Claude · N` (`### Pensamento (resumo)` opcional, texto, «Arquivos gerados»). Segue as opções. Datas locais `dd/mm/aa HH:MM`.
 - **JSON do CDC** — `<título>.cdc.json`: `{"format": "coletor-de-contexto", "version": 1, "exportedAt": …, "conversation": …}`, 2 espaços e quebra de linha no fim. O `conversation` é o modelo canônico inteiro; ignora as opções.
-- O popup lembra formatos e opções em `chrome.storage.local` (`cdc.exportSettings`). Os downloads caem em `Downloads/`; o dono guarda as exportações reais em `CDC/exportacoes-cdc/`, fora do repo.
+- O popup lembra formatos e opções em `chrome.storage.local` (`cdc.exportSettings`). Os downloads caem em `Downloads/`; o dono guarda as exportações reais em `CDC/exportacoes-cdc/<AAMMDD-HHMM>/` (uma subpasta por exportação, hora local), fora do repo.
 
 ## Arquitetura — pontos-chave
 - Extensão MV3, não userscript nem app desktop — DEC-001.
