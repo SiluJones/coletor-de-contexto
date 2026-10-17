@@ -120,6 +120,8 @@ interface FileRef { name: string; kind: string; size?: number; textContent?: str
 8. **`npm install` antes de existir entrypoint** — o `postinstall` roda `wxt prepare`, que falha com «No entrypoints found» se `src/entrypoints/` estiver vazio → em projeto novo, criar os arquivos antes de instalar.
 9. **Subir o TypeScript para a versão mais nova** — em 2026-10-16 o `typescript-eslint` 8.71 exigia `typescript <6.1.0`, e a mais nova era a 7.0 → o projeto fixa a 6.0; só subir quando o `typescript-eslint` aceitar (`npm view typescript-eslint peerDependencies`).
 10. **Formatar Markdown com Prettier ou editor que apaga espaço final** — destrói a quebra de linha do MD do Lunoda → `.prettierignore` exclui `**/*.md` e o `.editorconfig` desliga o trim em `*.md`; não remover nenhum dos dois.
+11. **Esperar que o `npm run dev` abra um Chrome sozinho** — no WXT 0.21 o `web-ext` é dependência opcional e não vem instalado; sem ele o dev server só avisa «Load .output\chrome-mv3-dev as an unpacked extension manually» (medido em 2026-10-16) → carregar à mão em `chrome://extensions` no Chrome de uso diário. É o certo para este projeto: o adaptador usa a sessão logada do claude.ai, que um perfil novo aberto pelo `web-ext` não teria.
+12. **Arquivo de configuração fora do Prettier entrar no `prettier --check`** — o `.claude/settings.json` entregue pelo chat reprovou o `npm run check` da wo0001, e o dono escolheu formatá-lo → todo JSON/TS que o chat entrega passa antes pelo `prettier --check` com a config do repositório (o `.prettierrc.json`), inclusive o que vai para `.claude/`.
 
 ## 📁 Arquivos Críticos (não mexer sem contexto)
 - `meta/CEREBRO.md` — comportamento do assistente; mudança aqui muda como todo turno trabalha.
