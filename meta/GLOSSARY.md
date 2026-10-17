@@ -14,7 +14,8 @@
 - **Turno** — um pedido do usuário mais a resposta da IA a ele.
 - **Pensamento (thinking)** — raciocínio que a IA mostra antes da resposta; no Claude vem como item `thinking` do `content`.
 - **Ramo / folha atual** — a conversa é uma árvore (editar um pedido ou regenerar uma resposta cria um ramo); a folha atual é a última mensagem do ramo que está na tela.
-- **Par de ouro** — `mapsmith 12.json` + `mapsmith 12.md`, exemplo real feito à mão; o exportador MD tem de reproduzir o `.md` a partir do `.json`.
+- **Oráculo do Lunoda** — par `.json` + `.md` exportado PELO Lunoda, guardado fora do repositório (é conteúdo real); o teste lê a pasta de `CDC_LUNODA_ORACLE_DIR` e exige reprodução byte a byte. O primeiro é o `mapsmith 12` (DEC-009).
+- **Par sintético** — `src/tests/fixtures/lunoda/sintetico.*`, gerado pelo código a partir de uma conversa inventada; protege contra regressão, não prova fidelidade ao Lunoda.
 
 ## Arquiteturas / módulos
 - **Adaptador (adapter)** — código de uma plataforma que lê a conversa (API interna ou DOM) e devolve o modelo canônico.

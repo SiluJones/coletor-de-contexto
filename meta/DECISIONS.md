@@ -151,3 +151,25 @@ A DEC-004 e a DEC-005 deixaram três pontos para o dono: o significado de `versi
 
 ### Consequências
 Ainda não testado no Lunoda: se ele aceita `subtitle` «Pensamento» e o `content` com a lista de arquivos (STATUS, Backlog). O formato da lista é o mais fácil de ajustar depois: muda só o exportador.
+
+
+---
+
+## DEC-009 — Repositório público: fixture sintética e oráculo do Lunoda fora do repo
+**Data:** 2026-10-16 · **Status:** aceita (repositório público decidido pelo dono)
+
+### Contexto
+O repositório no GitHub é público. O único exemplo do que o Lunoda grava, o `mapsmith 12`, é uma conversa real do dono (de outro projeto). Os testes de ouro precisam de um par que o próprio Lunoda produziu; um par gerado pelo código só prova que o código concorda consigo mesmo.
+
+### Decisão
+- Fixture versionada é sempre sintética: `src/tests/synthetic-conversation.ts` gera `src/tests/fixtures/lunoda/sintetico.json` e `.md`, gravados pelo próprio Vitest (`toMatchFileSnapshot`). Protege contra regressão.
+- A fidelidade ao Lunoda é provada por pares `.json` + `.md` exportados PELO Lunoda numa pasta fora do repositório, apontada por `CDC_LUNODA_ORACLE_DIR` (hoje a pasta-pai, com o `mapsmith 12`). Sem a variável, o bloco é pulado.
+- O `sintetico.json` importado no Lunoda e exportado de volta vira oráculo do par sintético e, de quebra, testa o bloco «Pensamento» e as listas de arquivos da DEC-008.
+
+### Alternativas consideradas
+- **Repositório privado com o `mapsmith 12` versionado** — o dono preferiu público.
+- **Anonimizar o `mapsmith 12`** — trocar o texto muda justamente o que o teste mede (conteúdo longo, acentos, blocos reais).
+- **Só o par sintético** — circular: o código gravaria o que ele mesmo confere.
+
+### Consequências
+O `npm test` comum não prova fidelidade; quem mexe em `src/exporters/` roda também o oráculo (comando no `CLAUDE.md`). Medido em 2026-10-16: `mapsmith 12.json` e `.md` reproduzidos byte a byte.

@@ -12,7 +12,7 @@ Extensão de navegador (Chrome, Manifest V3) que transforma uma conversa aberta 
 - **Framework de extensão:** WXT (Manifest V3; gera Chrome e Firefox a partir do mesmo código) — DEC-006.
 - **UI:** popup em HTML/TS puro no MVP; Preact só se a UI crescer.
 - **Persistência:** `chrome.storage.local` só para preferências (nunca para conversas).
-- **Testes:** Vitest com fixtures (respostas brutas salvas das APIs) e teste de ouro contra o par `mapsmith 12`.
+- **Testes:** Vitest com fixtures (respostas brutas salvas das APIs), par sintético versionado e oráculo privado do Lunoda fora do repositório (DEC-009).
 - **Distribuição:** `.zip` carregado como extensão descompactada no início; Chrome Web Store é decisão futura (IDEAS).
 - **Versões:** exatas no `package.json` (sem `^`). Trocar versão é decisão com motivo, não atualização de passagem.
 - **Validação única:** `npm run check` = typecheck + lint + Prettier + testes + build.
@@ -30,8 +30,8 @@ coletor-de-contexto/
     ├── entrypoints/             # popup, content script, background (convenção WXT)
     ├── adapters/                # claude.ts · chatgpt.ts · gemini.ts → Conversation
     ├── core/                    # model.ts (modelo canônico), ids.ts, dates.ts; testes *.test.ts ao lado
-    ├── exporters/               # lunoda-json.ts · lunoda-md.ts
-    └── tests/fixtures/          # respostas brutas + par de ouro Lunoda
+    ├── exporters/               # lunoda-types.ts · lunoda-build.ts (Conversation → entrada) · lunoda-json.ts · lunoda-md.ts
+    └── tests/                   # synthetic-conversation.ts + fixtures/ (par sintético do Lunoda; respostas brutas na F1)
 ```
 
 ## Convenções de Código
@@ -82,7 +82,7 @@ interface FileRef { name: string; kind: string; size?: number; textContent?: str
 
 ### Formato Lunoda — medido no par `mapsmith 12.json` / `.md` (2026-10-16)
 **JSON:**
-- Raiz: `{ "properties": [...], "entries": [...] }`, indentação de 2 espaços, LF.
+- Raiz: `{ "properties": [...], "entries": [...] }`. O arquivo é exatamente `JSON.stringify(doc, null, 2)`: LF, acentos crus (sem `\u`) e **sem quebra de linha no fim** (medido: o `mapsmith 12.json` é reproduzido byte a byte assim).
 - `properties` padrão: `p-tags` "Tags" (opções `o1` Ideia/yellow, `o2` Pesquisa/blue, `o3` Geral/slate) e `p-ia` "IA Utilizada" (`o4` Claude/violet, `o5` Gemini/green, `o6` ChatGPT/orange).
 - Cada entrada: `id`, `title`, `description`, `propertyValues` (`{"p-tags": [], "p-ia": []}`), `propertyAutoFlags` (`{}`), `blocks`, `createdAt`, `updatedAt`.
 - Cada bloco: `id`, `subtitle`, `version`, `content`, `blockProps` (`{}`).
@@ -122,12 +122,13 @@ interface FileRef { name: string; kind: string; size?: number; textContent?: str
 10. **Formatar Markdown com Prettier ou editor que apaga espaço final** — destrói a quebra de linha do MD do Lunoda → `.prettierignore` exclui `**/*.md` e o `.editorconfig` desliga o trim em `*.md`; não remover nenhum dos dois.
 11. **Esperar que o `npm run dev` abra um Chrome sozinho** — no WXT 0.21 o `web-ext` é dependência opcional e não vem instalado; sem ele o dev server só avisa «Load .output\chrome-mv3-dev as an unpacked extension manually» (medido em 2026-10-16) → carregar à mão em `chrome://extensions` no Chrome de uso diário. É o certo para este projeto: o adaptador usa a sessão logada do claude.ai, que um perfil novo aberto pelo `web-ext` não teria.
 12. **Arquivo de configuração fora do Prettier entrar no `prettier --check`** — o `.claude/settings.json` entregue pelo chat reprovou o `npm run check` da wo0001, e o dono escolheu formatá-lo → todo JSON/TS que o chat entrega passa antes pelo `prettier --check` com a config do repositório (o `.prettierrc.json`), inclusive o que vai para `.claude/`.
+13. **Conversa real como fixture** — o repositório é público (DEC-009) → fixture versionada é sempre sintética; par real do Lunoda vive fora do repo e entra só pelo `CDC_LUNODA_ORACLE_DIR`.
 
 ## 📁 Arquivos Críticos (não mexer sem contexto)
 - `meta/CEREBRO.md` — comportamento do assistente; mudança aqui muda como todo turno trabalha.
 - `src/core/model.ts` *(F1)* — contrato entre adapters e exporters; mudar um campo afeta os dois lados.
 - `src/exporters/lunoda-json.ts` *(F1)* — contrato com o Lunoda; reler «Formato Lunoda» acima antes de tocar.
-- `src/tests/fixtures/` *(F1)* — fixture alterada à mão mascara quebra real da plataforma; só se regrava capturando de novo.
+- `src/tests/fixtures/` — fixture alterada à mão mascara quebra real da plataforma; só se regrava capturando de novo. O par `lunoda/sintetico.*` é gravado pelo Vitest (`toMatchFileSnapshot`): para regravar de propósito, `npx vitest run -u` e o diff explicado no commit.
 
 ## Contexto de Produto
 - **Usuário-alvo:** o dono do projeto — usa o Claude intensamente em projetos longos com handoff entre conversas e guarda as conversas no Lunoda. Público externo é hipótese futura.

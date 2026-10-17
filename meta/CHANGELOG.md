@@ -13,3 +13,5 @@
 - Base de código da F1 (wo0001): WXT 0.21 + TypeScript 6.0 + Vitest 5, ESLint, Prettier, `.editorconfig` e `.gitattributes` (tudo em LF); popup provisório.
 - `src/core/`: modelo canônico com `DEFAULT_EXPORT_OPTIONS` (`model.ts`), IDs do Lunoda únicos e crescentes (`ids.ts`) e data local do cabeçalho do MD (`dates.ts`), com 9 testes.
 - DEC-008: `version` = turno, pensamento em bloco próprio, padrão pensamento desligado e arquivos ligados.
+- Exportadores Lunoda (wo0002): `buildLunodaEntry` (modelo → entrada, com pensamento e listas de arquivos), `renderLunodaJson`, `parseLunodaJson` e `renderLunodaMd`; reproduzem o `mapsmith 12` byte a byte.
+- Par sintético versionado (`src/tests/fixtures/lunoda/`) e oráculo privado por `CDC_LUNODA_ORACLE_DIR` (DEC-009); `@types/node` 22.20.5; 27 testes.

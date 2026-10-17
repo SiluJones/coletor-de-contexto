@@ -1,0 +1,104 @@
+{
+  "properties": [
+    {
+      "id": "p-tags",
+      "name": "Tags",
+      "options": [
+        {
+          "id": "o1",
+          "name": "Ideia",
+          "colorId": "yellow"
+        },
+        {
+          "id": "o2",
+          "name": "Pesquisa",
+          "colorId": "blue"
+        },
+        {
+          "id": "o3",
+          "name": "Geral",
+          "colorId": "slate"
+        }
+      ]
+    },
+    {
+      "id": "p-ia",
+      "name": "IA Utilizada",
+      "options": [
+        {
+          "id": "o4",
+          "name": "Claude",
+          "colorId": "violet"
+        },
+        {
+          "id": "o5",
+          "name": "Gemini",
+          "colorId": "green"
+        },
+        {
+          "id": "o6",
+          "name": "ChatGPT",
+          "colorId": "orange"
+        }
+      ]
+    }
+  ],
+  "entries": [
+    {
+      "id": "mvbhe28093k8",
+      "title": "Conversa sintética — contar palavras",
+      "description": "",
+      "propertyValues": {
+        "p-tags": [],
+        "p-ia": []
+      },
+      "propertyAutoFlags": {},
+      "blocks": [
+        {
+          "id": "mvbhe281d0g4",
+          "subtitle": "Prompt",
+          "version": 1,
+          "content": "Como eu conto as palavras deste arquivo no terminal?\n\n**Arquivos anexados:**\n- `notas.txt` — text/plain, 2,0 KB",
+          "blockProps": {}
+        },
+        {
+          "id": "mvbhe282vzuh",
+          "subtitle": "Pensamento",
+          "version": 1,
+          "content": "O usuário anexou um .txt e quer contar palavras.\n\nResposta curta: wc -w, com um exemplo.",
+          "blockProps": {}
+        },
+        {
+          "id": "mvbhe283nvl3",
+          "subtitle": "Claude",
+          "version": 1,
+          "content": "No Linux ou no macOS, use o `wc`:\n\n```bash\nwc -w notas.txt\n```\n\nA saída é o número de palavras seguido do nome do arquivo.  \nPara várias pastas, combine com `find`.",
+          "blockProps": {}
+        },
+        {
+          "id": "mvbhe2845yxw",
+          "subtitle": "Prompt",
+          "version": 2,
+          "content": "E no Windows, sem instalar nada?",
+          "blockProps": {}
+        },
+        {
+          "id": "mvbhe285j6j9",
+          "subtitle": "Claude",
+          "version": 2,
+          "content": "No PowerShell:\n\n| Comando | O que conta |\n|---|---|\n| `Get-Content notas.txt -Raw` + `Measure-Object -Word` | palavras |\n| `(Get-Content notas.txt).Count` | linhas |\n\nDeixei um script pronto.\n\n**Arquivos gerados:**\n- `contar.ps1` — text/x-powershell, 312 B",
+          "blockProps": {}
+        },
+        {
+          "id": "mvbhe286xt5t",
+          "subtitle": "Prompt",
+          "version": 3,
+          "content": "Obrigado! E para contar só as linhas que não estão vazias?",
+          "blockProps": {}
+        }
+      ],
+      "createdAt": "2026-10-16T21:30:00.000Z",
+      "updatedAt": "2026-10-16T21:30:00.000Z"
+    }
+  ]
+}

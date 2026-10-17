@@ -11,3 +11,8 @@ trim_trailing_whitespace = true
 # Markdown: dois espacos no fim da linha sao quebra de linha (formato do Lunoda) — nao apagar.
 [*.md]
 trim_trailing_whitespace = false
+
+# Fixtures: bytes exatos, inclusive a falta de quebra de linha final no .json do Lunoda.
+[src/tests/fixtures/**]
+insert_final_newline = false
+trim_trailing_whitespace = false

@@ -6,8 +6,8 @@
 Hoje o dono copia à mão cada pedido e cada resposta de uma conversa do claude.ai para dentro do Lunoda, bloco a bloco (resultado típico: `mapsmith 12`, 7 blocos montados ao longo de 4 horas). É lento, sujeito a erro de cópia (markdown perdido, bloco esquecido) e desestimula registrar conversas inteiras.
 
 ## Critérios de aceite (verificáveis)
-- [ ] **Teste de ouro do MD:** dado `mapsmith 12.json`, o exportador Lunoda MD gera um arquivo idêntico byte a byte a `mapsmith 12.md` (fuso fixado em America/Sao_Paulo no teste).
-- [ ] **Ida e volta do JSON:** dado `mapsmith 12.json` lido para o modelo, o exportador Lunoda JSON devolve a mesma estrutura (mesmas chaves, ordem dos blocos, `subtitle`, `version`, `content`), salvo os IDs, se regenerados.
+- [ ] **Oráculo do Lunoda (privado, DEC-009):** para cada par `.json` + `.md` exportado pelo Lunoda na pasta `CDC_LUNODA_ORACLE_DIR`, `renderLunodaJson(parseLunodaJson(json))` devolve o `.json` e `renderLunodaMd` devolve o `.md`, os dois byte a byte (fuso America/Sao_Paulo). Primeiro par: `mapsmith 12`, na pasta-pai do repo.
+- [ ] **Par sintético (versionado):** a conversa de `src/tests/synthetic-conversation.ts` gera `src/tests/fixtures/lunoda/sintetico.json` e `.md` sem diferença de byte, e o `.json` lido de volta reproduz os dois.
 - [ ] **IDs:** todo ID gerado tem 12 caracteres `[0-9a-z]`, e os 8 primeiros decodificam para um instante a até 1 s do momento da geração.
 - [ ] **Adaptador Claude, fixture simples:** dada uma resposta bruta salva de `chat_conversations/{uuid}?tree=True&rendering_mode=messages&render_all_tools=true`, o adaptador devolve `Conversation` com os turnos na ordem, `text` em markdown e `thinking` preenchido quando a fixture tem item `thinking`.
 - [ ] **Adaptador Claude, fixture com ramo:** numa conversa com um pedido editado, só o ramo até `current_leaf_message_uuid` aparece.

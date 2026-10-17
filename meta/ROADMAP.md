@@ -18,7 +18,7 @@
 - [x] Scaffold WXT + TypeScript + Vitest + ESLint/Prettier (wo0001).
 - [x] Modelo canônico (`core/model.ts`), geração de IDs e datas (wo0001).
 - [ ] Adaptador Claude via API interna, só o ramo atual.
-- [ ] Exportadores Lunoda JSON e Lunoda MD.
+- [x] Exportadores Lunoda JSON e Lunoda MD (wo0002).
 - [ ] Popup: detectar conversa, botão exportar, mensagens de erro claras.
 
 ## 🔵 F2 — Fidelidade e opções

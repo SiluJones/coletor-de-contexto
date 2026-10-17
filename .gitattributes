@@ -4,3 +4,5 @@
 * text=auto eol=lf
 *.png binary
 *.ico binary
+# Fixtures do Lunoda: bytes exatos (o .json NAO termina em quebra de linha; o .md tem espacos finais).
+src/tests/fixtures/** -text
