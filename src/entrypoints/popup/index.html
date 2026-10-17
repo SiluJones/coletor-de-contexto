@@ -17,6 +17,20 @@
         font-size: 14px;
         margin: 0 0 8px;
       }
+      fieldset {
+        border: 1px solid #d0d7de;
+        border-radius: 6px;
+        margin: 8px 0 0;
+        padding: 4px 10px 8px;
+      }
+      legend {
+        font-size: 11px;
+        color: #57606a;
+      }
+      label {
+        display: block;
+        margin-top: 3px;
+      }
       #status[data-kind='ok'] {
         color: #1a7f37;
       }
@@ -26,7 +40,7 @@
       button {
         width: 100%;
         padding: 6px;
-        margin-top: 6px;
+        margin-top: 8px;
         cursor: pointer;
       }
       button.secondary {
@@ -38,10 +52,23 @@
   <body>
     <h1>Coletor de Contexto</h1>
     <p id="status">Verificando a aba…</p>
-    <button id="export" type="button" hidden>Exportar para o Lunoda (.json + .md)</button>
-    <button id="raw" type="button" class="secondary" hidden>
-      Salvar resposta bruta (depuração)
-    </button>
+    <div id="controls" hidden>
+      <fieldset>
+        <legend>Formatos</legend>
+        <label><input type="checkbox" id="fmt-lunoda" /> Lunoda (.json + .md)</label>
+        <label><input type="checkbox" id="fmt-simple" /> Markdown simples (.md)</label>
+        <label
+          ><input type="checkbox" id="fmt-cdc" /> JSON do CDC (.cdc.json, conversa inteira)</label
+        >
+      </fieldset>
+      <fieldset>
+        <legend>Incluir</legend>
+        <label><input type="checkbox" id="opt-thinking" /> Pensamento (resumos)</label>
+        <label><input type="checkbox" id="opt-files" /> Lista de arquivos</label>
+      </fieldset>
+      <button id="export" type="button">Exportar</button>
+      <button id="raw" type="button" class="secondary">Salvar resposta bruta (depuração)</button>
+    </div>
     <script type="module" src="./main.ts"></script>
   </body>
 </html>

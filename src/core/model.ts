@@ -57,6 +57,8 @@ export interface Conversation {
   sourceId: string;
   title: string;
   url: string;
+  /** Modelo informado pela plataforma (ex.: "claude-opus-…"), quando vier. */
+  model?: string;
   /** ISO 8601 UTC. */
   createdAt: string;
   /** ISO 8601 UTC. */

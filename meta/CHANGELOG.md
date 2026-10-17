@@ -19,3 +19,6 @@
 - Captura bruta do Claude (wo0003, DEC-010): popup reconhece `claude.ai/chat/<uuid>`, injeta a busca na aba e baixa o corpo exato para `Downloads/cdc-raw/`; permissões `activeTab`, `scripting`, `downloads`; 50 testes.
 - Normalizador do Claude (wo0004, DEC-011): ramo atual, texto de `content[]`, pensamento por resumos, respostas seguidas unidas, anexos e arquivos gerados por referência; testado com resposta sintética e com capturas reais fora do repo.
 - Botão «Exportar para o Lunoda» (wo0004): baixa `<título>.json` e `<título>.md`, com o link da conversa na descrição e «IA Utilizada» marcada; captura bruta passa a ter o título na frente do nome; 80 testes.
+- F1 conferida pelo dono (2026-10-17): conversa real exportada pelo botão e importada no Lunoda.
+- Formatos «simples» (wo0005, DEC-012): Markdown simples para ler (`<título> (simples).md`) e JSON do CDC com a conversa inteira (`<título>.cdc.json`).
+- Popup com caixas de formato e de opção (pensamento, arquivos), lembradas em `chrome.storage.local`; permissão `storage`; 90 testes.

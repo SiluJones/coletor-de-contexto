@@ -221,3 +221,28 @@ As 4 capturas reais (CONTEXT, «Formato da resposta do Claude») mostraram que o
 ### Consequências
 A exportação reproduz o que a tela mostra, menos o raciocínio completo, que a API web não entrega. Mudança no formato do claude.ai aparece como erro «Formato da conversa do Claude mudou», e o teste das capturas reais reprova turno vazio.
 
+---
+
+## DEC-012 — Formatos «simples» e opções lembradas no popup
+**Data:** 2026-10-17 · **Status:** aceita (formatos pedidos pelo dono; desenho do chat)
+
+### Contexto
+O dono pediu um formato «original/simples», em `.md` e `.json`, além do par do Lunoda. A DEC-005 já previa as opções de pensamento e de arquivos no popup; até a F1 elas ficavam fixas no padrão da DEC-008.
+
+### Decisão
+- Três formatos, cada um com uma caixa no popup; um clique em «Exportar» baixa todos os marcados:
+  - **Lunoda**: `<título>.json` + `<título>.md`, como na F1.
+  - **Markdown simples**: `<título> (simples).md`. É para ler: cabeçalho com link, IA (com o modelo), datas e número de turnos; um `## Você · N` e um `## Claude · N` por turno; sem marcadores e sem IDs. Segue as opções de pensamento e de arquivos.
+  - **JSON do CDC**: `<título>.cdc.json` = `{format: "coletor-de-contexto", version: 1, exportedAt, conversation}`, com o modelo canônico INTEIRO. Ignora as opções: é o arquivo de guarda, de onde outro formato pode ser refeito depois.
+- O modelo canônico ganha `model?` (o modelo que a plataforma informa); o Lunoda não o usa.
+- Formatos e opções ficam em `chrome.storage.local`, chave `cdc.exportSettings`, permissão `storage`. A leitura é tolerante: campo faltando ou com tipo errado volta ao padrão, sem erro.
+- Padrão do primeiro uso: só o Lunoda, pensamento desligado, arquivos ligados (DEC-008 mantida).
+
+### Alternativas consideradas
+- **Escolha única de formato (botões de rádio)** — exige um clique por formato para quem quer mais de um.
+- **JSON do CDC respeitando as opções** — perderia a função de guarda: o que ficou de fora não volta.
+- **«JSON simples» com a forma do Lunoda** — repetiria o `.json` do Lunoda.
+- **Preferências em `localStorage` do popup** — some ao limpar dados do site da extensão e não é a API própria de extensão.
+
+### Consequências
+Formato novo = um exportador, uma caixa e um campo em `ExportFormats`/`parseSettings`. A `version` do JSON do CDC só muda com mudança incompatível do modelo canônico, registrada aqui.

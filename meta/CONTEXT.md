@@ -11,7 +11,7 @@ Extensão de navegador (Chrome, Manifest V3) que transforma uma conversa aberta 
 - **Linguagem:** TypeScript (strict).
 - **Framework de extensão:** WXT (Manifest V3; gera Chrome e Firefox a partir do mesmo código) — DEC-006.
 - **UI:** popup em HTML/TS puro no MVP; Preact só se a UI crescer.
-- **Persistência:** `chrome.storage.local` só para preferências (nunca para conversas).
+- **Persistência:** `chrome.storage.local` só para preferências (nunca para conversas) — formatos e opções do popup (DEC-012).
 - **Testes:** Vitest com fixtures (respostas brutas salvas das APIs), par sintético versionado e oráculo privado do Lunoda fora do repositório (DEC-009).
 - **Distribuição:** `.zip` carregado como extensão descompactada no início; Chrome Web Store é decisão futura (IDEAS).
 - **Versões:** exatas no `package.json` (sem `^`). Trocar versão é decisão com motivo, não atualização de passagem.
@@ -29,9 +29,9 @@ coletor-de-contexto/
 └── src/                         # F1 (scaffold: wo0001)
     ├── entrypoints/             # popup, content script, background (convenção WXT)
     ├── adapters/claude/         # url.ts (reconhece a conversa) · fetch-raw.ts (busca bruta, injetada na aba) · normalize.ts (resposta → Conversation)
-    ├── popup/                   # partes puras do popup: export.ts (resposta → .json + .md do Lunoda) · raw-dump.ts (captura bruta)
+    ├── popup/                   # partes puras do popup: export.ts (resposta → arquivos dos formatos marcados) · settings.ts (preferências) · raw-dump.ts (captura bruta)
     ├── core/                    # model.ts (modelo canônico), ids.ts, dates.ts; testes *.test.ts ao lado
-    ├── exporters/               # lunoda-types.ts · lunoda-build.ts (Conversation → entrada) · lunoda-json.ts · lunoda-md.ts
+    ├── exporters/               # lunoda-types.ts · lunoda-build.ts (Conversation → entrada) · lunoda-json.ts · lunoda-md.ts · simple-md.ts · cdc-json.ts
     └── tests/                   # synthetic-conversation.ts + fixtures/ (par sintético do Lunoda; respostas do Claude, sintéticas, depois das capturas)
 ```
 
@@ -62,6 +62,7 @@ interface Conversation {
   sourceId: string;          // uuid/id da conversa na plataforma
   title: string;
   url: string;
+  model?: string;            // modelo informado pela plataforma (DEC-012)
   createdAt: string;         // ISO 8601 UTC
   updatedAt: string;
   turns: Turn[];             // só o ramo atual
@@ -112,6 +113,11 @@ interface FileRef { name: string; kind: string; size?: number; textContent?: str
 - Duas mensagens seguidas da IA acontecem (continuação depois de `stop_reason: tool_use`, ou mensagem vazia de resposta abortada): viram UMA resposta.
 - Arquivos: do usuário em `attachments[]` (`file_name`, `file_type`, `file_size`, `extracted_content`) e `files[]` (`file_kind` como `image`, `file_name`, `size_bytes`); gerados pela IA em `files[]` da mensagem dela (`file_kind: blob`, `download_source`). O exportador nunca leva `extracted_content`.
 
+### Formatos do próprio CDC (DEC-012)
+- **Markdown simples** — `<título> (simples).md`: `# título`; lista com Link, IA (modelo), Criada em · Exportada em, Turnos; por turno `---`, `## Você · N` (texto + «Arquivos anexados») e `## Claude · N` (`### Pensamento (resumo)` opcional, texto, «Arquivos gerados»). Segue as opções. Datas locais `dd/mm/aa HH:MM`.
+- **JSON do CDC** — `<título>.cdc.json`: `{"format": "coletor-de-contexto", "version": 1, "exportedAt": …, "conversation": …}`, 2 espaços e quebra de linha no fim. O `conversation` é o modelo canônico inteiro; ignora as opções.
+- O popup lembra formatos e opções em `chrome.storage.local` (`cdc.exportSettings`). Os downloads caem em `Downloads/`; o dono guarda as exportações reais em `CDC/exportacoes-cdc/`, fora do repo.
+
 ## Arquitetura — pontos-chave
 - Extensão MV3, não userscript nem app desktop — DEC-001.
 - API interna do site primeiro, DOM como reserva, um adaptador por plataforma — DEC-002.
@@ -122,6 +128,7 @@ interface FileRef { name: string; kind: string; size?: number; textContent?: str
 - TypeScript + WXT + Vitest — DEC-006.
 - Tudo local, sob demanda, sem backend, sem varredura em segundo plano — DEC-007.
 - Normalizador do Claude sobre o formato medido; descrição = link; «IA Utilizada» na entrada e nos blocos da IA; arquivo com o nome da conversa — DEC-011.
+- Formatos em caixas no popup (Lunoda, Markdown simples, JSON do CDC inteiro); preferências em `chrome.storage.local` — DEC-012.
 
 ## Armadilhas Conhecidas (o que NÃO fazer)
 1. **Tratar endpoint interno como contrato** — `/api/organizations/...` (Claude) e `/backend-api/...` (ChatGPT) não são documentados e mudam sem aviso → isolar cada um num adapter, com fixture e teste, e mostrar erro claro («formato da plataforma mudou») em vez de exportar meia conversa.
@@ -136,7 +143,7 @@ interface FileRef { name: string; kind: string; size?: number; textContent?: str
 10. **Formatar Markdown com Prettier ou editor que apaga espaço final** — destrói a quebra de linha do MD do Lunoda → `.prettierignore` exclui `**/*.md` e o `.editorconfig` desliga o trim em `*.md`; não remover nenhum dos dois.
 11. **Esperar que o `npm run dev` abra um Chrome sozinho** — no WXT 0.21 o `web-ext` é dependência opcional e não vem instalado; sem ele o dev server só avisa «Load .output\chrome-mv3-dev as an unpacked extension manually» (medido em 2026-10-16) → carregar à mão em `chrome://extensions` no Chrome de uso diário. É o certo para este projeto: o adaptador usa a sessão logada do claude.ai, que um perfil novo aberto pelo `web-ext` não teria.
 12. **Arquivo de configuração fora do Prettier entrar no `prettier --check`** — o `.claude/settings.json` entregue pelo chat reprovou o `npm run check` da wo0001, e o dono escolheu formatá-lo → todo JSON/TS que o chat entrega passa antes pelo `prettier --check` com a config do repositório (o `.prettierrc.json`), inclusive o que vai para `.claude/`.
-13. **Conversa real como fixture** — o repositório é público (DEC-009) → fixture versionada é sempre sintética; par real do Lunoda vive em `CDC/oraculo-lunoda/` e captura bruta do Claude em `CDC/capturas-claude/`, as duas fora do repo.
+13. **Conversa real como fixture** — o repositório é público (DEC-009) → fixture versionada é sempre sintética; par real do Lunoda vive em `CDC/oraculo-lunoda/`, captura bruta do Claude em `CDC/capturas-claude/` e exportação real em `CDC/exportacoes-cdc/`, todas fora do repo.
 14. **Usar algo de fora no corpo de `fetchClaudeConversationRaw`** — o `executeScript` serializa a função como texto e a recria na página; import, constante do módulo ou função vizinha viram `ReferenceError` só no navegador → tudo dentro do corpo; o teste «funciona reconstruída só a partir do próprio texto» pega isso antes.
 15. **Ler o campo `text` da mensagem do Claude** — vem vazio em toda mensagem medida; exportaria conversas em branco sem erro nenhum → o texto vem de `content[]`; o teste das capturas reais (`CDC_CLAUDE_CAPTURES_DIR`) reprova turno vazio.
 16. **`vitest -u` (ou `--update`) ANTES dos caminhos** — no Vitest 5 a flag engole o caminho seguinte como valor: `-u A B` roda só o B, `--update A` roda a suíte inteira e regrava toda fixture divergente (medido em 2026-10-16) → flag sempre no FIM (`npx vitest run A B --update`) e conferir os hashes das fixtures logo depois.

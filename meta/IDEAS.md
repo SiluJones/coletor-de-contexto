@@ -40,7 +40,10 @@ Reconhecer nas respostas o bloco «Próximo / Peça no próximo turno» e expô-
 O WXT gera build para Firefox a partir do mesmo código; custo baixo depois do MVP.
 
 ### 2026-10-16 — Outros formatos de saída
-Markdown simples (sem os marcadores do Lunoda), Obsidian com front matter próprio, HTML. Cada um é só mais um exportador (DEC-003). **Pedido do dono (2026-10-16):** um formato «original/simples», em `.md` e `.json`. Recomendação do chat: Markdown legível (título, link, data e `## Você` / `## Claude` por turno) e JSON do CDC (o modelo canônico inteiro, com tudo que foi capturado — bom para arquivo e para reprocessar). Planejado na F2.
+Obsidian com front matter próprio, HTML. Cada um é só mais um exportador (DEC-003) e mais uma caixa no popup (DEC-012). O pedido do dono de um formato «original/simples» (`.md` e `.json`) foi feito na wo0005 — ver «Concluídas».
+
+### 2026-10-17 — Reprocessar a partir do JSON do CDC
+Abrir um `.cdc.json` guardado (no popup ou numa página da extensão) e gerar dele os outros formatos — Lunoda com pensamento, Markdown simples — sem buscar a conversa de novo. É para isso que o JSON do CDC leva tudo, mesmo com as opções desligadas.
 
 ### 2026-10-16 — Incluir as chamadas de ferramenta (opção)
 As respostas de trabalho do Claude têm centenas de `tool_use`/`tool_result` (até 696 numa captura). Hoje ficam de fora (DEC-011); uma opção poderia listá-las resumidas (nome da ferramenta + uma linha) para quem quiser o rastro completo.
@@ -58,6 +61,7 @@ As respostas de trabalho do Claude têm centenas de `tool_use`/`tool_result` (at
 - **Botão de depuração «salvar resposta bruta»** — implementado na wo0003 (DEC-010), visível em todo build durante a F1.
 - **Preencher `p-ia` sozinho** — implementado na wo0004 (DEC-011): na entrada e nos blocos da IA, como o dono marcava à mão.
 - **Link da conversa na descrição do Lunoda** (ideia do dono, 2026-10-16) — implementado na wo0004 (DEC-011).
+- **Formatos «simples» — Markdown simples e JSON do CDC** (pedido do dono, 2026-10-16) — implementados na wo0005 (DEC-012), escolhidos em caixas no popup.
 
 ---
 

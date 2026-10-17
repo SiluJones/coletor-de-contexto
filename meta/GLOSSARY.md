@@ -14,9 +14,12 @@
 - **Turno** — um pedido do usuário mais a resposta da IA a ele.
 - **Pensamento (thinking)** — raciocínio que a IA mostra antes da resposta; no Claude vem como item `thinking` do `content`.
 - **Ramo / folha atual** — a conversa é uma árvore (editar um pedido ou regenerar uma resposta cria um ramo); a folha atual é a última mensagem do ramo que está na tela.
-- **Oráculo do Lunoda** — par `.json` + `.md` exportado PELO Lunoda, guardado fora do repositório (é conteúdo real); o teste lê a pasta de `CDC_LUNODA_ORACLE_DIR` e exige reprodução byte a byte. Pasta: `CDC/oraculo-lunoda/`; pares `mapsmith 12`, `sintetico-lunoda`, `sintetico-lunoda-ia`, `sintetico-lunoda-desc` (DEC-009).
+- **Oráculo do Lunoda** — par `.json` + `.md` exportado PELO Lunoda, guardado fora do repositório (é conteúdo real); o teste lê a pasta de `CDC_LUNODA_ORACLE_DIR` e exige reprodução byte a byte. Pasta: `CDC/oraculo-lunoda/`; pares `mapsmith 12`, `sintetico-lunoda`, `sintetico-lunoda-ia`, `sintetico-lunoda-desc`, `CDC 1 - Lunoda` (DEC-009).
 - **Captura bruta** — resposta JSON do claude.ai salva como veio, pelo botão «Salvar resposta bruta (depuração)»; cai em `Downloads/cdc-raw/` e o dono a move para `CDC/capturas-claude/cdc-raw/` (privado, fora do repo). Matéria-prima do normalizador e das fixtures sintéticas do Claude (DEC-010); o teste lê a pasta de `CDC_CLAUDE_CAPTURES_DIR` (DEC-011).
 - **Resumo do pensamento** — `summaries[].summary` da resposta do Claude: os títulos curtos do raciocínio. É o único pensamento que a API web devolve; o bloco «Pensamento» é feito deles.
+- **Markdown simples** — formato do CDC para LER: `<título> (simples).md`, um `## Você · N` / `## Claude · N` por turno, sem marcadores do Lunoda (DEC-012).
+- **JSON do CDC** — formato de guarda do CDC: `<título>.cdc.json`, com o modelo canônico inteiro num envelope `format`/`version` (DEC-012).
+- **Exportações do CDC** — `CDC/exportacoes-cdc/`: onde o dono guarda as exportações reais, fora do repo.
 - **Par sintético** — `src/tests/fixtures/lunoda/sintetico.*`, gerado pelo código a partir de uma conversa inventada; protege contra regressão, não prova fidelidade ao Lunoda.
 
 ## Arquiteturas / módulos

@@ -1,22 +1,54 @@
-// Popup da extensao (F1, passos 6 e 8 da spec). Reconhece a conversa do Claude e oferece:
-// - «Exportar para o Lunoda»: baixa `<titulo>.json` e `<titulo>.md` (DEC-011);
+// Popup da extensao (F1 + F2). Reconhece a conversa do Claude e oferece:
+// - «Exportar»: baixa os formatos marcados (Lunoda, Markdown simples, JSON do CDC — DEC-011, DEC-012);
 // - «Salvar resposta bruta (depuracao)»: baixa a resposta da API como veio (DEC-010).
+// Formatos e opcoes ficam lembrados em chrome.storage.local.
 import { browser } from 'wxt/browser';
 import { fetchClaudeConversationRaw } from '../../adapters/claude/fetch-raw';
 import { ClaudeFormatError } from '../../adapters/claude/normalize';
 import { parseClaudeConversationUrl } from '../../adapters/claude/url';
 import { createIdGenerator } from '../../core/ids';
-import { DEFAULT_EXPORT_OPTIONS } from '../../core/model';
-import { buildLunodaExport } from '../../popup/export';
+import { buildExportDownloads } from '../../popup/export';
 import { rawDumpFilename, summarizeRaw } from '../../popup/raw-dump';
+import { parseSettings, SETTINGS_KEY, type ExportSettings } from '../../popup/settings';
 
-const statusEl = document.querySelector<HTMLParagraphElement>('#status')!;
-const exportButton = document.querySelector<HTMLButtonElement>('#export')!;
-const rawButton = document.querySelector<HTMLButtonElement>('#raw')!;
+const $ = <T extends HTMLElement>(id: string) => document.querySelector<T>(`#${id}`)!;
+const statusEl = $<HTMLParagraphElement>('status');
+const controls = $<HTMLDivElement>('controls');
+const exportButton = $<HTMLButtonElement>('export');
+const rawButton = $<HTMLButtonElement>('raw');
+const boxes = {
+  lunoda: $<HTMLInputElement>('fmt-lunoda'),
+  simpleMd: $<HTMLInputElement>('fmt-simple'),
+  cdcJson: $<HTMLInputElement>('fmt-cdc'),
+  thinking: $<HTMLInputElement>('opt-thinking'),
+  files: $<HTMLInputElement>('opt-files'),
+};
 
 function say(text: string, kind: 'info' | 'ok' | 'error' = 'info'): void {
   statusEl.textContent = text;
   statusEl.dataset.kind = kind;
+}
+
+/** Le as caixas marcadas. */
+function readBoxes(): ExportSettings {
+  return {
+    includeThinking: boxes.thinking.checked,
+    includeFiles: boxes.files.checked,
+    formats: {
+      lunoda: boxes.lunoda.checked,
+      simpleMd: boxes.simpleMd.checked,
+      cdcJson: boxes.cdcJson.checked,
+    },
+  };
+}
+
+/** Marca as caixas conforme as preferencias. */
+function writeBoxes(s: ExportSettings): void {
+  boxes.thinking.checked = s.includeThinking;
+  boxes.files.checked = s.includeFiles;
+  boxes.lunoda.checked = s.formats.lunoda;
+  boxes.simpleMd.checked = s.formats.simpleMd;
+  boxes.cdcJson.checked = s.formats.cdcJson;
 }
 
 /** Baixa um texto como arquivo (caminho relativo a Downloads). */
@@ -50,9 +82,18 @@ async function main(): Promise<void> {
     return;
   }
   const tabId = tab.id;
+
+  // Preferencias: lidas uma vez, salvas a cada mudanca de caixa.
+  const stored = await browser.storage.local.get(SETTINGS_KEY);
+  writeBoxes(parseSettings(stored[SETTINGS_KEY]));
+  for (const box of Object.values(boxes)) {
+    box.addEventListener('change', () => {
+      void browser.storage.local.set({ [SETTINGS_KEY]: readBoxes() });
+    });
+  }
+
   say(`Conversa ${conversationId.slice(0, 8)}… encontrada.`);
-  exportButton.hidden = false;
-  rawButton.hidden = false;
+  controls.hidden = false;
 
   /** Roda uma acao com os dois botoes travados e erro inesperado no popup. */
   const run = (action: () => Promise<void>) => async () => {
@@ -72,17 +113,23 @@ async function main(): Promise<void> {
   exportButton.addEventListener(
     'click',
     run(async () => {
+      const settings = readBoxes();
+      if (!Object.values(settings.formats).some(Boolean)) {
+        return say('Marque ao menos um formato.', 'error');
+      }
       const text = await fetchRaw(tabId, conversationId);
       if (text === null) return;
       const summary = summarizeRaw(text);
       if (!summary.ok) return say(summary.error, 'error');
-      const files = buildLunodaExport(JSON.parse(text), DEFAULT_EXPORT_OPTIONS, {
+      const out = buildExportDownloads(JSON.parse(text), settings, {
         newId: createIdGenerator(),
         now: new Date().toISOString(),
       });
-      await download(files.json, `${files.baseName}.json`, 'application/json');
-      await download(files.md, `${files.baseName}.md`, 'text/markdown');
-      say(`Exportado: ${files.baseName}.json e .md (${files.turns} turnos).`, 'ok');
+      for (const f of out.files) await download(f.content, f.filename, f.mime);
+      say(
+        `Exportado: ${out.files.length} arquivo(s) de «${out.baseName}» (${out.turns} turnos).`,
+        'ok',
+      );
     }),
   );
 

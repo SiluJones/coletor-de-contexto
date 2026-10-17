@@ -185,6 +185,7 @@ export function normalizeClaudeConversation(raw: unknown): Conversation {
     sourceId: uuid,
     title: name.trim() || 'Conversa sem título',
     url: `https://claude.ai/chat/${uuid}`,
+    ...(typeof raw.model === 'string' && raw.model ? { model: raw.model } : {}),
     createdAt,
     updatedAt,
     turns,

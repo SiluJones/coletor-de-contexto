@@ -1,0 +1,80 @@
+{
+  "format": "coletor-de-contexto",
+  "version": 1,
+  "exportedAt": "2026-10-16T21:30:00.000Z",
+  "conversation": {
+    "platform": "claude",
+    "sourceId": "11111111-2222-4333-8444-555555555555",
+    "title": "Sintética 1 — contar palavras",
+    "url": "https://claude.ai/chat/11111111-2222-4333-8444-555555555555",
+    "model": "claude-x",
+    "createdAt": "2026-10-16T20:00:00.000000Z",
+    "updatedAt": "2026-10-16T20:09:00.000000Z",
+    "turns": [
+      {
+        "index": 1,
+        "user": {
+          "text": "Quantas palavras tem este arquivo?",
+          "thinking": [],
+          "attachments": [
+            {
+              "name": "notas.txt",
+              "kind": "text/plain",
+              "size": 2048
+            },
+            {
+              "name": "print.png",
+              "kind": "image",
+              "size": 95547
+            }
+          ],
+          "generated": [],
+          "createdAt": "2026-10-16T20:00:00.000000Z"
+        },
+        "assistant": {
+          "text": "Vou contar com o `wc`.\n\nSão **412** palavras.",
+          "thinking": [
+            "- Lendo o anexo.\n- Escolhendo o comando.",
+            "- Conferindo a saida."
+          ],
+          "attachments": [],
+          "generated": [],
+          "createdAt": "2026-10-16T20:01:00.000000Z"
+        }
+      },
+      {
+        "index": 2,
+        "user": {
+          "text": "E sem contar as linhas vazias?",
+          "thinking": [],
+          "attachments": [],
+          "generated": [],
+          "createdAt": "2026-10-16T20:04:00.000000Z"
+        },
+        "assistant": {
+          "text": "Use `grep -c .` para as linhas não vazias.\n\nDeixei o script pronto.",
+          "thinking": [],
+          "attachments": [],
+          "generated": [
+            {
+              "name": "contar.sh",
+              "kind": "blob",
+              "size": 312
+            }
+          ],
+          "createdAt": "2026-10-16T20:05:00.000000Z"
+        }
+      },
+      {
+        "index": 3,
+        "user": {
+          "text": "Obrigado! Última pergunta depois.",
+          "thinking": [],
+          "attachments": [],
+          "generated": [],
+          "createdAt": "2026-10-16T20:08:00.000000Z"
+        }
+      }
+    ]
+  }
+}
