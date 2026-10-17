@@ -147,6 +147,7 @@ interface FileRef { name: string; kind: string; size?: number; textContent?: str
 14. **Usar algo de fora no corpo de `fetchClaudeConversationRaw`** — o `executeScript` serializa a função como texto e a recria na página; import, constante do módulo ou função vizinha viram `ReferenceError` só no navegador → tudo dentro do corpo; o teste «funciona reconstruída só a partir do próprio texto» pega isso antes.
 15. **Ler o campo `text` da mensagem do Claude** — vem vazio em toda mensagem medida; exportaria conversas em branco sem erro nenhum → o texto vem de `content[]`; o teste das capturas reais (`CDC_CLAUDE_CAPTURES_DIR`) reprova turno vazio.
 16. **`vitest -u` (ou `--update`) ANTES dos caminhos** — no Vitest 5 a flag engole o caminho seguinte como valor: `-u A B` roda só o B, `--update A` roda a suíte inteira e regrava toda fixture divergente (medido em 2026-10-16) → flag sempre no FIM (`npx vitest run A B --update`) e conferir os hashes das fixtures logo depois.
+17. **Mudar a pasta do projeto e esperar que a extensão continue igual** — extensão descompactada ganha o ID pelo caminho da pasta: outro caminho = outra extensão, com `chrome.storage.local` vazio (as caixas do popup voltam ao padrão) → remover a antiga em `chrome://extensions` e carregar `.output\chrome-mv3` do caminho novo.
 
 ## 📁 Arquivos Críticos (não mexer sem contexto)
 - `meta/CEREBRO.md` — comportamento do assistente; mudança aqui muda como todo turno trabalha.

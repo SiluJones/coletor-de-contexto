@@ -25,7 +25,7 @@
 ## 📋 Backlog (curto prazo)
 - [ ] Dono: escolher a próxima leva da F2 (recomendação do chat: copiar para a área de transferência).
 - [ ] Dono: decidir se corta a release 0.1.0 (F1 + primeira leva da F2).
-- [ ] Dono: dizer de onde veio `CDC/261016-2317.txt` (página HTML do claude.ai, 268 KB) — sem uso para o projeto até agora.
+- [ ] Dono: transferir o repositório de `joaolucas-nds` para `SiluJones` no GitHub e mover a pasta de `C:\Users\alexk\Tools\CDC` para `C:\Users\alexk\Arquiteturas\CDC` (roteiro na conversa de 2026-10-17); depois, `git remote set-url` e recarregar a extensão do novo caminho.
 
 ## 💬 Última conversa
-**2026-10-17** — F1 fechada pelo dono. wo0005: Markdown simples, JSON do CDC (conversa inteira) e opções no popup lembradas em `chrome.storage.local` (DEC-012). Code aplicou a wo0005 (`a8cd810`); o dono conferiu no navegador e no Lunoda. Próximo: release 0.1.0 e a próxima leva da F2.
+**2026-10-17** — F1 fechada pelo dono. wo0005: Markdown simples, JSON do CDC (conversa inteira) e opções no popup lembradas em `chrome.storage.local` (DEC-012). Code aplicou a wo0005 (`a8cd810`); o dono conferiu no navegador e no Lunoda. Próximo: transferência do repo para `SiluJones` e mudança da pasta para `Arquiteturas`; depois, release 0.1.0 e a próxima leva da F2.
