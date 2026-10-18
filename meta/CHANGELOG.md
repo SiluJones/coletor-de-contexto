@@ -4,22 +4,21 @@
 > **Cresce**: entradas novas no topo. Registra só o que foi de fato concluído/entregue.
 
 ## [Não lançado]
+
+## [0.1.0] — 2026-10-17
+Primeira versão usável: F1 (uma conversa do Claude → Lunoda) e a primeira leva da F2 (formatos «simples» e opções).
+
 ### Adicionado
-- Estrutura do repositório gerada pelo KCM v1.124.0 (`meta/`, `logs/`, `CLAUDE.md`, `.claude/`).
-- Documentação de contexto preenchida para o Coletor de Contexto: CONTEXT, STATUS, DECISIONS (DEC-001 a DEC-007), IDEAS, ROADMAP, GLOSSARY, HISTORY, LOG-TEMPLATE e modelo de SPEC.
-- Spec do MVP: `specs/261016-mvp-exportar-conversa-claude.md`.
-- `.gitignore` do stack Node/TypeScript/WXT.
-- Log do dia `logs/2026-10-16.md`.
-- Base de código da F1 (wo0001): WXT 0.21 + TypeScript 6.0 + Vitest 5, ESLint, Prettier, `.editorconfig` e `.gitattributes` (tudo em LF); popup provisório.
-- `src/core/`: modelo canônico com `DEFAULT_EXPORT_OPTIONS` (`model.ts`), IDs do Lunoda únicos e crescentes (`ids.ts`) e data local do cabeçalho do MD (`dates.ts`), com 9 testes.
-- DEC-008: `version` = turno, pensamento em bloco próprio, padrão pensamento desligado e arquivos ligados.
-- Exportadores Lunoda (wo0002): `buildLunodaEntry` (modelo → entrada, com pensamento e listas de arquivos), `renderLunodaJson`, `parseLunodaJson` e `renderLunodaMd`; reproduzem o `mapsmith 12` byte a byte.
-- Par sintético versionado (`src/tests/fixtures/lunoda/`) e oráculo privado por `CDC_LUNODA_ORACLE_DIR` (DEC-009); `@types/node` 22.20.5; 27 testes.
-- MD do Lunoda com propriedades marcadas (front matter, cabeçalho e blocos), medido no par `sintetico-lunoda-ia` (wo0003).
-- Captura bruta do Claude (wo0003, DEC-010): popup reconhece `claude.ai/chat/<uuid>`, injeta a busca na aba e baixa o corpo exato para `Downloads/cdc-raw/`; permissões `activeTab`, `scripting`, `downloads`; 50 testes.
-- Normalizador do Claude (wo0004, DEC-011): ramo atual, texto de `content[]`, pensamento por resumos, respostas seguidas unidas, anexos e arquivos gerados por referência; testado com resposta sintética e com capturas reais fora do repo.
-- Botão «Exportar para o Lunoda» (wo0004): baixa `<título>.json` e `<título>.md`, com o link da conversa na descrição e «IA Utilizada» marcada; captura bruta passa a ter o título na frente do nome; 80 testes.
-- F1 conferida pelo dono (2026-10-17): conversa real exportada pelo botão e importada no Lunoda.
-- Formatos «simples» (wo0005, DEC-012): Markdown simples para ler (`<título> (simples).md`) e JSON do CDC com a conversa inteira (`<título>.cdc.json`).
-- Popup com caixas de formato e de opção (pensamento, arquivos), lembradas em `chrome.storage.local`; permissão `storage`; 90 testes.
-- Formatos e opções da F2 conferidos pelo dono (2026-10-17): 4 arquivos, caixas lembradas, `.json` com pensamento importado no Lunoda e devolvido igual.
+- **Exportar** a conversa aberta no claude.ai com um clique no popup, nos formatos marcados (DEC-011, DEC-012):
+  - **Lunoda** — `<título>.json` (importável) e `<título>.md`, no layout do Lunoda; link da conversa na descrição e «IA Utilizada» marcada na entrada e nos blocos da IA.
+  - **Markdown simples** — `<título> (simples).md`, para ler: `## Você · N` / `## Claude · N` por turno.
+  - **JSON do CDC** — `<título>.cdc.json`, a conversa normalizada inteira, para guardar e reprocessar.
+- Opções **pensamento** (resumos, em bloco próprio — DEC-008) e **lista de arquivos** anexados e gerados (por referência, nunca o binário — DEC-005), lembradas entre usos. Primeiro uso: só Lunoda, sem pensamento, com arquivos.
+- Normalizador do Claude sobre o formato medido em capturas reais: só o ramo atual, texto de `content[]`, respostas seguidas unidas, mensagens vazias fora (DEC-011).
+- Botão de depuração «Salvar resposta bruta» para capturar o formato real da API (DEC-010).
+- Permissões mínimas: `activeTab`, `scripting`, `downloads`, `storage`; nenhuma permissão de site permanente (DEC-007, DEC-010).
+- Base de desenvolvimento: WXT 0.21 + TypeScript 6.0 + Vitest 5, ESLint e Prettier; `npm run check` com 90 testes; par sintético versionado e oráculo privado do Lunoda e capturas reais fora do repositório (DEC-009).
+- Documentação de contexto do KCM v1.124.0 (`meta/`, `specs/`, `logs/`, `CLAUDE.md`, `.claude/`), DEC-001 a DEC-012.
+
+### Conferido
+- O Lunoda importou exportações reais (com e sem pensamento) e as devolveu iguais — só o título e o `updatedAt` mudam.
