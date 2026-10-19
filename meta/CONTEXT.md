@@ -29,7 +29,7 @@ coletor-de-contexto/
 └── src/                         # F1 (scaffold: wo0001)
     ├── entrypoints/             # popup, content script, background (convenção WXT)
     ├── adapters/claude/         # url.ts (reconhece a conversa) · fetch-raw.ts (busca bruta, injetada na aba) · normalize.ts (resposta → Conversation)
-    ├── popup/                   # partes puras do popup: export.ts (resposta → arquivos dos formatos marcados) · settings.ts (preferências) · raw-dump.ts (captura bruta)
+    ├── popup/                   # partes puras do popup: export.ts (resposta → arquivos dos formatos marcados) · copy.ts (texto do «Copiar») · settings.ts (preferências) · raw-dump.ts (captura bruta)
     ├── core/                    # model.ts (modelo canônico), ids.ts, dates.ts; testes *.test.ts ao lado
     ├── exporters/               # lunoda-types.ts · lunoda-build.ts (Conversation → entrada) · lunoda-json.ts · lunoda-md.ts · simple-md.ts · cdc-json.ts
     └── tests/                   # synthetic-conversation.ts + fixtures/ (par sintético do Lunoda; respostas do Claude, sintéticas, depois das capturas)
@@ -129,6 +129,7 @@ interface FileRef { name: string; kind: string; size?: number; textContent?: str
 - Tudo local, sob demanda, sem backend, sem varredura em segundo plano — DEC-007.
 - Normalizador do Claude sobre o formato medido; descrição = link; «IA Utilizada» na entrada e nos blocos da IA; arquivo com o nome da conversa — DEC-011.
 - Formatos em caixas no popup (Lunoda, Markdown simples, JSON do CDC inteiro); preferências em `chrome.storage.local` — DEC-012.
+- «Copiar conversa» (Markdown simples) e «Copiar última resposta» (texto cru), sem permissão nova — DEC-013.
 
 ## Armadilhas Conhecidas (o que NÃO fazer)
 1. **Tratar endpoint interno como contrato** — `/api/organizations/...` (Claude) e `/backend-api/...` (ChatGPT) não são documentados e mudam sem aviso → isolar cada um num adapter, com fixture e teste, e mostrar erro claro («formato da plataforma mudou») em vez de exportar meia conversa.

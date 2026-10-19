@@ -29,7 +29,7 @@
 - [x] Opções de pensamento e arquivos (DEC-005), lembradas entre usos (wo0005, DEC-012).
 - [x] Formatos «simples» pedidos pelo dono: Markdown simples e JSON do CDC, escolhidos no popup (wo0005, DEC-012).
 - [ ] Conteúdo textual de artefatos gerados.
-- [ ] Copiar para a área de transferência.
+- [x] Copiar para a área de transferência (wo0007, DEC-013).
 - [ ] Nome de arquivo configurável.
 
 ## 🔵 F3 — Outras plataformas

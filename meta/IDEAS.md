@@ -30,9 +30,6 @@ Várias conversas num único `.json` do Lunoda (várias `entries`), disparado à
 ### 2026-10-16 — Ramos como versões
 Exportar respostas regeneradas ou pedidos editados (ramos da árvore) em vez de só o ramo atual. Como `version` já é o número do turno (DEC-008), os ramos precisariam de outro mecanismo — por exemplo, um bloco a mais com subtítulo «Claude (alternativa 2)».
 
-### 2026-10-16 — Copiar para a área de transferência
-Além de baixar, copiar o MD (ou só a última resposta) com um clique — útil para colar num handoff.
-
 ### 2026-10-16 — Detectar o bloco de fecho do KCM
 Reconhecer nas respostas o bloco «Próximo / Peça no próximo turno» e expô-lo à parte (ex.: copiar só a frase do próximo turno). Específico do fluxo do dono.
 
@@ -61,6 +58,7 @@ As respostas de trabalho do Claude têm centenas de `tool_use`/`tool_result` (at
 - **Botão de depuração «salvar resposta bruta»** — implementado na wo0003 (DEC-010), visível em todo build durante a F1.
 - **Preencher `p-ia` sozinho** — implementado na wo0004 (DEC-011): na entrada e nos blocos da IA, como o dono marcava à mão.
 - **Link da conversa na descrição do Lunoda** (ideia do dono, 2026-10-16) — implementado na wo0004 (DEC-011).
+- **Copiar para a área de transferência** — implementado na wo0007 (DEC-013): conversa em Markdown simples ou só a última resposta.
 - **Formatos «simples» — Markdown simples e JSON do CDC** (pedido do dono, 2026-10-16) — implementados na wo0005 (DEC-012), escolhidos em caixas no popup.
 
 ---

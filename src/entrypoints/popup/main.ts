@@ -1,5 +1,6 @@
 // Popup da extensao (F1 + F2). Reconhece a conversa do Claude e oferece:
 // - «Exportar»: baixa os formatos marcados (Lunoda, Markdown simples, JSON do CDC — DEC-011, DEC-012);
+// - «Copiar conversa» / «Copiar última resposta»: poe o texto na area de transferencia (DEC-013);
 // - «Salvar resposta bruta (depuracao)»: baixa a resposta da API como veio (DEC-010).
 // Formatos e opcoes ficam lembrados em chrome.storage.local.
 import { browser } from 'wxt/browser';
@@ -7,6 +8,7 @@ import { fetchClaudeConversationRaw } from '../../adapters/claude/fetch-raw';
 import { ClaudeFormatError } from '../../adapters/claude/normalize';
 import { parseClaudeConversationUrl } from '../../adapters/claude/url';
 import { createIdGenerator } from '../../core/ids';
+import { buildCopyText, type CopyKind } from '../../popup/copy';
 import { buildExportDownloads } from '../../popup/export';
 import { rawDumpFilename, summarizeRaw } from '../../popup/raw-dump';
 import { parseSettings, SETTINGS_KEY, type ExportSettings } from '../../popup/settings';
@@ -16,6 +18,9 @@ const statusEl = $<HTMLParagraphElement>('status');
 const controls = $<HTMLDivElement>('controls');
 const exportButton = $<HTMLButtonElement>('export');
 const rawButton = $<HTMLButtonElement>('raw');
+const copyConversationButton = $<HTMLButtonElement>('copy-conversation');
+const copyLastButton = $<HTMLButtonElement>('copy-last');
+const actionButtons = [exportButton, rawButton, copyConversationButton, copyLastButton];
 const boxes = {
   lunoda: $<HTMLInputElement>('fmt-lunoda'),
   simpleMd: $<HTMLInputElement>('fmt-simple'),
@@ -95,9 +100,9 @@ async function main(): Promise<void> {
   say(`Conversa ${conversationId.slice(0, 8)}… encontrada.`);
   controls.hidden = false;
 
-  /** Roda uma acao com os dois botoes travados e erro inesperado no popup. */
+  /** Roda uma acao com os botoes travados e erro inesperado no popup. */
   const run = (action: () => Promise<void>) => async () => {
-    exportButton.disabled = rawButton.disabled = true;
+    for (const b of actionButtons) b.disabled = true;
     say('Buscando a conversa…');
     try {
       await action();
@@ -106,7 +111,7 @@ async function main(): Promise<void> {
         err instanceof ClaudeFormatError ? ' Salve a resposta bruta e leve ao chat.' : '';
       say(`${err instanceof Error ? err.message : String(err)}.${hint}`, 'error');
     } finally {
-      exportButton.disabled = rawButton.disabled = false;
+      for (const b of actionButtons) b.disabled = false;
     }
   };
 
@@ -132,6 +137,24 @@ async function main(): Promise<void> {
       );
     }),
   );
+
+  /** Copia o texto pedido. Le o texto antes de escrever: a area de transferencia so muda se der certo. */
+  const copy = (kind: CopyKind) =>
+    run(async () => {
+      const text = await fetchRaw(tabId, conversationId);
+      if (text === null) return;
+      const summary = summarizeRaw(text);
+      if (!summary.ok) return say(summary.error, 'error');
+      const out = buildCopyText(JSON.parse(text), kind, readBoxes(), {
+        now: new Date().toISOString(),
+      });
+      if (out.text === null) return say('A conversa ainda não tem resposta da IA.', 'error');
+      await navigator.clipboard.writeText(out.text);
+      const what = kind === 'conversation' ? `conversa (${out.turns} turnos)` : 'última resposta';
+      say(`Copiado: ${what}, ${out.text.length} caracteres.`, 'ok');
+    });
+  copyConversationButton.addEventListener('click', copy('conversation'));
+  copyLastButton.addEventListener('click', copy('lastReply'));
 
   rawButton.addEventListener(
     'click',

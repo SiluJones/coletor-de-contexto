@@ -246,3 +246,24 @@ O dono pediu um formato «original/simples», em `.md` e `.json`, além do par d
 
 ### Consequências
 Formato novo = um exportador, uma caixa e um campo em `ExportFormats`/`parseSettings`. A `version` do JSON do CDC só muda com mudança incompatível do modelo canônico, registrada aqui.
+
+---
+
+## DEC-013 — Copiar para a área de transferência
+**Data:** 2026-10-18 · **Status:** aceita (leva escolhida pelo chat a pedido do dono)
+
+### Contexto
+A IDEAS registrava «copiar o MD (ou só a última resposta) com um clique — útil para colar num handoff». O dono deixou a escolha da próxima leva da F2 com o chat.
+
+### Decisão
+- Dois botões no popup: **Copiar conversa** (Markdown simples da conversa inteira, com as opções de pensamento e arquivos) e **Copiar última resposta** (o texto da última resposta da IA no ramo atual, como veio, sem lista de arquivos).
+- Se o último turno não tem resposta, vale a do turno anterior; sem nenhuma resposta, o popup avisa e não mexe na área de transferência.
+- `navigator.clipboard.writeText` no popup, sem a permissão `clipboardWrite`.
+
+### Alternativas consideradas
+- **Copiar o MD do Lunoda** — cheio de marcadores; serve para importar, não para colar.
+- **Um botão só, com escolha num menu** — um clique a mais para o caso mais comum.
+- **Permissão `clipboardWrite`** — só necessária para `execCommand`; a API assíncrona funciona no popup aberto. Se o navegador recusar, a mensagem de erro aparece no popup e a permissão entra numa correção.
+
+### Consequências
+Nenhum exportador muda. A busca da conversa roda a cada cópia, como no «Exportar» (DEC-007: só sob demanda).

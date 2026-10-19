@@ -6,7 +6,7 @@
 ---
 
 ## Versão Atual
-**0.1.0** — 2026-10-17 — F1 (uma conversa do Claude → Lunoda) e a primeira leva da F2 (formatos «simples» e opções), conferidas pelo dono. Release pela wo0006.
+**0.1.0** — 2026-10-17 — F1 (uma conversa do Claude → Lunoda) e a primeira leva da F2 (formatos «simples» e opções), conferidas pelo dono. Tag `v0.1.0` empurrada (wo0006, `1ffc2df`).
 
 ## ✅ Funcionando
 - Estrutura do repositório (KCM v1.124.0) com os `meta/` preenchidos para este projeto.
@@ -23,9 +23,8 @@
 - Nada conhecido.
 
 ## 📋 Backlog (curto prazo)
-- [ ] Dono: escolher a próxima leva da F2 (recomendação do chat: copiar para a área de transferência).
-- [ ] Dono: publicar a release v0.1.0 no GitHub a partir da tag, com o `.zip` (roteiro na conversa de 2026-10-17).
-- [ ] Dono: escolher a licença do repositório público (hoje sem `LICENSE`: ninguém pode reutilizar o código).
+- [ ] Dono: conferir no navegador os botões «Copiar conversa» e «Copiar última resposta» (wo0007).
+- [ ] Release v0.1.0 no GitHub: a tag existe (`1ffc2df`); falta a página da release com o `.zip`. Sem o `gh` no PC, o dono cria pela página (roteiro na conversa de 2026-10-17) ou instala o `gh` e o Code roda a Edição 4 da wo0006.
 
 ## 💬 Última conversa
-**2026-10-17** — Repositório transferido para `SiluJones` e pasta movida para `C:\Users\alexk\Arquiteturas\CDC` (identidade e chave conferidas, `npm run check` verde, extensão recarregada). wo0006: release 0.1.0 (versão, tag, `.zip`, README). Próximo: o Code aplica; o dono publica a release no GitHub e escolhe a licença.
+**2026-10-18** — Release 0.1.0 aplicada (tag `v0.1.0`; a página da release no GitHub ficou para o dono: `gh` não instalado). Licença MIT. Segunda leva da F2 escrita (wo0007, DEC-013): copiar a conversa ou a última resposta. Próximo: o Code aplica; o dono confere os botões.

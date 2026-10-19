@@ -35,6 +35,8 @@ Depois, em `chrome://extensions`: ligue o **Modo do desenvolvedor**, clique em *
 2. Clique no ícone do Coletor de Contexto, marque os formatos e as opções.
 3. **Exportar** — os arquivos caem em `Downloads/`, com o título da conversa na frente do nome.
 
+**Copiar conversa** põe a conversa inteira em Markdown simples na área de transferência (com as mesmas opções); **Copiar última resposta** copia só o texto da última resposta da IA — bom para colar num handoff.
+
 «Salvar resposta bruta (depuração)» baixa a resposta da API como veio, para diagnosticar quando o formato do claude.ai mudar.
 
 ## Lunoda
@@ -59,6 +61,9 @@ Estrutura: `src/adapters/` lê cada plataforma e devolve o modelo canônico (`sr
 - `CLAUDE.md` + `.claude/` — arranque do Claude Code. `INSTRUCOES-DO-PROJETO.md` — Instruções do Projeto no claude.ai.
 
 Estrutura de contexto gerada pelo Kit de Contexto Universal v1.124.0.
+
+## Licença
+[MIT](LICENSE).
 
 ## Aviso
 Usa endpoints internos e não documentados do claude.ai, os mesmos que a página usa; podem mudar sem aviso. Use com a sua própria conta e com moderação.
