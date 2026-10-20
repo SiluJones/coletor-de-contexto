@@ -20,10 +20,9 @@
 - **F2:** primeira leva entregue e conferida. Faltam as levas «copiar para a área de transferência», «conteúdo dos artefatos gerados» e «nome de arquivo configurável» (ROADMAP); a próxima é escolha do dono.
 
 ## ❌ Quebrado / Com Problema
-- Nada conhecido.
+- **Nome do arquivo em outro perfil do Chrome** (relato do dono, 2026-10-20): exportando a conversa «KCM 1» num segundo perfil, os arquivos não saem com o nome da conversa. Causa não confirmada; suspeita: a extensão de downloads instalada naquele perfil (ícone azul na barra) troca o nome dos downloads. Aguardando os nomes que saíram e o nome da extensão.
 
 ## 📋 Backlog (curto prazo)
-- [ ] Dono: conferir no navegador os botões «Copiar conversa» e «Copiar última resposta» (wo0007).
 - [ ] Release v0.1.0 no GitHub: a tag existe (`1ffc2df`); falta a página da release com o `.zip`. Sem o `gh` no PC, o dono cria pela página (roteiro na conversa de 2026-10-17) ou instala o `gh` e o Code roda a Edição 4 da wo0006.
 
 ## 💬 Última conversa
