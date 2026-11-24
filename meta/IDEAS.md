@@ -7,7 +7,10 @@
 
 ## 💡 Ideias Ativas — Usuário
 ### 2026-10 — Suporte a outras IAs (ChatGPT, Gemini…)
-Além do Claude, coletar do ChatGPT, do Gemini e de outras. Viável: ChatGPT por API interna, Gemini só por DOM (mais frágil). Planejado na F3 do ROADMAP.
+Além do Claude, coletar do ChatGPT, do Gemini e de outras. Viável: ChatGPT por API interna, Gemini só por DOM (mais frágil). Planejado na F3 do ROADMAP. O dono perguntou de novo em 2026-11-09 (nota `261109-0952`); resposta: sim — o modelo canônico já separa a plataforma do formato (DEC-002, DEC-003), cada IA é um adaptador novo.
+
+### 2026-11-09 — Ícone próprio da extensão
+Trocar o «C» cinza genérico por um ícone que identifique o Coletor de Contexto na barra do Chrome (nota `261109-0952`). Pede os PNGs 16/32/48/128 em `public/icon/` (convenção do WXT) e um desenho original.
 
 ### 2026-10 — Capturar o pensamento da IA
 Incluir o processo de pensamento quando a plataforma o expõe. Coberto por DEC-005 e DEC-008: bloco próprio «Pensamento», desligado por padrão.

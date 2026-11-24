@@ -4,6 +4,9 @@
 > **Cresce**: entradas novas no topo. Registra só o que foi de fato concluído/entregue.
 
 ## [Não lançado]
+### Adicionado
+- «Copiar conversa» (Markdown simples, com as opções) e «Copiar última resposta» (texto cru da IA) no popup (wo0007, DEC-013); conferidos pelo dono em 2026-10-19.
+- Licença MIT (`LICENSE`) e seção no README.
 
 ## [0.1.0] — 2026-10-17
 Primeira versão usável: F1 (uma conversa do Claude → Lunoda) e a primeira leva da F2 (formatos «simples» e opções).

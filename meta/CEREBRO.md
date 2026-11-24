@@ -38,6 +38,8 @@ Comece vazia e escreva quando doer duas vezes: técnica que você precisou expli
 
 - **Ponte do chat (pasta vinculada): reenviar arquivo pelo MESMO caminho de origem pode entregar uma cópia antiga.** Medido em 2026-10-17, duas vezes seguidas: a wo0004 regerada chegou ao disco na versão anterior (a primeira fez a Edição 0 do Code parar, como devia). Com um nome de origem NOVO a cópia chegou certa. Regra: todo envio que substitui arquivo já enviado sai de um nome novo (ex.: `<nome>-<sha1 curto>.md`), cai numa pasta temporária, é copiado no lugar pelo shell da máquina, e o `sha1sum` do disco é conferido contra o gerado ANTES de citar o arquivo.
 - **Simular a WO a partir do texto dela pega erro do autor.** Nas wo0001 a wo0004 a simulação (código numa cópia do repo + edições de doc aplicadas por script que lê os blocos da WO) achou: um `postinstall` que falha sem entrypoint, o Prettier no `.claude/`, uma frase de `git status` incompleta e o `vitest -u` engolindo o caminho seguinte. Cada um teria parado a aplicação.
+- **WO que edita arquivo existente leva o campo «Âncoras lidas em» no cabeçalho, sempre.** A skill `apply-wo` recusa sem ele (wo0006, 2026-10-17: recusada sem tocar em nada), mesmo quando a edição é uma linha conferida por hash. O campo diz o que foi lido, quando e em que commit.
+- **Canal pasta vinculada: o repositório mora em `C:\Users\alexk\Arquiteturas\CDC\coletor-de-contexto`** (mudado de `Tools\CDC` em 2026-10-17, junto com a transferência para a conta `SiluJones`). A chave SSH e a identidade vêm do `.gitconfig-arquiteturas` por pasta (`includeIf`); mover a pasta para fora de `Arquiteturas` troca a conta.
 
 ## Princípios de trabalho
 

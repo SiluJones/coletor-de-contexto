@@ -12,18 +12,24 @@
 - Estrutura do repositório (KCM v1.124.0) com os `meta/` preenchidos para este projeto.
 - Base de código: WXT + TypeScript + Vitest, `npm run check` verde.
 - Exportadores Lunoda JSON e MD: reproduzem os pares do Lunoda byte a byte no oráculo privado (6 pares em `CDC/oraculo-lunoda/`, um deles com blocos «Pensamento», DEC-009).
-- Normalizador do Claude: 6 capturas reais em `CDC/capturas-claude/cdc-raw/` sem turno vazio (DEC-011).
+- Normalizador do Claude: capturas reais em `CDC/capturas-claude/cdc-raw/` (7 em 2026-10-19) sem turno vazio (DEC-011).
+- «Copiar conversa» e «Copiar última resposta» (wo0007, DEC-013): conferidos pelo dono em 2026-10-19, texto colado inteiro, sem permissão `clipboardWrite`.
+- Licença MIT (`LICENSE`).
 - Botão «Exportar» da F1: o dono exportou «CDC 1» e o Lunoda importou; a reexportação do Lunoda é igual (só título e `updatedAt` mudam). Exportações em `CDC/exportacoes-cdc/<AAMMDD-HHMM>/`.
 - Formatos e opções da F2 (wo0005, DEC-012): os 4 arquivos saem, as caixas ficam lembradas, e o Lunoda importou o `.json` com pensamento e o devolveu igual (só título e `updatedAt` mudam) — conferido em 2026-10-17.
 
 ## 🔧 Em Progresso
-- **F2:** primeira leva entregue e conferida. Faltam as levas «copiar para a área de transferência», «conteúdo dos artefatos gerados» e «nome de arquivo configurável» (ROADMAP); a próxima é escolha do dono.
+- **F2:** levas «formatos e opções» e «copiar» entregues e conferidas. Faltam «conteúdo dos artefatos gerados» (pede medir antes onde a API entrega o texto) e «nome de arquivo configurável» (ROADMAP).
+- **Template-update do KCM v1.162.1:** pacote em `CDC/261124-kcm-update-dev-v1.162.1/` (pasta-pai), ainda não aplicado; o projeto está no kit v1.124.0. Roteiro no `_UPDATE-PROMPT.md` do pacote.
 
 ## ❌ Quebrado / Com Problema
-- **Nome do arquivo em outro perfil do Chrome** (relato do dono, 2026-10-20): exportando a conversa «KCM 1» num segundo perfil, os arquivos não saem com o nome da conversa. Causa não confirmada; suspeita: a extensão de downloads instalada naquele perfil (ícone azul na barra) troca o nome dos downloads. Aguardando os nomes que saíram e o nome da extensão.
+- Nada confirmado. **Em observação:** nome do arquivo em outro perfil do Chrome [relatado pelo dono, 2026-10-20]. Não reproduzido: a exportação de «KCM 1» feita no segundo perfil em 2026-10-20 23:41 saiu com o nome certo nos 4 arquivos [medido no disco, `CDC/exportacoes-cdc/261020-2341/`]. Suspeita antiga (extensão de downloads daquele perfil) não testada. Fechar se não voltar.
 
 ## 📋 Backlog (curto prazo)
-- [ ] Release v0.1.0 no GitHub: a tag existe (`1ffc2df`); falta a página da release com o `.zip`. Sem o `gh` no PC, o dono cria pela página (roteiro na conversa de 2026-10-17) ou instala o `gh` e o Code roda a Edição 4 da wo0006.
+- [ ] Aplicar o template-update do KCM v1.162.1 (primeira tarefa do próximo chat; pede o texto do painel de Instruções colado pelo dono).
+- [ ] Release v0.1.0 no GitHub: a tag existe (`1ffc2df`); a página da release com o `.zip` não foi confirmada [relatado pelo dono: «pendente, eu acho»]. Sem o `gh` no PC, o dono cria pela página ou instala o `gh` e o Code roda a Edição 4 da wo0006.
+- [ ] Olhar as exportações de outros projetos que usaram o CDC, inclusive de outros perfis do Chrome [relatado pelo dono, 2026-11-24: ele vai dar acesso às pastas] — validar o normalizador e os formatos em conversas variadas.
+- [ ] Ícone próprio da extensão (pedido do dono, IDEAS).
 
 ## 💬 Última conversa
-**2026-10-18** — Release 0.1.0 aplicada (tag `v0.1.0`; a página da release no GitHub ficou para o dono: `gh` não instalado). Licença MIT. Segunda leva da F2 escrita (wo0007, DEC-013): copiar a conversa ou a última resposta. Próximo: o Code aplica; o dono confere os botões.
+**2026-11-24** — Conversa de chat 1 (iniciada em 2026-10-16) encerrada por tamanho: F1, F2 (formatos, opções, copiar), release 0.1.0, transferência para `SiluJones` e mudança para `Arquiteturas`. Brief de arranque em `CDC/261124-HANDOFF-BRIEF.md` (pasta-pai). Próximo: template-update do KCM v1.162.1.
