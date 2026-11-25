@@ -8,12 +8,12 @@ Ao ABRIR a conversa, leia nesta ordem: `CEREBRO.md` → `CONTEXT.md` → `STATUS
 Mensagem cheia de pedidos é onde essa releitura mais falha. Nota `.txt` da pasta-pai: leia inteira, funda nos meta/ e arquive MOVENDO.
 Confirme em uma frase o que entendeu da tarefa antes de executar. Se houver ambiguidade real, pergunte antes.
 **Canal — pasta vinculada:** arquivo seu vai direto ao lugar definitivo, em LF, relido antes de sobrescrever; o que eu rodo, grave e confira com `ls` antes de citar. Git só leitura (`GIT_OPTIONAL_LOCKS=0`). Resto: CEREBRO, «Canal do chat».
-**Config:** no fim, se a PRÓXIMA etapa pedir config diferente, recomende-a explícita — no chat: modelo + esforço (Baixo→Máximo) + pensamento (lig/desl); no Claude Code: modelo + `/effort` (ou `ultrathink`/`ultracode`), SEM toggle de pensamento. Nunca afirme saber a atual; recomende pela tarefa. Pesada com config fraca → peça aumento; folga → diga que pode baixar.
+**Config:** no fim, sempre, recomende-a por raia — no chat: modelo + esforço (Baixo→Máximo) + pensamento (lig/desl); no Claude Code: modelo + `/effort` (ou `ultrathink`/`ultracode`), SEM toggle de pensamento. Nunca afirme saber a atual; recomende pela tarefa. Pesada com config fraca → peça aumento; folga → diga que pode baixar.
 **Log:** nomeie `logs/AAAA-MM-DD.md` (data ISO, sem a palavra "log" no nome).
 **Análise antes do compromisso:** não-trivial → `analises/AAMMDD-ANALISE-<tema>.md`; QUÊ já decidido = execução, vá direto. Gatilho e abandono no CEREBRO.
 **Arquivo não lido não se deduz — leia do disco; o Code mede o que roda.**
-**WO nunca vai sozinha:** entregue junto a linha `/apply-wo <arquivo>` para eu colar no Code.
-**Commit:** ao concluir mudança versionada, ENTREGUE o `git commit` pronto, em bloco SEPARADO, mensagem sem acento. Bloco git parcial (só `add`) não serve: os três em ordem, ou só o `commit`.
+**WO nunca vai sozinha:** `/apply-wo <arquivo>` em bloco cercado; roteiro do dono, se houver, no chat.
+**Commit:** havendo WO, o bloco de commit é dela; sem WO, ENTREGUE o `git commit` pronto, em bloco SEPARADO, mensagem sem acento. Bloco git parcial (só `add`) não serve: os três em ordem, ou só o `commit`.
 **Entregáveis de repo (sem eu pedir):** `.gitignore` do stack na PRIMEIRA leva com estrutura; `README.md` quando ela estabilizar — se for cedo, DIGA e por quê. Detalhe no CEREBRO.
 
 ## Como trabalhar comigo
@@ -30,19 +30,20 @@ Princípios universais (definição completa no CEREBRO.md): analisa antes de ac
 - Mensagens de commit em PT-BR, no imperativo curto.
 - Estilo de código: legibilidade primeiro, performance só se medido.
 
-## Arquivos de contexto (no Projeto)
-- **CEREBRO.md** — comportamento do assistente (este conjunto de regras, em versão completa).
-- **SPEC.md** — Modelo de **spec de feature** (Spec-Driven Development): o problema, os critérios de aceite verificáveis, as decisões e o fora-de-escopo. **Sob demanda** — copie para `specs/AAMMDD-nome.md`, uma por feature, e a pasta nasce aí. **Não é o modelo das WOs** (instrução de aplicação Chat→Code, em `meta/workorders/`): spec diz o QUE construir, WO diz COMO aplicar.
-- **CONTEXT.md** — O que o projeto é: visão, stack, estrutura, como as peças críticas funcionam, armadilhas, produto. Estável.
-- **STATUS.md** — O agora: o que funciona, o que está em progresso, o que está quebrado, backlog curto. Rolante — o resolvido sai.
-- **DECISIONS.md** — Por que as coisas são como são: decisões de arquitetura (DEC) e bugs graves resolvidos (FIX). Cresce devagar.
-- **CHANGELOG.md** — Histórico de versões entregues (SemVer + Keep a Changelog). Cresce no topo.
-- **IDEAS.md** — Segundo cérebro: ideias suas e do assistente. Nunca perde nada — ideia muda de status, não some.
-- **LOG-TEMPLATE.md** — Modelo do log do dia. Referência fixa — nunca substituído pelo conteúdo preenchido.
-- **ROADMAP.md** — OPCIONAL — plano deliberado de evolução em fases. Use quando o projeto tem direção de médio/longo prazo.
-- **GLOSSARY.md** — OPCIONAL — termos próprios do projeto. Use quando há jargão que se repete entre conversas.
-- **HISTORY.md** — OPCIONAL — conhecimento consolidado de fases antigas (guias, análises que não cabem no CONTEXT enxuto). Lido sob demanda.
-- Logs detalhados do dia NÃO ficam no Projeto: vivem em `logs/` no Git e são lidos sob demanda.
+## Arquivos de contexto
+- **CEREBRO.md** — o comportamento completo do assistente.
+- **SPEC.md** — Spec de feature (o QUÊ), sob demanda; não WO.
+- **CONTEXT.md** — Visão, stack, armadilhas, produto. Estável.
+- **STATUS.md** — O agora e o backlog curto. Rolante.
+- **DECISIONS.md** — O porquê: arquitetura (DEC) e bugs (FIX).
+- **CHANGELOG.md** — Versões entregues (SemVer). Cresce no topo.
+- **IDEAS.md** — Segundo cérebro: ideia muda, não some.
+- **LOG-TEMPLATE.md** — Modelo do log do dia; nunca substituído.
+- **ROADMAP.md** — OPCIONAL — plano de evolução em fases.
+- **GLOSSARY.md** — OPCIONAL — jargão que se repete no projeto.
+- **SETUP.md** — OPCIONAL — ambiente, para o humano.
+- **HISTORY.md** — OPCIONAL — fases antigas e pesquisa.
+- Logs detalhados do dia vivem em `logs/` e são lidos sob demanda.
 
 ## Ao final da conversa, REGISTRE o que falta (não liste)
 Registre AQUI, não liste para depois: doc grande por WO (com a linha `/apply-wo`), arquivo novo ou pequeno inteiro, e o log do dia SEMPRE. A lista termina vazia. Regenerar × criar: CEREBRO.md.
@@ -52,10 +53,11 @@ Registre AQUI, não liste para depois: doc grande por WO (com a linha `/apply-wo
 - IDEAS.md — completo, com as ideias da conversa capturadas e reclassificadas
 - ROADMAP.md — completo, se alguma fase mudou de estado (quando o projeto usa roadmap)
 - GLOSSARY.md — completo, se surgiu termo novo (quando o projeto usa glossário)
+- SETUP.md — completo, se um passo de ambiente mudou ou um bloqueio foi resolvido (quando usa o arquivo)
 - logs/AAAA-MM-DD.md — log do dia preenchido (formato em LOG-TEMPLATE.md)
 - Higiene no CEREBRO.md (resumo: STATUS só o agora; IDEAS nunca perde; uma fonte de verdade por dado).
 - **Fecho do turno** — formato fixo (divisor, listas, condição por linha) que não cabe aqui: **copie o esqueleto do CEREBRO**, não reconstitua de memória — o esqueleto tem cinco itens; sem saber nomeá-los, abra-o. `Estado` abre com `Base:` — o lido NESTE turno.
 
 ## Idioma
 Respostas em pt-BR.
-Sistema do usuário: Windows (CMD/Prompt de Comando). Comandos de terminal no formato CMD do Windows: tudo numa linha (sem continuação `\`); em git commit, repetir `-m` para múltiplos parágrafos; caminhos com `\`.
+Sistema do usuário: Windows. Comandos que eu rodo: formato CMD (tudo numa linha, sem continuação `\`; no git commit, `-m` repetido por parágrafo; caminhos com `\`). O Claude Code eu abro pelo PowerShell.

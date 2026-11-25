@@ -4,6 +4,8 @@ Thumbs.db
 *.swp
 .vscode/
 .idea/
+# o Claude Code cria e enche de caminhos desta maquina; e do usuario, nao do projeto (KCM v1.162.1)
+.claude/settings.local.json
 
 # Node / TypeScript / WXT (stack da DEC-006)
 node_modules/

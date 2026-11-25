@@ -8,6 +8,9 @@
 - «Copiar conversa» (Markdown simples, com as opções) e «Copiar última resposta» (texto cru da IA) no popup (wo0007, DEC-013); conferidos pelo dono em 2026-10-19.
 - Licença MIT (`LICENSE`) e seção no README.
 
+### Modificado
+- Kit de contexto (KCM) atualizado de v1.124.0 para v1.162.1: CEREBRO e Instruções fundidos com o perfil do projeto transplantado, `meta/GUIA-DO-KIT.md` novo, skills `apply-wo`/`wrap`/`sondar` e molde de WO do kit, permissões do Code ampliadas (DEC-014). Nada muda na extensão.
+
 ## [0.1.0] — 2026-10-17
 Primeira versão usável: F1 (uma conversa do Claude → Lunoda) e a primeira leva da F2 (formatos «simples» e opções).
 

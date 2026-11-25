@@ -15,7 +15,13 @@ Extensão de navegador (Chrome, Manifest V3) que transforma uma conversa aberta 
 - **Testes:** Vitest com fixtures (respostas brutas salvas das APIs), par sintético versionado e oráculo privado do Lunoda fora do repositório (DEC-009).
 - **Distribuição:** `.zip` carregado como extensão descompactada no início; Chrome Web Store é decisão futura (IDEAS).
 - **Versões:** exatas no `package.json` (sem `^`). Trocar versão é decisão com motivo, não atualização de passagem.
-- **Validação única:** `npm run check` = typecheck + lint + Prettier + testes + build.
+- **Validação:** ver «Build e validação», abaixo.
+
+## Build e validação (a rede deste projeto)
+- **Rede automática:** `npm run check` = typecheck + lint + Prettier + testes (Vitest) + build; sai com código de erro. Roda antes de commitar mudança de código.
+- **Linha de base:** o par sintético do Lunoda (`src/tests/fixtures/lunoda/sintetico.*`, gravado pelo Vitest com `toMatchFileSnapshot`; regravar só de propósito, com a flag no FIM — armadilha 16). Fora do repositório, por serem conteúdo real (DEC-009): o oráculo do Lunoda (`CDC_LUNODA_ORACLE_DIR=../oraculo-lunoda`) e as capturas reais do Claude (`CDC_CLAUDE_CAPTURES_DIR=../capturas-claude/cdc-raw`) — os comandos completos estão no `CLAUDE.md`; o `npm test` comum pula os dois.
+- **Na tela, pelo dono:** carregar `.output\chrome-mv3` em `chrome://extensions` no Chrome de uso diário (armadilha 11), abrir uma conversa no claude.ai, usar o popup e importar o `.json` no Lunoda.
+- **O que o ambiente do chat não roda:** a extensão dentro do Chrome logado e o Lunoda. O chat tem Node na VM (o Prettier do repositório rodou lá em 2026-11-25); testes e build são do Code.
 
 ## Estrutura do Projeto
 ```

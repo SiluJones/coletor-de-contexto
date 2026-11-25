@@ -17,6 +17,9 @@ O que se pretendia fazer ao começar.
 ### Feito
 - Mudanças concretas: arquivos tocados, funções criadas, WOs escritas ou aplicadas.
 
+### Entregas
+- WOs aplicadas (com o commit), specs e análises escritas — o que outro turno vai procurar pelo nome.
+
 ### Plataformas e formatos tocados
 - Qual adaptador (Claude, ChatGPT, Gemini) e qual exportador (Lunoda JSON, Lunoda MD) mudaram; se alguma fixture foi recapturada, de quando é a captura.
 

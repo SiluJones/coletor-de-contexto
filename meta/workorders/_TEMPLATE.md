@@ -1,7 +1,7 @@
 # WO NNNN — [titulo curto e concreto, no que a WO ENTREGA]
 
 > **Este arquivo e o MODELO — nao o preencha aqui.** Copie para `meta/workorders/AAMMDD-woNNNN-desc.md`
-> e preencha a copia. Ele sobe sempre ao Projeto (o `.flatdropignore` ignora `meta/workorders/*` mas
+> e preencha a copia. No canal de reserva (FlatDrop) o modelo sobe ao Projeto mesmo assim (o `.flatdropignore` ignora `meta/workorders/*` mas
 > reinclui `!meta/workorders/_TEMPLATE.md`), para que a primeira conversa depois de uma transferencia
 > tenha o formato a mao sem precisar das WOs antigas.
 >
@@ -23,14 +23,17 @@
 > no arquivo depois do chat — **PARE e reporte**, nao commite por cima. Sem pasta vinculada, apague a linha.
 > **Ancora semantica:** se um trecho-ancora nao bater EXATAMENTE, **PARE e reporte** — nunca chute um
 > lugar proximo. Os arquivos podem ter mudado entre a escrita desta WO e a aplicacao.
-> **Idempotencia:** antes de cada insercao, procure a frase-chave do texto NOVO. Se ja existir, **PULE**
+> **Idempotencia:** antes de cada edicao, procure o texto NOVO INTEIRO no arquivo — frase-chave nao basta: na forma
+> «trocar» o texto novo repete a ancora, e um trecho dele ja existe antes de aplicar. Ja aplicada = o texto novo INTEIRO esta
+> no arquivo **e a ancora nao** — salvo quando a ancora esta DENTRO do texto novo (forma «trocar»). Na REMOCAO o texto novo e
+> um pedaco da ancora: sem a segunda condicao, ela seria pulada sem nunca ter sido aplicada. Ja aplicada, **PULE**
 > o item e diga no relatorio — nao duplique.
 > **Ancoras lidas em:** para CADA edicao, o arquivo e o trecho literal que voce leu NESTE turno para escrever a ancora.
 > Campo OBRIGATORIO em WO que edita arquivo existente. **Quem aplica RECUSA a WO se vier vazio** — a conferencia sai de
 > quem escreveu (que tem o vies) e vai para quem aplica (que nao tem), que e o mesmo desenho que faz o «PARE e reporte»
 > funcionar todas as vezes. O campo pede o TRECHO, nao uma marca de conferido: nao se escreve o trecho sem abrir o arquivo.
 > **Afirmacao sobre artefato legivel nao e opiniao, e leitura** — o que uma ferramenta faz, o que um simbolo contem, em que
-> estado esta o mount. Nao cite simbolo, caminho ou capacidade de ferramenta que voce nao leu neste turno; declarar «nao li»
+> estado esta a pasta (ou o mount, no canal de reserva). Nao cite simbolo, caminho ou capacidade de ferramenta que voce nao leu neste turno; declarar «nao li»
 > nao autoriza escrever a WO em cima.
 > **Numero de checklist e DERIVADO, nunca estimado.** Toda contagem prevista (`grep -c`, quantidade de bullets, de
 > arquivos) sai de simular o texto final DESTA WO, incluindo o que ela propria manda inserir — a WO costuma citar as
@@ -152,16 +155,18 @@ fica invisivel dos dois lados, porque a correcao e a conferencia saem do mesmo i
 
 **Ancora** *(diga ONDE fica: secao, funcao, item — nunca numero de linha)*:
 
-```
+````
 [trecho literal e unico do arquivo vivo, copiado sem reformatar]
-```
+````
 
 **Substituir por:**
 
-```
+````
 [texto exato que entra]
-```
+````
 
+> **Cerca de QUATRO crases** nos blocos de ancora e de texto novo: texto com `## titulo` ou com bloco de tres crases dentro
+> quebra quem delimita pelo cabecalho ou pela cerca de tres; a de quatro so fecha na linha de quatro, e quem aplica delimita por ela.
 > Variantes — use a que couber, sempre com a ancora acima: **Inserir IMEDIATAMENTE APOS** ·
 > **Inserir IMEDIATAMENTE ANTES** · **Remover o bloco inteiro** · **Criar arquivo novo** (sem ancora;
 > diga o que fazer se ele ja existir) · **MOVER**.
@@ -177,6 +182,8 @@ fica invisivel dos dois lados, porque a correcao e a conferencia saem do mesmo i
 > BORDA do texto novo nao sobrevive ao bloco cercado — ponha-a no MEIO, entre a ancora e o texto.
 > **Caso medido:** um script de aplicacao tratou «inserir apos» como «substituir» em tres edicoes; o
 > saldo de linhas previsto pela WO acusou, e quem aplicou corrigiu antes do commit.
+> **Ancora e texto novo sem linha em branco nas BORDAS.** A borda em branco casa uma linha a menos (ou a mais), o saldo
+> «quase bate» e quem aplica racionaliza a diferenca. Recorte sem borda; saldo de linhas diferente do previsto e VERMELHO.
 
 ## Edicao 2 — `caminho/real/do/arquivo.ext` · [...]
 
@@ -247,10 +254,12 @@ WO avisou que certa frase «nao e citada por nenhum texto inserido — conferido
         o comando exato, o que esperar ver, e o que fazer se vier diferente —
         **nunca peca um resultado que voce nao ensinou a produzir.**
       - **Quando o passo e do dono, ele nao e item de checklist: e ROTEIRO, e roteiro tem forma.** Sai da
-        lista de quem aplica e vai para o fecho do chat, como bloco proprio. **Cinco linhas de
+        lista de quem aplica e vai **no chat, no MESMO turno que entrega a WO**, como bloco proprio —
+        nunca so dentro do arquivo da WO, nunca no turno seguinte: nada nele depende do relatorio, porque
+        ele sai da spec e do que a WO muda. **Cinco linhas de
         cabecalho:** **Para** (quem, e com o que aberto) · **Por que** (o que a automacao nao cobriu,
         nomeando a WO) · **Formato** (cada item diz **o que se ve quando esta certo**, com numero quando
-        existe numero) · **Tempo** (quanto dura num passe so) · **Estado** (commit, versao instalada e
+        existe numero) · **Tempo** (quanto dura num passe so) · **Estado** (a WO pelo nome — «o commit da woNNNN», nao um hash que ainda nao existe —, versao instalada e
         **onde esta o rollback vivo** — e a linha que decide se o dono pode mexer sem medo). **Tres
         secoes:** **Preparo** (o que abrir e deixar pronto antes de comecar, para o passe nao parar no
         meio), os itens, e **«o que este roteiro NAO testa»**, que impede «passou tudo» de ser lido como
@@ -273,7 +282,8 @@ WO avisou que certa frase «nao e citada por nenhum texto inserido — conferido
         porque nenhum instrumento abriu um deles. Fechar a lacuna costuma custar pouco.
       - **Prova de vida:** quando "passou" se parece com "nada aconteceu", o passo precisa do par negativo
         que forca o sinal. Lista vazia so significa alguma coisa depois de voce ter visto a mesma checagem
-        devolver um item.
+        devolver um item. Teste novo: rode-o contra o codigo de ANTES — ele tem de falhar, no numero previsto;
+        teste que passa antes da mudanca nao testa a mudanca.
       - **`grep` casa por LINHA.** Se a frase que voce mandou conferir esta quebrada em duas linhas — e o
         proprio texto que a WO insere costuma quebra-la —, o `grep` devolve zero e o passo acusa ausencia
         onde ha presenca. Conferir frase que atravessa linha pede `grep -Pzo`, `rg -U` ou uma ancora curta
@@ -286,6 +296,8 @@ WO avisou que certa frase «nao e citada por nenhum texto inserido — conferido
 O que foi feito · o que fugiu do texto literal da WO · arquivos tocados · resultado da validacao · o commit e o push. Escreva-o DEPOIS de resolver o push: relatorio anterior a decisao conta so parte da historia.
 **Nao** substitua este relatorio pelo bloco de fecho do chat: aquele e da raia de planejamento, e trocar
 relatorio por formulario perde justamente o que so quem aplicou viu.
+Relatorio e log se gravam pela ferramenta de escrita de arquivo, nunca por `echo -e`/`printf`: o escape come a barra
+invertida dos caminhos do Windows e grava byte invalido.
 
 ## Commit — blocos separados, mensagem SEM acento
 
@@ -303,4 +315,4 @@ git commit -m "tipo(escopo): descricao no imperativo curto" -m "Corpo explicando
 git push
 ```
 
-*Gerado pelo Kit de Contexto Universal v1.124.0 — 2026-10-16 — esta linha e do KIT: nao funda, substitua pela do pacote mais recente.*
+*Gerado pelo Kit de Contexto Universal v1.162.1 — 2026-11-24 — esta linha e do KIT: nao funda, substitua pela do pacote mais recente.*

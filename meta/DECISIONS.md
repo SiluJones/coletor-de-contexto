@@ -2,7 +2,7 @@
 
 > Arquivo que **cresce devagar**. Guarda o PORQUÊ — o que o código sozinho não conta.
 > **DEC** = decisão de arquitetura/design · **FIX** = bug grave resolvido.
-> Toda entrada traz `**Status:**` com valor fechado: aceita · substituída por X · resolvida · aberta.
+> Toda entrada traz `**Status:**` com valor fechado: aceita · aceita — emendada por DEC-X · substituída por X · resolvida · aberta.
 > Entrada resolvida ou substituída vai para `DECISIONS-archive.md` por evento; ~700 linhas é só alarme.
 
 ---
@@ -267,3 +267,25 @@ A IDEAS registrava «copiar o MD (ou só a última resposta) com um clique — �
 
 ### Consequências
 Nenhum exportador muda. A busca da conversa roda a cada cópia, como no «Exportar» (DEC-007: só sob demanda).
+
+---
+
+## DEC-014 — Template-update do KCM v1.124.0 → v1.162.1 com o perfil transplantado
+**Data:** 2026-11-25 · **Status:** aceita
+
+### Contexto
+O pacote `261124-kcm-update-dev-v1.162.1` foi gerado com o perfil vazio: nome vazio e sistema operacional «não informado». Com isso o CEREBRO e as Instruções do pacote saem sem a seção «Ambiente», sem a linha do CMD e sem o nome. O manifesto manda tratar campo de perfil diferente como pergunta ao dono antes de fundir, e diz que o remédio é regerar o pacote — a regra existe para impedir que um pacote feito com o formulário de outro projeto copie o perfil errado. O chat aplicou a regra ao pé da letra (vazio lido como diferente) e perguntou «regerar ou transplantar», recomendando regerar. O dono recusou regerar por um campo vazio — é a segunda vez que o perfil chega vazio (o nome já viera como placeholder em 2026-10-16) — e corrigiu o perfil: abre o Claude Code pelo PowerShell (no CMD o Code não funciona direito, causa desconhecida) e cola os comandos dele no CMD [relatado pelo dono].
+
+### Decisão
+- Fusão a partir do pacote (CEREBRO e Instruções), com transplante marcado do que é deste projeto: os 4 itens de «Técnicas específicas deste projeto»; a seção «Ambiente (sistema operacional)», agora com CMD (comandos do dono) e PowerShell (onde ele abre o Code); o aviso de sistema operacional em «Commit pronto ao final»; o título e a linha do Windows nas Instruções.
+- Duas regras locais novas em «Técnicas específicas»: (1) campo de perfil VAZIO no pacote e já declarado aqui = transplante sem pergunta; só campo PREENCHIDO com valor diferente é pergunta; (2) os insumos permanentes da pasta-pai são `oraculo-lunoda/`, `capturas-claude/cdc-raw/` e `exportacoes-cdc/<AAMMDD-HHMM>/` — desvio da convenção `material/` do kit; `exportacoes-cdc/` é dado de teste do produto, não a «pasta de histórico das conversas» do kit, e o chat arquiva nela movendo.
+- Os choques do inventário foram resolvidos pelo pacote: o bloco de commit é da WO quando houver WO; a config sai sempre, por raia; skill muda por WO e o `settings.json` o chat grava inteiro e confere; a pasta-pai segue o desvio acima.
+- Entram inteiros do pacote: `meta/GUIA-DO-KIT.md` (novo), as skills `apply-wo`/`wrap`/`sondar` e `meta/workorders/_TEMPLATE.md`. `settings.json` ganha `git show`, `git cat-file`, `wc`, `grep`, `head`; `.gitignore` ganha `.claude/settings.local.json`; `CLAUDE.md` ganha a seção «Auditoria das instruções» e a linha do terminal do dono, e perde a linha «Parou…» (a skill nova grava o relatório também na parada); CONTEXT ganha «Build e validação»; LOG-TEMPLATE ganha «Entregas».
+
+### Alternativas consideradas
+- **Regerar o pacote com nome e SO** — recusada pelo dono: regerar por campo vazio é custo recorrente, e o projeto já declara o perfil.
+- **Fundir sem o transplante** — apagaria o perfil e as técnicas que este projeto aprendeu.
+- **Ficar no kit v1.124.0** — perderia as correções (relatório na parada, idempotência das WOs, contagem de caracteres com locale) e o GUIA.
+
+### Consequências
+Os 6 carimbos do kit dizem v1.162.1. O perfil vive no CEREBRO e nas Instruções como transplante marcado, e o próximo update o transplanta de novo sem perguntar. As Instruções novas só valem para o chat depois que o dono as colar no painel do Projeto. Feedback ao kit no IDEAS.

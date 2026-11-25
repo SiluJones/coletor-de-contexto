@@ -14,18 +14,18 @@ Leia `meta/CEREBRO.md` → o doc de contexto do projeto (ex.: `meta/CONTEXT.md`)
 - Mudou `src/exporters/`? Rode também o oráculo privado do Lunoda (DEC-009): `CDC_LUNODA_ORACLE_DIR=../oraculo-lunoda npx vitest run src/exporters/lunoda-golden.test.ts` — pares exportados pelo Lunoda em `CDC/oraculo-lunoda/`, fora do repo. O `npm test` comum pula esse bloco.
 - `src/adapters/claude/fetch-raw.ts` é injetado na aba do claude.ai: nada de import ou constante de fora dentro de `fetchClaudeConversationRaw` (armadilha 14 do CONTEXT).
 - Mudou `src/adapters/claude/`? Rode também as capturas reais (DEC-011): `CDC_CLAUDE_CAPTURES_DIR=../capturas-claude/cdc-raw npx vitest run src/adapters/claude/normalize.test.ts` — respostas brutas do claude.ai fora do repo; nenhuma pode virar turno vazio.
-- **Parou (divergência na Edição 0, âncora não achada, validação vermelha)? O relatório em arquivo sai do mesmo jeito, ANTES do menu de opções** — `../AAMMDD-HHMM-code-cdc-apply-<wo>.txt` com o que foi conferido, o que divergiu (esperado × obtido, com o comando) e o que NÃO foi feito. É o que o chat lê; sem ele, o dono tem de copiar a tela.
 - Mudança só de doc (meta/) NÃO precisa de build; a rede é o `git diff`.
 - Adicione seus comandos de build/teste ao `allow` de `.claude/settings.json`.
 
 ## Convenções
 - Mensagens de commit **sem acento**.
+- **Terminal do dono:** ele abre o Claude Code pelo **PowerShell** (no CMD o Code não funciona direito, causa não investigada) e cola os comandos dele no **CMD** [relatado pelo dono, 2026-11-25]. Comando que você entrega para ELE rodar sai em sintaxe do CMD (uma linha, `-m` repetido no commit); o que você roda sozinho segue o seu shell.
 - Edições nos meta/ são **append-only** pelo Code (STATUS, DECISIONS); curadoria que reescreve vem do chat (arquivo inteiro OU WO).
 - Ao aplicar uma WO de `meta/workorders/`: ache cada âncora exatamente; se não achar, PARE e reporte. Não mexa fora das edições nomeadas. `git diff` antes do commit.
 - **Ao fechar a tarefa, RELATE o trabalho** — o que fez, achados e desvios do que a tarefa pedia, arquivos tocados, resultado do build/validação e o commit. **Não** copie o bloco de fecho do `meta/CEREBRO.md`: aquele é da raia de planejamento, e trocar relatório por formulário perde o que só você viu.
 
 ## Quando eu pedir medição
-- Eu leio só o que chega pelo mount; você lê o disco. Se eu pedir para **medir**, o pedido não tem âncora nem commit: não edite nada, não conserte nada, não sugira nada.
+- Eu leio a pasta com teto de contexto e de tempo por comando; você lê o repositório inteiro. Se eu pedir para **medir**, o pedido não tem âncora nem commit: não edite nada, não conserte nada, não sugira nada.
 - Responda com o **número cru e o comando que o produziu**. Sem interpretação, sem recomendação — se você achar que o número indica um problema, diga o número primeiro e a suspeita depois, separada.
 - Se o alvo estiver fora da raiz do repositório, isso depende de `permissions.additionalDirectories` no `.claude/settings.json` (a mesma chave do relatório em arquivo). Se a leitura for negada, DIGA — não estime.
 
@@ -43,3 +43,7 @@ Leia `meta/CEREBRO.md` → o doc de contexto do projeto (ex.: `meta/CONTEXT.md`)
 - WO com diff exato já validado → **Sonnet**, esforço proporcional (mecânico = baixo/médio).
 - Tarefa com julgamento sem rede (refator multi-arquivo, WO que delega decisão) → **Opus**, esforço alto.
 - Esforço proporcional à ambiguidade; `/effort low` para o trivial.
+
+## Auditoria das instruções (depois de um update do kit)
+- Depois de fundir um pacote do KCM, ou de trocar de modelo, rode `/doctor prompt-audit .` (também `/checkup prompt-audit`; Claude Code 2.1.283 ou mais novo). Ele lê este `CLAUDE.md`, as regras, as skills e os comandos, aponta instrução velha, referência a arquivo ou comando que não existe e contradição, e **propõe** a edição sem aplicar: a proposta vira WO como qualquer outra.
+- Ele não lê o `meta/CEREBRO.md` nem o `meta/GUIA-DO-KIT.md`, que não são arquivos do Code: para esses, a rede continua sendo a varredura do merge.
