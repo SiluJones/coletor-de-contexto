@@ -1,8 +1,9 @@
 /**
- * Partes puras do botao de depuracao «Salvar resposta bruta» (passo 6 da spec, DEC-010).
+ * Partes puras do formato «Resposta bruta» do «Exportar» (DEC-015; antes, botao de depuracao — DEC-010).
  */
 
 import { safeFileName } from '../core/filename';
+import type { DownloadFile } from './export';
 
 /** Subpasta dentro de Downloads onde as capturas brutas caem. */
 export const RAW_DUMP_DIR = 'cdc-raw';
@@ -51,5 +52,23 @@ export function summarizeRaw(text: string): RawSummary {
     kb,
     topKeys: Object.keys(parsed).length,
     ...(typeof name === 'string' && name.trim() ? { title: name } : {}),
+  };
+}
+
+/**
+ * Arquivo da resposta bruta: o texto EXATAMENTE como veio da API, sem reformatar (DEC-015).
+ * @param text corpo da resposta, como veio.
+ * @param title o `name` da conversa (de `summarizeRaw`), se houver.
+ */
+export function rawDownloadFile(
+  text: string,
+  conversationId: string,
+  now: Date,
+  title?: string,
+): DownloadFile {
+  return {
+    filename: rawDumpFilename(conversationId, now, title),
+    content: text,
+    mime: 'application/json',
   };
 }

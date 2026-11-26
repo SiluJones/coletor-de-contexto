@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { rawDumpFilename, summarizeRaw } from './raw-dump';
+import { rawDownloadFile, rawDumpFilename, summarizeRaw } from './raw-dump';
 
 const ID = 'd41adc75-87c7-4a84-87ee-0b95f7ed0a5c';
 const NOW = new Date('2026-10-17T01:23:25.562Z');
@@ -39,5 +39,16 @@ describe('summarizeRaw', () => {
 
   it('recusa JSON que nao e objeto', () => {
     expect(summarizeRaw('[1,2]')).toMatchObject({ ok: false });
+  });
+});
+
+describe('rawDownloadFile', () => {
+  it('leva o texto byte a byte, sem reformatar, em cdc-raw/', () => {
+    const text = '{"name":"CDC 1",  "chat_messages":[]}\n';
+    expect(rawDownloadFile(text, ID, NOW, 'CDC 1')).toEqual({
+      filename: 'cdc-raw/CDC 1 — claude-d41adc75-20261017T012325Z.json',
+      content: text,
+      mime: 'application/json',
+    });
   });
 });

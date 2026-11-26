@@ -20,14 +20,15 @@
 - Formatos e opções da F2 (wo0005, DEC-012): os 4 arquivos saem, as caixas ficam lembradas, e o Lunoda importou o `.json` com pensamento e o devolveu igual (só título e `updatedAt` mudam) — conferido em 2026-10-17.
 
 ## 🔧 Em Progresso
-- **F2:** levas «formatos e opções» e «copiar» entregues e conferidas. Faltam «conteúdo dos artefatos gerados» (pede medir antes onde a API entrega o texto) e «nome de arquivo configurável» (ROADMAP).
+- **F2:** levas «formatos e opções» e «copiar» entregues e conferidas; leva «resposta bruta como formato» (wo0011, DEC-015) aplicada, falta a conferência do dono no navegador. Próxima: «reprocessar a partir da bruta». Faltam ainda «conteúdo dos artefatos gerados» (a bruta já tem o dado: entradas de ferramenta) e «nome de arquivo configurável» (ROADMAP).
 
 ## ❌ Quebrado / Com Problema
 - Nada confirmado. **Em observação:** nome do arquivo em outro perfil do Chrome [relatado pelo dono, 2026-10-20]. Não reproduzido: a exportação de «KCM 1» feita no segundo perfil em 2026-10-20 23:41 saiu com o nome certo nos 4 arquivos [medido no disco, `CDC/exportacoes-cdc/261020-2341/`]. Suspeita antiga (extensão de downloads daquele perfil) não testada. Fechar se não voltar.
 
 ## 📋 Backlog (curto prazo)
-- [ ] Olhar as exportações de outros projetos que usaram o CDC, inclusive de outros perfis do Chrome [relatado pelo dono, 2026-11-24: ele vai dar acesso às pastas] — validar o normalizador e os formatos em conversas variadas.
+- [ ] Conferir no navegador a leva da resposta bruta (roteiro do chat, wo0011).
+- [ ] Spec e WO do «reprocessar a partir da bruta» (DEC-015).
 - [ ] Ícone próprio da extensão (pedido do dono, IDEAS).
 
 ## 💬 Última conversa
-**2026-11-26** — Conversa de chat 2: template-update do KCM v1.162.1 fechado (DEC-014, Instruções coladas no painel) e release v0.1.0 publicada no GitHub (wo0010). Próximo: as exportações de outros projetos (Backlog), quando o dono conceder as pastas.
+**2026-11-26** — Conversa de chat 2: KCM v1.162.1 (DEC-014), release v0.1.0 no GitHub (wo0010), inventário das exportações de 28 projetos e análise dos formatos; decisão «bruta + simples» (DEC-015, wo0011). Próximo: o dono confere a bruta no navegador; depois, o reprocessar.

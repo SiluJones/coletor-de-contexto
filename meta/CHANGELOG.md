@@ -7,9 +7,15 @@
 ### Adicionado
 - «Copiar conversa» (Markdown simples, com as opções) e «Copiar última resposta» (texto cru da IA) no popup (wo0007, DEC-013); conferidos pelo dono em 2026-10-19.
 - Licença MIT (`LICENSE`) e seção no README.
+- Formato «Resposta bruta» no «Exportar»: a resposta da API como veio, em `cdc-raw/`, salva antes de normalizar — o único formato sem perda (wo0011, DEC-015).
 
 ### Modificado
 - Kit de contexto (KCM) atualizado de v1.124.0 para v1.162.1: CEREBRO e Instruções fundidos com o perfil do projeto transplantado, `meta/GUIA-DO-KIT.md` novo, skills `apply-wo`/`wrap`/`sondar` e molde de WO do kit, permissões do Code ampliadas (DEC-014). Nada muda na extensão.
+- Padrão de primeiro uso do popup: Markdown simples + resposta bruta (antes: só Lunoda) (DEC-015).
+- Teste das capturas reais aceita resposta da IA sem texto quando há pensamento ou arquivo; reprova a conversa sem nenhum texto da IA.
+
+### Removido
+- Botão «Salvar resposta bruta (depuração)»: virou a caixa «Resposta bruta» (DEC-015).
 
 ## [0.1.0] — 2026-10-17
 Primeira versão usável: F1 (uma conversa do Claude → Lunoda) e a primeira leva da F2 (formatos «simples» e opções).

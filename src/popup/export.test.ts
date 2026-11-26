@@ -45,7 +45,7 @@ describe('buildExportDownloads (formatos escolhidos)', () => {
   const all = {
     includeThinking: true,
     includeFiles: true,
-    formats: { lunoda: true, simpleMd: true, cdcJson: true },
+    formats: { lunoda: true, simpleMd: true, cdcJson: true, raw: true },
   };
   const out = buildExportDownloads(
     structuredClone(SYNTHETIC_CLAUDE_RAW),
@@ -64,24 +64,38 @@ describe('buildExportDownloads (formatos escolhidos)', () => {
     ]);
   });
 
-  it('padrao do primeiro uso -> so os 2 do Lunoda, iguais aos do buildLunodaExport', () => {
+  it('so Lunoda -> os 2 do Lunoda, iguais aos do buildLunodaExport', () => {
+    const onlyLunoda = {
+      ...DEFAULT_SETTINGS,
+      formats: { lunoda: true, simpleMd: false, cdcJson: false, raw: false },
+    };
     const d = buildExportDownloads(
       structuredClone(SYNTHETIC_CLAUDE_RAW),
-      DEFAULT_SETTINGS,
+      onlyLunoda,
       ctx(),
       'America/Sao_Paulo',
     );
     const l = buildLunodaExport(
       structuredClone(SYNTHETIC_CLAUDE_RAW),
-      DEFAULT_SETTINGS,
+      onlyLunoda,
       ctx(),
       'America/Sao_Paulo',
     );
     expect(d.files.map((f) => f.content)).toEqual([l.json, l.md]);
   });
 
-  it('nenhum formato marcado -> nenhum arquivo', () => {
-    const none = { ...all, formats: { lunoda: false, simpleMd: false, cdcJson: false } };
+  it('padrao do primeiro uso -> so o Markdown simples (a bruta sai pelo popup, antes)', () => {
+    const d = buildExportDownloads(
+      structuredClone(SYNTHETIC_CLAUDE_RAW),
+      DEFAULT_SETTINGS,
+      ctx(),
+      'America/Sao_Paulo',
+    );
+    expect(d.files.map((f) => f.filename)).toEqual(['Sintética 1 — contar palavras (simples).md']);
+  });
+
+  it('nenhum formato normalizado marcado (so a bruta) -> nenhum arquivo aqui', () => {
+    const none = { ...all, formats: { lunoda: false, simpleMd: false, cdcJson: false, raw: true } };
     expect(buildExportDownloads(structuredClone(SYNTHETIC_CLAUDE_RAW), none, ctx()).files).toEqual(
       [],
     );

@@ -62,11 +62,10 @@
     <div id="controls" hidden>
       <fieldset>
         <legend>Formatos</legend>
+        <label><input type="checkbox" id="fmt-simple" /> Markdown simples (.md, para ler)</label>
+        <label><input type="checkbox" id="fmt-raw" /> Resposta bruta (.json, sem perda)</label>
         <label><input type="checkbox" id="fmt-lunoda" /> Lunoda (.json + .md)</label>
-        <label><input type="checkbox" id="fmt-simple" /> Markdown simples (.md)</label>
-        <label
-          ><input type="checkbox" id="fmt-cdc" /> JSON do CDC (.cdc.json, conversa inteira)</label
-        >
+        <label><input type="checkbox" id="fmt-cdc" /> JSON do CDC (.cdc.json)</label>
       </fieldset>
       <fieldset>
         <legend>Incluir</legend>
@@ -78,7 +77,6 @@
         <button id="copy-conversation" type="button">Copiar conversa</button>
         <button id="copy-last" type="button">Copiar última resposta</button>
       </div>
-      <button id="raw" type="button" class="secondary">Salvar resposta bruta (depuração)</button>
     </div>
     <script type="module" src="./main.ts"></script>
   </body>

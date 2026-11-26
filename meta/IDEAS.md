@@ -43,7 +43,7 @@ O WXT gera build para Firefox a partir do mesmo código; custo baixo depois do M
 Obsidian com front matter próprio, HTML. Cada um é só mais um exportador (DEC-003) e mais uma caixa no popup (DEC-012). O pedido do dono de um formato «original/simples» (`.md` e `.json`) foi feito na wo0005 — ver «Concluídas».
 
 ### 2026-10-17 — Reprocessar a partir do JSON do CDC
-Abrir um `.cdc.json` guardado (no popup ou numa página da extensão) e gerar dele os outros formatos — Lunoda com pensamento, Markdown simples — sem buscar a conversa de novo. É para isso que o JSON do CDC leva tudo, mesmo com as opções desligadas.
+Abrir um `.cdc.json` guardado (no popup ou numa página da extensão) e gerar dele os outros formatos — Lunoda com pensamento, Markdown simples — sem buscar a conversa de novo. É para isso que o JSON do CDC leva tudo, mesmo com as opções desligadas. **[2026-11-26] A fonte passa a ser a resposta bruta** (DEC-015): ela guarda o que o `.cdc.json` não guarda. Aprovada pelo dono como a leva seguinte à da bruta como formato; spec a escrever.
 
 ### 2026-10-16 — Incluir as chamadas de ferramenta (opção)
 As respostas de trabalho do Claude têm centenas de `tool_use`/`tool_result` (até 696 numa captura). Hoje ficam de fora (DEC-011); uma opção poderia listá-las resumidas (nome da ferramenta + uma linha) para quem quiser o rastro completo.
@@ -58,7 +58,7 @@ As respostas de trabalho do Claude têm centenas de `tool_use`/`tool_result` (at
 ---
 
 ## ✅ Concluídas
-- **Botão de depuração «salvar resposta bruta»** — implementado na wo0003 (DEC-010), visível em todo build durante a F1.
+- **Botão de depuração «salvar resposta bruta»** — implementado na wo0003 (DEC-010), visível em todo build durante a F1. Substituído em 2026-11-26 pela caixa «Resposta bruta» do «Exportar» (wo0011, DEC-015).
 - **Preencher `p-ia` sozinho** — implementado na wo0004 (DEC-011): na entrada e nos blocos da IA, como o dono marcava à mão.
 - **Link da conversa na descrição do Lunoda** (ideia do dono, 2026-10-16) — implementado na wo0004 (DEC-011).
 - **Copiar para a área de transferência** — implementado na wo0007 (DEC-013): conversa em Markdown simples ou só a última resposta.

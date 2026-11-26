@@ -1,7 +1,7 @@
 // Popup da extensao (F1 + F2). Reconhece a conversa do Claude e oferece:
-// - «Exportar»: baixa os formatos marcados (Lunoda, Markdown simples, JSON do CDC — DEC-011, DEC-012);
-// - «Copiar conversa» / «Copiar última resposta»: poe o texto na area de transferencia (DEC-013);
-// - «Salvar resposta bruta (depuracao)»: baixa a resposta da API como veio (DEC-010).
+// - «Exportar»: baixa os formatos marcados — Markdown simples, resposta bruta, Lunoda, JSON do CDC
+//   (DEC-011, DEC-012, DEC-015); a bruta sai primeiro, como veio da API;
+// - «Copiar conversa» / «Copiar última resposta»: poe o texto na area de transferencia (DEC-013).
 // Formatos e opcoes ficam lembrados em chrome.storage.local.
 import { browser } from 'wxt/browser';
 import { fetchClaudeConversationRaw } from '../../adapters/claude/fetch-raw';
@@ -10,21 +10,26 @@ import { parseClaudeConversationUrl } from '../../adapters/claude/url';
 import { createIdGenerator } from '../../core/ids';
 import { buildCopyText, type CopyKind } from '../../popup/copy';
 import { buildExportDownloads } from '../../popup/export';
-import { rawDumpFilename, summarizeRaw } from '../../popup/raw-dump';
-import { parseSettings, SETTINGS_KEY, type ExportSettings } from '../../popup/settings';
+import { rawDownloadFile, summarizeRaw } from '../../popup/raw-dump';
+import {
+  needsNormalization,
+  parseSettings,
+  SETTINGS_KEY,
+  type ExportSettings,
+} from '../../popup/settings';
 
 const $ = <T extends HTMLElement>(id: string) => document.querySelector<T>(`#${id}`)!;
 const statusEl = $<HTMLParagraphElement>('status');
 const controls = $<HTMLDivElement>('controls');
 const exportButton = $<HTMLButtonElement>('export');
-const rawButton = $<HTMLButtonElement>('raw');
 const copyConversationButton = $<HTMLButtonElement>('copy-conversation');
 const copyLastButton = $<HTMLButtonElement>('copy-last');
-const actionButtons = [exportButton, rawButton, copyConversationButton, copyLastButton];
+const actionButtons = [exportButton, copyConversationButton, copyLastButton];
 const boxes = {
   lunoda: $<HTMLInputElement>('fmt-lunoda'),
   simpleMd: $<HTMLInputElement>('fmt-simple'),
   cdcJson: $<HTMLInputElement>('fmt-cdc'),
+  raw: $<HTMLInputElement>('fmt-raw'),
   thinking: $<HTMLInputElement>('opt-thinking'),
   files: $<HTMLInputElement>('opt-files'),
 };
@@ -43,6 +48,7 @@ function readBoxes(): ExportSettings {
       lunoda: boxes.lunoda.checked,
       simpleMd: boxes.simpleMd.checked,
       cdcJson: boxes.cdcJson.checked,
+      raw: boxes.raw.checked,
     },
   };
 }
@@ -54,6 +60,7 @@ function writeBoxes(s: ExportSettings): void {
   boxes.lunoda.checked = s.formats.lunoda;
   boxes.simpleMd.checked = s.formats.simpleMd;
   boxes.cdcJson.checked = s.formats.cdcJson;
+  boxes.raw.checked = s.formats.raw;
 }
 
 /** Baixa um texto como arquivo (caminho relativo a Downloads). */
@@ -100,15 +107,22 @@ async function main(): Promise<void> {
   say(`Conversa ${conversationId.slice(0, 8)}… encontrada.`);
   controls.hidden = false;
 
+  /** A resposta bruta ja foi salva nesta acao? Muda a dica quando o formato do site mudou. */
+  let rawSaved = false;
+
   /** Roda uma acao com os botoes travados e erro inesperado no popup. */
   const run = (action: () => Promise<void>) => async () => {
     for (const b of actionButtons) b.disabled = true;
+    rawSaved = false;
     say('Buscando a conversa…');
     try {
       await action();
     } catch (err) {
-      const hint =
-        err instanceof ClaudeFormatError ? ' Salve a resposta bruta e leve ao chat.' : '';
+      const hint = !(err instanceof ClaudeFormatError)
+        ? ''
+        : rawSaved
+          ? ' A resposta bruta foi salva em Downloads/cdc-raw: leve-a ao chat.'
+          : ' Exporte só a «Resposta bruta» e leve-a ao chat.';
       say(`${err instanceof Error ? err.message : String(err)}.${hint}`, 'error');
     } finally {
       for (const b of actionButtons) b.disabled = false;
@@ -126,15 +140,24 @@ async function main(): Promise<void> {
       if (text === null) return;
       const summary = summarizeRaw(text);
       if (!summary.ok) return say(summary.error, 'error');
+      const now = new Date();
+      // A bruta sai PRIMEIRO: se o formato do site mudou e o normalizador falhar abaixo, ela ja
+      // esta salva — e e justamente o que o chat precisa para consertar (DEC-015).
+      if (settings.formats.raw) {
+        const f = rawDownloadFile(text, conversationId, now, summary.title);
+        await download(f.content, f.filename, f.mime);
+        rawSaved = true;
+      }
+      if (!needsNormalization(settings.formats)) {
+        return say(`Exportado: resposta bruta (${summary.kb} KB) em Downloads/cdc-raw.`, 'ok');
+      }
       const out = buildExportDownloads(JSON.parse(text), settings, {
         newId: createIdGenerator(),
-        now: new Date().toISOString(),
+        now: now.toISOString(),
       });
       for (const f of out.files) await download(f.content, f.filename, f.mime);
-      say(
-        `Exportado: ${out.files.length} arquivo(s) de «${out.baseName}» (${out.turns} turnos).`,
-        'ok',
-      );
+      const count = out.files.length + (rawSaved ? 1 : 0);
+      say(`Exportado: ${count} arquivo(s) de «${out.baseName}» (${out.turns} turnos).`, 'ok');
     }),
   );
 
@@ -155,19 +178,6 @@ async function main(): Promise<void> {
     });
   copyConversationButton.addEventListener('click', copy('conversation'));
   copyLastButton.addEventListener('click', copy('lastReply'));
-
-  rawButton.addEventListener(
-    'click',
-    run(async () => {
-      const text = await fetchRaw(tabId, conversationId);
-      if (text === null) return;
-      const summary = summarizeRaw(text);
-      if (!summary.ok) return say(summary.error, 'error');
-      const filename = rawDumpFilename(conversationId, new Date(), summary.title);
-      await download(text, filename, 'application/json');
-      say(`Salvo em Downloads/${filename} (${summary.kb} KB, ${summary.topKeys} chaves).`, 'ok');
-    }),
-  );
 }
 
 void main();

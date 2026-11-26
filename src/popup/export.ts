@@ -62,9 +62,10 @@ export function buildLunodaExport(
 }
 
 /**
- * Monta TODOS os arquivos dos formatos marcados, com nomes que comecam pelo titulo da conversa:
- * `<titulo>.json` + `<titulo>.md` (Lunoda), `<titulo> (simples).md` e `<titulo>.cdc.json`.
- * Nenhum formato marcado -> lista vazia (o popup avisa).
+ * Monta os arquivos dos formatos que dependem da conversa normalizada, com nomes que comecam pelo
+ * titulo: `<titulo>.json` + `<titulo>.md` (Lunoda), `<titulo> (simples).md` e `<titulo>.cdc.json`.
+ * A resposta bruta NAO passa por aqui: o popup a salva antes, com `rawDownloadFile` (DEC-015).
+ * Nenhum desses formatos marcado -> lista vazia.
  * @throws ClaudeFormatError quando o formato da resposta mudou.
  */
 export function buildExportDownloads(

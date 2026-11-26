@@ -177,7 +177,7 @@ O `npm test` comum não prova fidelidade; quem mexe em `src/exporters/` roda tam
 ---
 
 ## DEC-010 — Claude: busca injetada na aba e captura bruta antes do normalizador
-**Data:** 2026-10-16 · **Status:** aceita
+**Data:** 2026-10-16 · **Status:** aceita — emendada por DEC-015 (o botão de depuração virou o formato «Resposta bruta»)
 
 ### Contexto
 O normalizador do Claude (passo 7 da spec) depende do formato da resposta de `chat_conversations`, que o projeto só conhece por relato de terceiro (HISTORY §1). Escrevê-lo em cima disso seria deduzir um formato não lido, e o erro apareceria em silêncio: arquivo exportado faltando partes.
@@ -224,7 +224,7 @@ A exportação reproduz o que a tela mostra, menos o raciocínio completo, que a
 ---
 
 ## DEC-012 — Formatos «simples» e opções lembradas no popup
-**Data:** 2026-10-17 · **Status:** aceita (formatos pedidos pelo dono; desenho do chat)
+**Data:** 2026-10-17 · **Status:** aceita — emendada por DEC-015 (o `.cdc.json` deixa de ser o arquivo de guarda; padrão de primeiro uso novo)
 
 ### Contexto
 O dono pediu um formato «original/simples», em `.md` e `.json`, além do par do Lunoda. A DEC-005 já previa as opções de pensamento e de arquivos no popup; até a F1 elas ficavam fixas no padrão da DEC-008.
@@ -289,3 +289,27 @@ O pacote `261124-kcm-update-dev-v1.162.1` foi gerado com o perfil vazio: nome va
 
 ### Consequências
 Os 6 carimbos do kit dizem v1.162.1. O perfil vive no CEREBRO e nas Instruções como transplante marcado, e o próximo update o transplanta de novo sem perguntar. As Instruções novas só valem para o chat depois que o dono as colar no painel do Projeto. Feedback ao kit no IDEAS.
+
+---
+
+## DEC-015 — Resposta bruta como formato do «Exportar»; padrão «simples + bruta»
+**Data:** 2026-11-26 · **Status:** aceita (decisão do dono sobre a análise `meta/analises/261126-ANALISE-formatos-de-exportacao.md`)
+
+### Contexto
+O dono exportava 5 arquivos por conversa (Lunoda `.json` e `.md`, `(simples).md`, `.cdc.json` e a bruta do botão de depuração). Medido em 51 conversas de 28 projetos (2026-11-26): os quatro formatos processados têm o mesmo conteúdo; só a bruta guarda as entradas e resultados de ferramenta (12,1 e 14,1 milhões de caracteres, contra 2,86 milhões de texto) e os ramos editados (52 mensagens em 11 conversas); os projetos só leem o `(simples).md`. O dono não importa mais no Lunoda.
+
+### Decisão
+- Caixa «Resposta bruta (.json, sem perda)» no popup, lembrada em `formats.raw`; o arquivo é o texto da API byte a byte, em `cdc-raw/` com o nome do antigo botão.
+- O popup salva a bruta ANTES de normalizar: se o formato do site mudou, ela sobrevive à falha do normalizador, e o aviso diz que ela foi salva.
+- Padrão de primeiro uso: Markdown simples + resposta bruta; preferência salva sem `formats.raw` ganha a bruta marcada. Pensamento e arquivos seguem a DEC-008.
+- O botão «Salvar resposta bruta (depuração)» sai (emenda a DEC-010). O `.cdc.json` continua disponível, mas deixa de ser o arquivo de guarda (emenda a DEC-012): a bruta é a fonte, e o reprocessar (leva seguinte) partirá dela.
+- O teste das capturas reais aceita resposta da IA sem texto quando há pensamento ou arquivo, e reprova a conversa sem nenhum texto da IA (armadilha 18 do CONTEXT).
+
+### Alternativas consideradas
+- **Manter os 5 arquivos** — é o problema.
+- **Só o `(simples).md`** — perde o que só a bruta tem e não se refaz se a conversa sumir do claude.ai.
+- **`.cdc.json` como guarda** — não guarda ferramentas nem ramos.
+- **Manter o botão de depuração ao lado da caixa** — duas formas de fazer a mesma coisa; a caixa salva antes de normalizar, que era o papel do botão.
+
+### Consequências
+Por conversa, 2 arquivos em vez de 5 no uso do dono. Formato que deixou de ser exportado só se refaz exportando de novo até o reprocessar existir. As 50 brutas reais dos projetos viram corpus do teste de capturas.

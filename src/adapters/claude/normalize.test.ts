@@ -108,6 +108,10 @@ describe.skipIf(!capturesDir)('capturas reais (CDC_CLAUDE_CAPTURES_DIR)', () => 
     expect(captures.length).toBeGreaterThan(0);
   });
 
+  // Resposta da IA sem texto existe de verdade: a IA trabalha so com ferramentas e para, e o dono
+  // manda «Continuar» (155 turnos em 21 de 50 conversas reais, 2026-11-26). Ela tem pensamento.
+  // O que nao pode: resposta sem texto, sem arquivo e sem pensamento, e conversa sem NENHUM texto da
+  // IA — este e o sintoma da armadilha 15 (ler o campo `text`, que vem vazio).
   it.each(captures)('%s: normaliza sem erro e sem turno vazio', (file) => {
     const raw: unknown = JSON.parse(readFileSync(join(capturesDir!, file), 'utf8'));
     const c = normalizeClaudeConversation(raw);
@@ -115,8 +119,12 @@ describe.skipIf(!capturesDir)('capturas reais (CDC_CLAUDE_CAPTURES_DIR)', () => 
     for (const t of c.turns) {
       expect(t.user.text !== '' || t.user.attachments.length > 0).toBe(true);
       if (t.assistant) {
-        expect(t.assistant.text !== '' || t.assistant.generated.length > 0).toBe(true);
+        const a = t.assistant;
+        expect(a.text !== '' || a.generated.length > 0 || a.thinking.length > 0).toBe(true);
       }
+    }
+    if (c.turns.some((t) => t.assistant)) {
+      expect(c.turns.some((t) => (t.assistant?.text ?? '') !== '')).toBe(true);
     }
   });
 });

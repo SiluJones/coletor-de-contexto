@@ -11,8 +11,10 @@ export interface ExportFormats {
   lunoda: boolean;
   /** Markdown simples, para ler. */
   simpleMd: boolean;
-  /** JSON do CDC: a conversa inteira, para guardar e reprocessar. */
+  /** JSON do CDC: a conversa normalizada inteira. */
   cdcJson: boolean;
+  /** Resposta bruta da API, como veio: o unico formato sem perda (DEC-015). */
+  raw: boolean;
 }
 
 /** Tudo o que o popup lembra. */
@@ -23,10 +25,10 @@ export interface ExportSettings extends ExportOptions {
 /** Chave no `chrome.storage.local`. */
 export const SETTINGS_KEY = 'cdc.exportSettings';
 
-/** Primeiro uso: so o Lunoda, sem pensamento, com arquivos (DEC-008). */
+/** Primeiro uso: Markdown simples + resposta bruta (DEC-015), sem pensamento, com arquivos (DEC-008). */
 export const DEFAULT_SETTINGS: Readonly<ExportSettings> = Object.freeze({
   ...DEFAULT_EXPORT_OPTIONS,
-  formats: Object.freeze({ lunoda: true, simpleMd: false, cdcJson: false }),
+  formats: Object.freeze({ lunoda: false, simpleMd: true, cdcJson: false, raw: true }),
 });
 
 const bool = (v: unknown, fallback: boolean): boolean => (typeof v === 'boolean' ? v : fallback);
@@ -49,6 +51,15 @@ export function parseSettings(raw: unknown): ExportSettings {
       lunoda: bool(f.lunoda, d.formats.lunoda),
       simpleMd: bool(f.simpleMd, d.formats.simpleMd),
       cdcJson: bool(f.cdcJson, d.formats.cdcJson),
+      raw: bool(f.raw, d.formats.raw),
     },
   };
+}
+
+/**
+ * Algum formato marcado precisa da conversa normalizada? A resposta bruta sozinha nao precisa:
+ * ela sai como veio, mesmo quando o formato do site mudou e o normalizador falharia.
+ */
+export function needsNormalization(formats: ExportFormats): boolean {
+  return formats.lunoda || formats.simpleMd || formats.cdcJson;
 }

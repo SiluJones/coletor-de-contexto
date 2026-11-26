@@ -8,9 +8,12 @@ Extensão do Chrome que exporta a conversa aberta no claude.ai para arquivos de 
 
 | Formato | Arquivo | Para quê |
 |---|---|---|
-| Lunoda | `<título>.json` + `<título>.md` | Importar no Lunoda; um bloco por mensagem (`Prompt`, `Pensamento`, `Claude`) |
 | Markdown simples | `<título> (simples).md` | Ler: `## Você · N` / `## Claude · N` por turno |
-| JSON do CDC | `<título>.cdc.json` | Guardar a conversa inteira, com tudo o que foi capturado |
+| Resposta bruta | `cdc-raw/<título> — claude-<id>-<data>.json` | Guardar sem perda: a resposta da API como veio, com o que a IA fez por ferramenta e os ramos editados |
+| Lunoda | `<título>.json` + `<título>.md` | Importar no Lunoda; um bloco por mensagem (`Prompt`, `Pensamento`, `Claude`) |
+| JSON do CDC | `<título>.cdc.json` | A conversa normalizada inteira (o que os outros formatos usam) |
+
+No primeiro uso vêm marcados o Markdown simples e a resposta bruta: um para ler, outro para não perder nada.
 
 Opções no popup, lembradas entre usos: **pensamento** (os resumos que o claude.ai mostra) e **lista de arquivos** anexados e gerados (nome, tipo e tamanho — nunca o conteúdo). Só o ramo da conversa que está na tela é exportado.
 
@@ -37,7 +40,7 @@ Depois, em `chrome://extensions`: ligue o **Modo do desenvolvedor**, clique em *
 
 **Copiar conversa** põe a conversa inteira em Markdown simples na área de transferência (com as mesmas opções); **Copiar última resposta** copia só o texto da última resposta da IA — bom para colar num handoff.
 
-«Salvar resposta bruta (depuração)» baixa a resposta da API como veio, para diagnosticar quando o formato do claude.ai mudar.
+A resposta bruta é salva antes de qualquer outro formato: se o claude.ai mudar o formato e a exportação falhar, ela já está em `Downloads/cdc-raw/` — é o que serve para consertar.
 
 ## Lunoda
 Aplicação do autor para guardar textos em entradas e blocos. O `.json` exportado se importa direto nela; o `.md` é para leitura e para um importador futuro.

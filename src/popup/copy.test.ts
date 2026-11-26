@@ -9,7 +9,7 @@ import { DEFAULT_SETTINGS } from './settings';
 const all = {
   includeThinking: true,
   includeFiles: true,
-  formats: { lunoda: false, simpleMd: false, cdcJson: false },
+  formats: { lunoda: false, simpleMd: false, cdcJson: false, raw: false },
 };
 const ctx = { now: SYNTHETIC_NOW, timeZone: 'America/Sao_Paulo' };
 const raw = () => structuredClone(SYNTHETIC_CLAUDE_RAW);

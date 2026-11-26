@@ -35,7 +35,7 @@ coletor-de-contexto/
 └── src/                         # F1 (scaffold: wo0001)
     ├── entrypoints/             # popup, content script, background (convenção WXT)
     ├── adapters/claude/         # url.ts (reconhece a conversa) · fetch-raw.ts (busca bruta, injetada na aba) · normalize.ts (resposta → Conversation)
-    ├── popup/                   # partes puras do popup: export.ts (resposta → arquivos dos formatos marcados) · copy.ts (texto do «Copiar») · settings.ts (preferências) · raw-dump.ts (captura bruta)
+    ├── popup/                   # partes puras do popup: export.ts (resposta → arquivos dos formatos marcados) · copy.ts (texto do «Copiar») · settings.ts (preferências) · raw-dump.ts (formato «Resposta bruta»)
     ├── core/                    # model.ts (modelo canônico), ids.ts, dates.ts; testes *.test.ts ao lado
     ├── exporters/               # lunoda-types.ts · lunoda-build.ts (Conversation → entrada) · lunoda-json.ts · lunoda-md.ts · simple-md.ts · cdc-json.ts
     └── tests/                   # synthetic-conversation.ts + fixtures/ (par sintético do Lunoda; respostas do Claude, sintéticas, depois das capturas)
@@ -119,9 +119,10 @@ interface FileRef { name: string; kind: string; size?: number; textContent?: str
 - Duas mensagens seguidas da IA acontecem (continuação depois de `stop_reason: tool_use`, ou mensagem vazia de resposta abortada): viram UMA resposta.
 - Arquivos: do usuário em `attachments[]` (`file_name`, `file_type`, `file_size`, `extracted_content`) e `files[]` (`file_kind` como `image`, `file_name`, `size_bytes`); gerados pela IA em `files[]` da mensagem dela (`file_kind: blob`, `download_source`). O exportador nunca leva `extracted_content`.
 
-### Formatos do próprio CDC (DEC-012)
+### Formatos do próprio CDC (DEC-012, DEC-015)
 - **Markdown simples** — `<título> (simples).md`: `# título`; lista com Link, IA (modelo), Criada em · Exportada em, Turnos; por turno `---`, `## Você · N` (texto + «Arquivos anexados») e `## Claude · N` (`### Pensamento (resumo)` opcional, texto, «Arquivos gerados»). Segue as opções. Datas locais `dd/mm/aa HH:MM`.
 - **JSON do CDC** — `<título>.cdc.json`: `{"format": "coletor-de-contexto", "version": 1, "exportedAt": …, "conversation": …}`, 2 espaços e quebra de linha no fim. O `conversation` é o modelo canônico inteiro; ignora as opções.
+- **Resposta bruta** (DEC-015) — `cdc-raw/<título> — claude-<uuid8>-<AAAAMMDDTHHMMSSZ>.json`: o texto da API byte a byte. É o único formato sem perda: guarda as entradas e resultados de ferramenta (os arquivos que a IA escreveu), os ramos editados e o conteúdo extraído dos anexos, que o normalizador descarta. O popup a salva ANTES de normalizar. Padrão de primeiro uso: Markdown simples + resposta bruta.
 - O popup lembra formatos e opções em `chrome.storage.local` (`cdc.exportSettings`). Os downloads caem em `Downloads/`; o dono guarda as exportações reais em `CDC/exportacoes-cdc/<AAMMDD-HHMM>/` (uma subpasta por exportação, hora local), fora do repo.
 
 ## Arquitetura — pontos-chave
@@ -136,6 +137,7 @@ interface FileRef { name: string; kind: string; size?: number; textContent?: str
 - Normalizador do Claude sobre o formato medido; descrição = link; «IA Utilizada» na entrada e nos blocos da IA; arquivo com o nome da conversa — DEC-011.
 - Formatos em caixas no popup (Lunoda, Markdown simples, JSON do CDC inteiro); preferências em `chrome.storage.local` — DEC-012.
 - «Copiar conversa» (Markdown simples) e «Copiar última resposta» (texto cru), sem permissão nova — DEC-013.
+- Resposta bruta como formato do «Exportar», salva antes de normalizar; padrão «simples + bruta»; sem botão de depuração — DEC-015.
 
 ## Armadilhas Conhecidas (o que NÃO fazer)
 1. **Tratar endpoint interno como contrato** — `/api/organizations/...` (Claude) e `/backend-api/...` (ChatGPT) não são documentados e mudam sem aviso → isolar cada um num adapter, com fixture e teste, e mostrar erro claro («formato da plataforma mudou») em vez de exportar meia conversa.
@@ -155,6 +157,7 @@ interface FileRef { name: string; kind: string; size?: number; textContent?: str
 15. **Ler o campo `text` da mensagem do Claude** — vem vazio em toda mensagem medida; exportaria conversas em branco sem erro nenhum → o texto vem de `content[]`; o teste das capturas reais (`CDC_CLAUDE_CAPTURES_DIR`) reprova turno vazio.
 16. **`vitest -u` (ou `--update`) ANTES dos caminhos** — no Vitest 5 a flag engole o caminho seguinte como valor: `-u A B` roda só o B, `--update A` roda a suíte inteira e regrava toda fixture divergente (medido em 2026-10-16) → flag sempre no FIM (`npx vitest run A B --update`) e conferir os hashes das fixtures logo depois.
 17. **Mudar a pasta do projeto e esperar que a extensão continue igual** — extensão descompactada ganha o ID pelo caminho da pasta: outro caminho = outra extensão, com `chrome.storage.local` vazio (as caixas do popup voltam ao padrão) → remover a antiga em `chrome://extensions` e carregar `.output\chrome-mv3` do caminho novo.
+18. **Supor que toda resposta da IA tem texto** — a IA às vezes trabalha só com ferramentas e para, e o dono manda «Continuar»: 155 turnos assim em 21 de 50 conversas reais (2026-11-26). A resposta vem só com pensamento e ferramentas, e o `(simples).md` mostra só o pensamento, fiel à bruta → o teste das capturas reais aceita resposta sem texto quando há pensamento ou arquivo, e reprova a conversa sem NENHUM texto da IA (o sintoma da armadilha 15).
 
 ## 📁 Arquivos Críticos (não mexer sem contexto)
 - `meta/CEREBRO.md` — comportamento do assistente; mudança aqui muda como todo turno trabalha.

@@ -1,6 +1,6 @@
 # ANALISE — Quais arquivos exportar por conversa
 
-> **Status:** Em discussao
+> **Status:** Decidida — em 2026-11-26 o dono escolheu «bruta + simples» (não importa mais no Lunoda) e aprovou a bruta como formato do popup e o reprocessar logo depois: DEC-015, spec `specs/261126-f2-bruta-como-formato.md`, wo0011
 > **Data:** 2026-11-26 (data de criacao; nao muda depois)
 
 ## Problema
