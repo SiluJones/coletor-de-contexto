@@ -60,7 +60,7 @@ Estrutura: `src/adapters/` lê cada plataforma e devolve o modelo canônico (`sr
 - `specs/` — uma spec por feature. `logs/` — um arquivo por dia.
 - `CLAUDE.md` + `.claude/` — arranque do Claude Code. `INSTRUCOES-DO-PROJETO.md` — Instruções do Projeto no claude.ai.
 
-Estrutura de contexto gerada pelo Kit de Contexto Universal v1.124.0.
+Estrutura de contexto gerada pelo Kit de Contexto Universal v1.162.1.
 
 ## Licença
 [MIT](LICENSE).
