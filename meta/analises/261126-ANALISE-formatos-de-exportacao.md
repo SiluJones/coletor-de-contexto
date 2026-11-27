@@ -3,6 +3,8 @@
 > **Status:** Decidida — em 2026-11-26 o dono escolheu «bruta + simples» (não importa mais no Lunoda) e aprovou a bruta como formato do popup e o reprocessar logo depois: DEC-015, spec `specs/261126-f2-bruta-como-formato.md`, wo0011
 > **Data:** 2026-11-26 (data de criacao; nao muda depois)
 
+> **Correção de 2026-11-27 (o chat):** os números abaixo saíram de uma busca que o `timeout 150` cortou em silêncio e cobriram só parte dos históricos. Remedido em 2026-11-27, sem corte: **49 pastas de histórico, 141 conversas, 284,1 MB** (`(simples).md` 17,5 · `.cdc.json` 18,8 · Lunoda `.json` 18,9 · Lunoda `.md` 19,4 · brutas 209,5 MB; 140 brutas — falta a de «My Little Lady 3»). Nas 140 brutas, ramo atual: 10,0 milhões de caracteres de texto, **45,9 milhões nas entradas de ferramenta** e 61,9 milhões nos resultados; **211 mensagens fora do ramo, em 29 conversas**. A conclusão não muda: a bruta continua o único formato sem perda, e as entradas de ferramenta somam 4,6 vezes o texto. Os números originais ficam abaixo, como registro do que foi afirmado.
+
 ## Problema
 
 O dono exporta quase sempre os 5 arquivos por conversa — Lunoda `.json`, Lunoda `.md`, `(simples).md`, `.cdc.json` e a resposta bruta (que ele guarda em `cdc-raw/`) — e os move para `- Histórico - <projeto> (CDC)/` na pasta de notas arquivadas de cada projeto. Ele quer parar com a repetição sem perder nada [relatado pelo dono, 2026-11-26]. Se nada mudar: 5 arquivos por conversa, quatro deles com o mesmo conteúdo, e nenhum critério para escolher.
