@@ -8,7 +8,6 @@ import { parseSettings, SETTINGS_KEY, type ExportSettings } from '../../popup/se
 
 const $ = <T extends HTMLElement>(id: string) => document.querySelector<T>(`#${id}`)!;
 const fileInput = $<HTMLInputElement>('files');
-const drop = $<HTMLDivElement>('drop');
 const runButton = $<HTMLButtonElement>('run');
 const statusEl = $<HTMLParagraphElement>('status');
 const results = $<HTMLUListElement>('results');
@@ -80,14 +79,25 @@ async function main(): Promise<void> {
   }
 
   fileInput.addEventListener('change', () => choose(fileInput.files));
-  drop.addEventListener('dragover', (e) => {
+  // A pagina INTEIRA recebe o arraste (pedido do dono, 2026-11-27), nao so a caixa pontilhada.
+  // `dragenter`/`dragleave` disparam a cada elemento filho cruzado: o contador evita o destaque piscar.
+  const page = document.documentElement;
+  let dragDepth = 0;
+  document.addEventListener('dragenter', (e) => {
     e.preventDefault();
-    drop.classList.add('over');
+    dragDepth++;
+    page.classList.add('over');
   });
-  drop.addEventListener('dragleave', () => drop.classList.remove('over'));
-  drop.addEventListener('drop', (e) => {
+  document.addEventListener('dragleave', () => {
+    dragDepth = Math.max(0, dragDepth - 1);
+    if (dragDepth === 0) page.classList.remove('over');
+  });
+  // Sem o preventDefault no dragover, o navegador abre o arquivo na aba em vez de entrega-lo aqui.
+  document.addEventListener('dragover', (e) => e.preventDefault());
+  document.addEventListener('drop', (e) => {
     e.preventDefault();
-    drop.classList.remove('over');
+    dragDepth = 0;
+    page.classList.remove('over');
     const dropped = e.dataTransfer?.files ?? null;
     // Arrastar nao preenche o campo de arquivo sozinho: sem isto, a pagina diz «1 arquivo escolhido»
     // ao lado de um campo que mostra «Nenhum arquivo escolhido» (visto pelo dono em 2026-11-27).

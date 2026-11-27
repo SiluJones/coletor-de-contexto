@@ -4,6 +4,8 @@
 > **Cresce**: entradas novas no topo. Registra só o que foi de fato concluído/entregue.
 
 ## [Não lançado]
+### Modificado
+- Página «Reprocessar»: a página inteira recebe o arquivo arrastado, não só a caixa pontilhada (pedido do dono, 2026-11-27).
 
 ## [0.2.0] — 2026-11-27
 Guardar sem perder nada: a resposta bruta vira formato do «Exportar», e o «Reprocessar» gera os outros formatos dela depois. Também «Copiar» e a licença MIT.

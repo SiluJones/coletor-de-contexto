@@ -6,7 +6,7 @@
 ---
 
 ## Versão Atual
-**0.2.0** — 2026-11-27 — F2 quase inteira: copiar, resposta bruta como formato (padrão «simples + bruta») e reprocessar arquivos guardados, todos conferidos pelo dono. Tag `v0.2.0` e release pelo bloco do dono e pela API do GitHub (chat). Anterior: 0.1.0 (2026-10-17, tag `v0.1.0`).
+**0.2.0** — 2026-11-27 — F2 quase inteira: copiar, resposta bruta como formato (padrão «simples + bruta») e reprocessar arquivos guardados, todos conferidos pelo dono. Commit `46c18ff`; a tag `v0.2.0` e a página da release ficam com o dono (a API recusa criar release nesta sessão). Anterior: 0.1.0 (2026-10-17, tag `v0.1.0`).
 
 ## ✅ Funcionando
 - Estrutura do repositório (KCM v1.169.0, desde 2026-11-27 — DEC-014, DEC-016) com os `meta/` preenchidos para este projeto. Método C (DEC-016): o chat grava, o dono versiona pelo bloco.
@@ -30,7 +30,7 @@
 
 ## 📋 Backlog (curto prazo)
 - [ ] Colar o `INSTRUCOES-DO-PROJETO.md` no painel do Projeto (a linha do bloco simples, emenda da DEC-018).
-- [ ] Release v0.2.0 no GitHub com o `.zip` (o chat, pela API, depois do push da tag).
+- [ ] Release v0.2.0 no GitHub: o dono empurra a tag e cria a página, com as notas de `CDC/261127-release-v0.2.0-notas.md` e o `.output/coletor-de-contexto-0.2.0-chrome.zip`.
 - [ ] Próxima frente de produto: a decidir (candidatas no ROADMAP/IDEAS: ícone, conteúdo dos artefatos, F3 outras IAs).
 - [ ] Ícone próprio da extensão (pedido do dono, IDEAS).
 

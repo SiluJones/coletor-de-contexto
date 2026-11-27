@@ -37,9 +37,16 @@
         border-radius: 8px;
         text-align: center;
       }
-      #drop.over {
-        border-color: #0969da;
+      html.over {
+        outline: 4px dashed #0969da;
+        outline-offset: -8px;
         background: #f6f8fa;
+      }
+      html.over #drop {
+        border-color: #0969da;
+      }
+      html {
+        min-height: 100%;
       }
       button {
         margin-top: 12px;
@@ -77,7 +84,7 @@
     </fieldset>
     <div id="drop">
       <input type="file" id="files" accept=".json,application/json" multiple />
-      <p>ou arraste os arquivos para cá</p>
+      <p>ou arraste os arquivos para qualquer lugar desta página</p>
     </div>
     <button id="run" type="button" disabled>Reprocessar</button>
     <p id="status"></p>
