@@ -379,3 +379,5 @@ O kit v1.169.0 manda todo bloco de terminal dizer na 1ª linha para qual shell f
 
 ### Consequências
 CEREBRO («Ambiente»), Instruções e `CLAUDE.md` dizem PowerShell; as Instruções voltam ao painel. Feedback ao KCM no aviso de lido da carta 01 e no IDEAS.
+
+**Emenda (2026-11-27, mesmo dia):** o dono mostrou o modelo que quer (print `Captura de tela 2026-11-26 104723.png`, bloco de outro projeto): `cd "<pasta>"`, `git add -A`, `git commit -m "…"`, `git push`, um por linha — roda igual no CMD e no PowerShell, sem nada exclusivo de um shell. Os encadeamentos do PowerShell (`if ($LASTEXITCODE -eq 0) { … }`, `Set-Location`) saem: complicam um bloco que só precisa ser colado, e a validação que justificaria parar no erro o chat já roda antes, numa cópia. Ficam: um bloco só, sem comentário dentro, e `npm.cmd` quando o dono precisar rodar `npm`.

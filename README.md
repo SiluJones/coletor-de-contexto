@@ -2,7 +2,7 @@
 
 Extensão do Chrome que exporta a conversa aberta no claude.ai para arquivos de texto: `.json` importável no [Lunoda](#lunoda), `.md` no mesmo layout, um Markdown simples para ler e um JSON com a conversa inteira. Tudo local, sob demanda, com a sessão já logada no navegador — sem servidor, sem varredura em segundo plano.
 
-> **Versão 0.1.0.** Só o Claude por enquanto; ChatGPT e Gemini estão no [roteiro](meta/ROADMAP.md).
+> **Versão 0.2.0.** Só o Claude por enquanto; ChatGPT e Gemini estão no [roteiro](meta/ROADMAP.md).
 
 ## O que sai
 

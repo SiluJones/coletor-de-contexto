@@ -60,4 +60,4 @@ Registre AQUI, não liste: troca exata e o log do dia SEMPRE; versione pelo bloc
 
 ## Idioma
 Respostas em pt-BR.
-Sistema do usuário: Windows (CMD e PowerShell). Comandos que eu rodo: PowerShell compatível com o 5.1 (sem `&&`; `npm.cmd`), todos num bloco SÓ e sem linha de comentário dentro; o shell vai dito no texto, antes do bloco. CMD só quando exigir, e avisado. O Claude Code eu abro pelo PowerShell.
+Sistema do usuário: Windows (CMD e PowerShell). Comandos que eu rodo: um por linha, simples, que rodem iguais no CMD e no PowerShell (`cd "<pasta>"`, `git add -A`, `git commit -m`, `git push`; `npm.cmd` se precisar), todos num bloco SÓ e sem comentário dentro. Comando de um shell só vem avisado antes. O Claude Code eu abro pelo PowerShell.

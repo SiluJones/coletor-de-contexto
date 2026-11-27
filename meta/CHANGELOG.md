@@ -4,6 +4,10 @@
 > **Cresce**: entradas novas no topo. Registra só o que foi de fato concluído/entregue.
 
 ## [Não lançado]
+
+## [0.2.0] — 2026-11-27
+Guardar sem perder nada: a resposta bruta vira formato do «Exportar», e o «Reprocessar» gera os outros formatos dela depois. Também «Copiar» e a licença MIT.
+
 ### Adicionado
 - «Copiar conversa» (Markdown simples, com as opções) e «Copiar última resposta» (texto cru da IA) no popup (wo0007, DEC-013); conferidos pelo dono em 2026-10-19.
 - Licença MIT (`LICENSE`) e seção no README.

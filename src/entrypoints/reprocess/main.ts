@@ -88,7 +88,11 @@ async function main(): Promise<void> {
   drop.addEventListener('drop', (e) => {
     e.preventDefault();
     drop.classList.remove('over');
-    choose(e.dataTransfer?.files ?? null);
+    const dropped = e.dataTransfer?.files ?? null;
+    // Arrastar nao preenche o campo de arquivo sozinho: sem isto, a pagina diz «1 arquivo escolhido»
+    // ao lado de um campo que mostra «Nenhum arquivo escolhido» (visto pelo dono em 2026-11-27).
+    if (dropped) fileInput.files = dropped;
+    choose(dropped);
   });
 
   runButton.addEventListener('click', async () => {

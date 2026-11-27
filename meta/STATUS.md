@@ -6,7 +6,7 @@
 ---
 
 ## Versão Atual
-**0.1.0** — 2026-10-17 — F1 (uma conversa do Claude → Lunoda) e a primeira leva da F2 (formatos «simples» e opções), conferidas pelo dono. Tag `v0.1.0` empurrada (wo0006, `1ffc2df`).
+**0.2.0** — 2026-11-27 — F2 quase inteira: copiar, resposta bruta como formato (padrão «simples + bruta») e reprocessar arquivos guardados, todos conferidos pelo dono. Tag `v0.2.0` e release pelo bloco do dono e pela API do GitHub (chat). Anterior: 0.1.0 (2026-10-17, tag `v0.1.0`).
 
 ## ✅ Funcionando
 - Estrutura do repositório (KCM v1.169.0, desde 2026-11-27 — DEC-014, DEC-016) com os `meta/` preenchidos para este projeto. Método C (DEC-016): o chat grava, o dono versiona pelo bloco.
@@ -29,9 +29,10 @@
 - Nada confirmado. **Em observação:** nome do arquivo em outro perfil do Chrome [relatado pelo dono, 2026-10-20]. Não reproduzido: a exportação de «KCM 1» feita no segundo perfil em 2026-10-20 23:41 saiu com o nome certo nos 4 arquivos [medido no disco, `CDC/exportacoes-cdc/261020-2341/`]. Suspeita antiga (extensão de downloads daquele perfil) não testada. Fechar se não voltar.
 
 ## 📋 Backlog (curto prazo)
-- [ ] Colar o `INSTRUCOES-DO-PROJETO.md` no painel do Projeto (a linha do sistema: PowerShell, DEC-018).
-- [ ] Próxima frente de produto: a decidir (candidatas no ROADMAP/IDEAS: ícone, conteúdo dos artefatos, F3 outras IAs, versão 0.2.0).
+- [ ] Colar o `INSTRUCOES-DO-PROJETO.md` no painel do Projeto (a linha do bloco simples, emenda da DEC-018).
+- [ ] Release v0.2.0 no GitHub com o `.zip` (o chat, pela API, depois do push da tag).
+- [ ] Próxima frente de produto: a decidir (candidatas no ROADMAP/IDEAS: ícone, conteúdo dos artefatos, F3 outras IAs).
 - [ ] Ícone próprio da extensão (pedido do dono, IDEAS).
 
 ## 💬 Última conversa
-**2026-11-27** — Conversa de chat 2: resposta bruta e reprocessar conferidos no navegador; merge do KCM v1.169.0 com o método C (DEC-016, commit `a51da8a`), aviso de lido enviado ao KCM; blocos do dono em PowerShell (DEC-018). Próximo: o dono cola as Instruções no painel e escolhe a próxima frente.
+**2026-11-27** — Conversa de chat 2: resposta bruta e reprocessar conferidos; KCM v1.169.0 com o método C (DEC-016); blocos do dono simples, rodando no CMD e no PowerShell (DEC-018 emendada); versão 0.2.0 cortada. Próximo: o dono roda o bloco (commit + tag), o chat publica a release, o dono escolhe a próxima frente.
