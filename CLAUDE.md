@@ -20,7 +20,7 @@ Leia `meta/CEREBRO.md` → o doc de contexto do projeto (ex.: `meta/CONTEXT.md`)
 
 ## Convenções
 - Mensagens de commit **sem acento**.
-- **Terminal do dono:** ele abre o Claude Code pelo **PowerShell** (no CMD o Code não funciona direito, causa não investigada) e cola os comandos dele no **CMD** [relatado pelo dono, 2026-11-25]. Comando que você entrega para ELE rodar sai em sintaxe do CMD (uma linha por comando, `-m` repetido no commit), e TODOS os comandos de uma entrega vão num bloco só, abrindo com `cd /d` da pasta; o que você roda sozinho segue o seu shell.
+- **Terminal do dono:** ele abre o Claude Code pelo **PowerShell** (no CMD o Code não funciona direito, causa não investigada) [relatado pelo dono, 2026-11-25]. Comando que você entrega para ELE rodar sai em **PowerShell compatível com o 5.1** (sem `&&`; `npm.cmd`; `Set-Location`), TODOS num bloco só e sem linha de comentário dentro (DEC-018); o que você roda sozinho segue o seu shell.
 - Nos meta/, o Code atualiza o STATUS (rolante: só o agora) e **acrescenta** em DECISIONS (só cresce); curadoria que reescreve vem do chat (arquivo inteiro OU WO).
 - Ao aplicar uma WO de `meta/workorders/`: ache cada âncora exatamente; se não achar, PARE e reporte. Não mexa fora das edições nomeadas. `git diff` antes do commit.
 - WO de **conferência** (método C, «**Forma:** conferencia»): o chat já gravou tudo, STATUS e DECISIONS inclusive — você confere, gera o build, commita, empurra e relata, sem escrever em doc. A primeira linha dela diz por que ela se paga.

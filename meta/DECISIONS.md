@@ -359,3 +359,23 @@ Com a DEC-015 o dono passa a guardar só a bruta e o `(simples).md`. Para ter ou
 
 ### Consequências
 Nenhuma permissão nova. O tamanho de imagem é o único ponto em que o reprocessado pode diferir de um `(simples).md` antigo (hipótese: a API às vezes omite o `size_bytes`).
+
+---
+
+## DEC-018 — Blocos para o dono em PowerShell, sem linha de comentário dentro
+**Data:** 2026-11-27 · **Status:** aceita (pedido do dono, nota `261127-1652`; desvio do kit v1.169.0)
+
+### Contexto
+O kit v1.169.0 manda todo bloco de terminal dizer na 1ª linha para qual shell foi escrito (`REM CMD` ou `# PowerShell`). O primeiro bloco nesse formato (o do commit `a51da8a`) rodou certo, mas o dono não quer texto que não faz nada dentro de algo feito para copiar e colar; e achou o PowerShell mais fácil de abrir no Windows 11 que o CMD. Ele já abre o Claude Code pelo PowerShell.
+
+### Decisão
+- Os comandos que o dono roda — o bloco de git do método C, sobretudo — vêm em PowerShell, compatível com o Windows PowerShell 5.1: sem `&&` (encadeamento por `if ($LASTEXITCODE -eq 0) { … }`), `npm.cmd` em vez de `npm` (o `npm.ps1` cai na política de execução padrão), `Set-Location "<pasta>"`.
+- Um bloco só, sem linha de comentário dentro; o shell se diz no texto, antes do bloco.
+- CMD só quando o comando exigir, e dito antes.
+
+### Alternativas consideradas
+- **Seguir o kit (shell na 1ª linha, como comentário)** — o dono recusou: atrapalha o copiar e colar.
+- **PowerShell 7 com `&&`** — não é o que vem no Windows 11; o bloco quebraria no 5.1.
+
+### Consequências
+CEREBRO («Ambiente»), Instruções e `CLAUDE.md` dizem PowerShell; as Instruções voltam ao painel. Feedback ao KCM no aviso de lido da carta 01 e no IDEAS.

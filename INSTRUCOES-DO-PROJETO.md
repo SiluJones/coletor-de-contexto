@@ -60,4 +60,4 @@ Registre AQUI, não liste: troca exata e o log do dia SEMPRE; versione pelo bloc
 
 ## Idioma
 Respostas em pt-BR.
-Sistema do usuário: Windows (CMD e PowerShell). O usuário usa CMD e PowerShell: todo bloco de terminal diz na 1ª linha para qual foi escrito (`REM CMD` ou `# PowerShell`) e usa só a sintaxe dele; comando que roda igual nos dois diz «CMD ou PowerShell». Aqui: comandos que eu rodo, em CMD e todos num bloco SÓ; o Claude Code eu abro pelo PowerShell.
+Sistema do usuário: Windows (CMD e PowerShell). Comandos que eu rodo: PowerShell compatível com o 5.1 (sem `&&`; `npm.cmd`), todos num bloco SÓ e sem linha de comentário dentro; o shell vai dito no texto, antes do bloco. CMD só quando exigir, e avisado. O Claude Code eu abro pelo PowerShell.
