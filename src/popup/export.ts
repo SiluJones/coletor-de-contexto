@@ -61,6 +61,13 @@ export function buildLunodaExport(
   };
 }
 
+/** Arquivos gerados de uma conversa, com o nome-base e o numero de turnos. */
+export interface ConversationDownloads {
+  baseName: string;
+  turns: number;
+  files: DownloadFile[];
+}
+
 /**
  * Monta os arquivos dos formatos que dependem da conversa normalizada, com nomes que comecam pelo
  * titulo: `<titulo>.json` + `<titulo>.md` (Lunoda), `<titulo> (simples).md` e `<titulo>.cdc.json`.
@@ -73,8 +80,20 @@ export function buildExportDownloads(
   settings: ExportSettings,
   ctx: BuildContext,
   timeZone?: string,
-): { baseName: string; turns: number; files: DownloadFile[] } {
-  const conversation = normalizeClaudeConversation(raw);
+): ConversationDownloads {
+  return buildConversationDownloads(normalizeClaudeConversation(raw), settings, ctx, timeZone);
+}
+
+/**
+ * O mesmo que `buildExportDownloads`, a partir da conversa ja normalizada — o «Exportar» e o
+ * «Reprocessar» (DEC-017) passam por aqui, para os dois darem os mesmos arquivos.
+ */
+export function buildConversationDownloads(
+  conversation: Conversation,
+  settings: ExportSettings,
+  ctx: BuildContext,
+  timeZone?: string,
+): ConversationDownloads {
   const baseName = safeFileName(conversation.title);
   const files: DownloadFile[] = [];
   if (settings.formats.lunoda) {

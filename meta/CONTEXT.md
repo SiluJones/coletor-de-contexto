@@ -20,6 +20,7 @@ Extensão de navegador (Chrome, Manifest V3) que transforma uma conversa aberta 
 ## Build e validação (a rede deste projeto)
 - **Rede automática:** `npm run check` = typecheck + lint + Prettier + testes (Vitest) + build; sai com código de erro. Roda antes de commitar mudança de código.
 - **Linha de base:** o par sintético do Lunoda (`src/tests/fixtures/lunoda/sintetico.*`, gravado pelo Vitest com `toMatchFileSnapshot`; regravar só de propósito, com a flag no FIM — armadilha 16). Fora do repositório, por serem conteúdo real (DEC-009): o oráculo do Lunoda (`CDC_LUNODA_ORACLE_DIR=../oraculo-lunoda`) e as capturas reais do Claude (`CDC_CLAUDE_CAPTURES_DIR=../capturas-claude/cdc-raw`) — os comandos completos estão no `CLAUDE.md`; o `npm test` comum pula os dois.
+- **Fidelidade do reprocessar:** `CDC_REPROCESS_PAIRS_DIR=<pasta>` aponta para um histórico (`cdc-raw/` + `(simples).md`) e confere o reprocessado contra o guardado, fora a data de exportação e o tamanho de imagem (DEC-017).
 - **Na tela, pelo dono:** carregar `.output\chrome-mv3` em `chrome://extensions` no Chrome de uso diário (armadilha 11), abrir uma conversa no claude.ai, usar o popup e importar o `.json` no Lunoda.
 - **O que o ambiente do chat não roda:** a extensão dentro do Chrome logado e o Lunoda. O chat tem Node na VM (o Prettier do repositório rodou lá em 2026-11-25); testes e build são do Code.
 
@@ -29,13 +30,13 @@ coletor-de-contexto/
 ├── CLAUDE.md, .claude/          # arranque do Claude Code (skills apply-wo, wrap, sondar)
 ├── INSTRUCOES-DO-PROJETO.md     # fonte das Instruções do Projeto no claude.ai
 ├── meta/                        # arquivos de contexto (este, STATUS, DECISIONS…)
-│   └── workorders/              # WOs chat → Code
+│   └── workorders/              # WOs chat → Code (só quando se pagam — método C, DEC-016)
 ├── specs/                       # uma spec por feature (AAMMDD-nome.md)
 ├── logs/                        # um arquivo por dia (AAAA-MM-DD.md)
 └── src/                         # F1 (scaffold: wo0001)
-    ├── entrypoints/             # popup, content script, background (convenção WXT)
+    ├── entrypoints/             # popup, content script, background (convenção WXT) · `reprocess/` (página «Reprocessar», DEC-017)
     ├── adapters/claude/         # url.ts (reconhece a conversa) · fetch-raw.ts (busca bruta, injetada na aba) · normalize.ts (resposta → Conversation)
-    ├── popup/                   # partes puras do popup: export.ts (resposta → arquivos dos formatos marcados) · copy.ts (texto do «Copiar») · settings.ts (preferências) · raw-dump.ts (formato «Resposta bruta»)
+    ├── popup/                   # partes puras do popup: export.ts (resposta → arquivos dos formatos marcados) · copy.ts (texto do «Copiar») · settings.ts (preferências) · raw-dump.ts (formato «Resposta bruta») · reprocess.ts (reconhece o arquivo guardado e gera os formatos)
     ├── core/                    # model.ts (modelo canônico), ids.ts, dates.ts; testes *.test.ts ao lado
     ├── exporters/               # lunoda-types.ts · lunoda-build.ts (Conversation → entrada) · lunoda-json.ts · lunoda-md.ts · simple-md.ts · cdc-json.ts
     └── tests/                   # synthetic-conversation.ts + fixtures/ (par sintético do Lunoda; respostas do Claude, sintéticas, depois das capturas)
@@ -123,6 +124,7 @@ interface FileRef { name: string; kind: string; size?: number; textContent?: str
 - **Markdown simples** — `<título> (simples).md`: `# título`; lista com Link, IA (modelo), Criada em · Exportada em, Turnos; por turno `---`, `## Você · N` (texto + «Arquivos anexados») e `## Claude · N` (`### Pensamento (resumo)` opcional, texto, «Arquivos gerados»). Segue as opções. Datas locais `dd/mm/aa HH:MM`.
 - **JSON do CDC** — `<título>.cdc.json`: `{"format": "coletor-de-contexto", "version": 1, "exportedAt": …, "conversation": …}`, 2 espaços e quebra de linha no fim. O `conversation` é o modelo canônico inteiro; ignora as opções.
 - **Resposta bruta** (DEC-015) — `cdc-raw/<título> — claude-<uuid8>-<AAAAMMDDTHHMMSSZ>.json`: o texto da API byte a byte. É o único formato sem perda: guarda as entradas e resultados de ferramenta (os arquivos que a IA escreveu), os ramos editados e o conteúdo extraído dos anexos, que o normalizador descarta. O popup a salva ANTES de normalizar. Padrão de primeiro uso: Markdown simples + resposta bruta.
+- **Reprocessar** (DEC-017) — página `reprocess.html`: arquivos guardados (resposta bruta ou JSON do CDC versão 1) → os formatos marcados, com os nomes do «Exportar», em `Downloads/cdc-reprocessado/<AAMMDD-HHMM>/`.
 - O popup lembra formatos e opções em `chrome.storage.local` (`cdc.exportSettings`). Os downloads caem em `Downloads/`; o dono guarda as exportações reais em `CDC/exportacoes-cdc/<AAMMDD-HHMM>/` (uma subpasta por exportação, hora local), fora do repo.
 
 ## Arquitetura — pontos-chave
@@ -138,6 +140,7 @@ interface FileRef { name: string; kind: string; size?: number; textContent?: str
 - Formatos em caixas no popup (Lunoda, Markdown simples, JSON do CDC inteiro); preferências em `chrome.storage.local` — DEC-012.
 - «Copiar conversa» (Markdown simples) e «Copiar última resposta» (texto cru), sem permissão nova — DEC-013.
 - Resposta bruta como formato do «Exportar», salva antes de normalizar; padrão «simples + bruta»; sem botão de depuração — DEC-015.
+- Reprocessar numa página da extensão, a partir da bruta ou do `.cdc.json`; «Exportar» e «Reprocessar» geram pela mesma função (`buildConversationDownloads`) — DEC-017.
 
 ## Armadilhas Conhecidas (o que NÃO fazer)
 1. **Tratar endpoint interno como contrato** — `/api/organizations/...` (Claude) e `/backend-api/...` (ChatGPT) não são documentados e mudam sem aviso → isolar cada um num adapter, com fixture e teste, e mostrar erro claro («formato da plataforma mudou») em vez de exportar meia conversa.

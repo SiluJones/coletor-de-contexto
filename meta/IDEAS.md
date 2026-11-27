@@ -42,9 +42,8 @@ O WXT gera build para Firefox a partir do mesmo código; custo baixo depois do M
 ### 2026-10-16 — Outros formatos de saída
 Obsidian com front matter próprio, HTML. Cada um é só mais um exportador (DEC-003) e mais uma caixa no popup (DEC-012). O pedido do dono de um formato «original/simples» (`.md` e `.json`) foi feito na wo0005 — ver «Concluídas».
 
-### 2026-10-17 — Reprocessar a partir do JSON do CDC
-Abrir um `.cdc.json` guardado (no popup ou numa página da extensão) e gerar dele os outros formatos — Lunoda com pensamento, Markdown simples — sem buscar a conversa de novo. É para isso que o JSON do CDC leva tudo, mesmo com as opções desligadas. **[2026-11-26] A fonte passa a ser a resposta bruta** (DEC-015): ela guarda o que o `.cdc.json` não guarda. Aprovada pelo dono como a leva seguinte à da bruta como formato; spec a escrever.
-
+### 2026-11-27 — Reprocessar uma pasta inteira
+Na página «Reprocessar», escolher uma pasta (`webkitdirectory`) em vez de arquivos — por exemplo um `- Histórico - <projeto> (CDC)` inteiro, com o `cdc-raw/` dentro. Fora da primeira leva (DEC-017); volta se escolher arquivo a arquivo pesar.
 ### 2026-10-16 — Incluir as chamadas de ferramenta (opção)
 As respostas de trabalho do Claude têm centenas de `tool_use`/`tool_result` (até 696 numa captura). Hoje ficam de fora (DEC-011); uma opção poderia listá-las resumidas (nome da ferramenta + uma linha) para quem quiser o rastro completo.
 
@@ -58,6 +57,7 @@ As respostas de trabalho do Claude têm centenas de `tool_use`/`tool_result` (at
 ---
 
 ## ✅ Concluídas
+- **Reprocessar a partir do JSON do CDC** (ideia de 2026-10-17; a fonte passou a ser a resposta bruta, DEC-015) — implementado em 2026-11-27 (DEC-017): página `reprocess.html`, aceita a bruta e o `.cdc.json`.
 - **Botão de depuração «salvar resposta bruta»** — implementado na wo0003 (DEC-010), visível em todo build durante a F1. Substituído em 2026-11-26 pela caixa «Resposta bruta» do «Exportar» (wo0011, DEC-015).
 - **Preencher `p-ia` sozinho** — implementado na wo0004 (DEC-011): na entrada e nos blocos da IA, como o dono marcava à mão.
 - **Link da conversa na descrição do Lunoda** (ideia do dono, 2026-10-16) — implementado na wo0004 (DEC-011).
@@ -78,6 +78,8 @@ As respostas de trabalho do Claude têm centenas de `tool_use`/`tool_result` (at
 - **[2026-10-17]** A skill `apply-wo` do kit manda gravar o relatório em arquivo no fim, depois do push; quando o Code PARA (divergência na Edição 0 da wo0004), ele não gravou nada e o dono teve de copiar a tela para o chat. Ajuste local: a skill e o `CLAUDE.md` dizem que a parada também gera relatório em arquivo, antes do menu. O kit poderia trazer isso de fábrica. **[2026-11-25] Absorvido no kit v1.162.1** (skill `apply-wo`, «A parada também grava o relatório em arquivo»); a linha local saiu do `CLAUDE.md` (DEC-014).
 - **[2026-11-25]** **Pacote de update com o perfil vazio, de novo — e a regra do manifesto transforma isso em pedido de regerar.** O pacote v1.162.1 veio com todos os campos de perfil vazios e o SO «não informado»; em 2026-10-16 o nome já viera como placeholder. O manifesto trata campo vazio como «diferente», manda perguntar antes de fundir e nomeia «regerar o pacote» como remédio; o assistente seguiu isso e custou um turno ao dono, que não vai regerar pacote por qualquer coisa. Propostas ao kit: (1) a regra separar **vazio** (ausência: transplanta-se o valor vivo, marcado, sem pergunta) de **preenchido com valor diferente** (aí sim pergunta); (2) o texto que depende do perfil (seção «Ambiente», linha do SO nas Instruções, aviso no commit) vir em bloco marcado e transplantável, para o merge se adaptar sem regerar; (3) o gerador de pacote ler o perfil do projeto que vai atualizar, ou avisar na tela que o perfil está vazio antes de baixar. Adaptação local: DEC-014 e «Técnicas específicas deste projeto» no CEREBRO.
 - **[2026-11-25]** **Sistema operacional com um terminal só não descreve este dono.** Ele cola os comandos no CMD, mas abre o Claude Code pelo PowerShell (no CMD o Code não funciona direito). O formulário poderia separar «terminal onde o dono cola comandos» de «terminal onde ele abre o Claude Code». Adaptação local: seção «Ambiente» do CEREBRO e linha do `CLAUDE.md`.
+- **[2026-11-27]** **Merge pelo `_DELTA.md` (v1.162.1 → v1.169.0): funcionou.** Dos 12 trechos do CEREBRO, 11 entraram por troca exata e 1 não bateu (o aviso de sistema operacional em «Commit pronto ao final», que este projeto já tinha transplantado igual) — ajustado sem pergunta; 0 perguntas ao dono. Skills e molde de WO estavam iguais ao pacote anterior e foram trocados inteiros; nenhum arquivo «igual» precisou de comparação. A seção «Ambiente» do pacote, agora gerada com o perfil, substituiu a transplantada (mais um item do projeto). Resultado conferido: CEREBRO = pacote + transplantes, só a linha «vazio» de «Técnicas» saiu.
+- **[2026-11-27]** **Bloco de git num bloco só:** o dono pediu, na mesma conversa em que o pacote chegou, que todos os comandos venham num bloco para copiar uma vez — o kit v1.169.0 já trazia a regra. Sinal de que ela estava certa; e o dono abre o Code pelo PowerShell mas cola os comandos no CMD, o que o perfil «CMD e PowerShell» do kit cobre.
 
 ---
 

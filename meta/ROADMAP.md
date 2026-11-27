@@ -31,6 +31,8 @@
 - [ ] Conteúdo textual de artefatos gerados.
 - [x] Copiar para a área de transferência (wo0007, DEC-013).
 - [ ] Nome de arquivo configurável.
+- [x] Resposta bruta como formato do «Exportar» (wo0011, DEC-015).
+- [x] Reprocessar arquivos guardados (DEC-017) — falta a conferência do dono no navegador.
 
 ## 🔵 F3 — Outras plataformas
 **Objetivo:** ChatGPT (API interna) e Gemini (DOM) produzindo o mesmo modelo canônico.

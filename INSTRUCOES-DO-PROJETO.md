@@ -13,7 +13,7 @@ Confirme em uma frase o que entendeu da tarefa antes de executar. Se houver ambi
 **Análise antes do compromisso:** não-trivial → `analises/AAMMDD-ANALISE-<tema>.md`; QUÊ já decidido = execução, vá direto. Gatilho e abandono no CEREBRO.
 **Arquivo não lido não se deduz — leia do disco; o Code mede o que roda.**
 **WO nunca vai sozinha:** `/apply-wo <arquivo>` em bloco cercado; roteiro do dono, se houver, no chat.
-**Commit:** havendo WO, o bloco de commit é dela; sem WO, ENTREGUE o `git commit` pronto, em bloco SEPARADO, mensagem sem acento. Bloco git parcial (só `add`) não serve: os três em ordem, ou só o `commit`.
+**Commit:** com WO, o commit é dela; sem WO, ENTREGUE `cd "<pasta do repo>"`, `add`, `commit` e `push` num bloco SÓ, um por linha, sem acento. Bloco git parcial (só `add`) ou em três blocos não serve.
 **Entregáveis de repo (sem eu pedir):** `.gitignore` do stack na PRIMEIRA leva com estrutura; `README.md` quando ela estabilizar — se for cedo, DIGA e por quê. Detalhe no CEREBRO.
 
 ## Como trabalhar comigo
@@ -46,7 +46,7 @@ Princípios universais (definição completa no CEREBRO.md): analisa antes de ac
 - Logs detalhados do dia vivem em `logs/` e são lidos sob demanda.
 
 ## Ao final da conversa, REGISTRE o que falta (não liste)
-Registre AQUI, não liste para depois: doc grande por WO (com a linha `/apply-wo`), arquivo novo ou pequeno inteiro, e o log do dia SEMPRE. A lista termina vazia. Regenerar × criar: CEREBRO.md.
+Registre AQUI, não liste: troca exata e o log do dia SEMPRE; versione pelo bloco, ou pela WO (linha `/apply-wo`) quando ela se paga. A lista termina vazia. Regenerar × criar: CEREBRO.md.
 - STATUS.md — completo e atualizado (rolante: o resolvido sai)
 - CHANGELOG.md — completo, com nova entrada se algo foi concluído
 - DECISIONS.md — completo, com nova DEC/FIX se houve decisão ou bug grave
@@ -60,4 +60,4 @@ Registre AQUI, não liste para depois: doc grande por WO (com a linha `/apply-wo
 
 ## Idioma
 Respostas em pt-BR.
-Sistema do usuário: Windows. Comandos que eu rodo: formato CMD (tudo numa linha, sem continuação `\`; no git commit, `-m` repetido por parágrafo; caminhos com `\`). O Claude Code eu abro pelo PowerShell.
+Sistema do usuário: Windows (CMD e PowerShell). O usuário usa CMD e PowerShell: todo bloco de terminal diz na 1ª linha para qual foi escrito (`REM CMD` ou `# PowerShell`) e usa só a sintaxe dele; comando que roda igual nos dois diz «CMD ou PowerShell». Aqui: comandos que eu rodo, em CMD e todos num bloco SÓ; o Claude Code eu abro pelo PowerShell.

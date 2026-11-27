@@ -24,14 +24,14 @@
 > - Ao final da conversa, o assistente REGISTRA o que falta
 > - Quando perguntar vs. quando agir
 > - Verifica antes de pedir um arquivo
+> - Ambiente (sistema operacional)
 > - A rede deste projeto (como ele se verifica)
 > - README e LICENSE
-> - Ambiente (sistema operacional)
 > - Idioma
 > - Recomendação de configuração (fim de turno)
 > - Desenvolvimento no Claude Code (raias chat ↔ Code)
 > - Kit de arranque do Claude Code — pacote separado
-> **No `GUIA-DO-KIT.md`** (lido quando o gatilho pede, nunca na abertura): «Ao receber um template-update do KCM» · «Transferência entre conversas — canal de reserva (sem a pasta vinculada): o que vai para o Projeto e o que se anexa» · «Sonda e exploração — o par que produz evidência» · «Correspondência entre projetos — quando o interlocutor é outro assistente».
+> **No `GUIA-DO-KIT.md`** (lido quando o gatilho pede, nunca na abertura): «Ao receber um template-update do KCM» · «Transferência entre conversas — canal de reserva (sem a pasta vinculada): o que vai para o Projeto e o que se anexa» · «Sonda e exploração — o par que produz evidência» · «Correspondência entre projetos — quando o interlocutor é outro assistente» · «Análise antes do compromisso — como escrever» · «Refino das Instruções — como refinar» · «Método C — a WO de conferência e o bloco».
 
 ---
 
@@ -49,10 +49,10 @@
 > Este projeto roda com o chat **lendo e gravando na pasta do projeto** (app desktop com a pasta vinculada). Toda menção a mount, `_MANIFEST`, FlatDrop, upload e «nome de download» no resto deste arquivo é **canal de reserva**: vale só quando a conversa roda sem a pasta (site sem vínculo, outra conta). Se a pasta não responder, diga qual canal você tem e siga a reserva — nunca trabalhe de memória.
 
 - **Ritual em dois tempos.** Ao abrir a conversa, os arquivos de contexto na ordem acima. Em todo turno, só o barato e verificável: `git log -3 --oneline`, `git status --short` e a listagem da pasta-pai; arquivo de contexto que mudou se relê. Ler tudo em todo turno não escala, e regra dura que ninguém cumpre ensina a ignorar as outras. O vigia é o `Base:` do fecho: turno que afirma estado sem leitura feita nele falhou o ritual.
-- **Git pelo chat é só leitura, sempre com `GIT_OPTIONAL_LOCKS=0`.** Um `git status` comum grava `.git/index.lock`, e o chat não consegue apagá-lo: o Git do dono fica travado até alguém remover à mão. Commit e push são do Code.
-- **Arquivo que você autora vai direto para o lugar definitivo** — nunca para download nem para pasta provisória. Em LF; releia do disco antes de sobrescrever, porque outro escritor pode ter mexido. O que o dono vai rodar ou abrir é gravado e conferido com `ls` **antes** da resposta que o cita.
+- **Git pelo chat é só leitura, sempre com `GIT_OPTIONAL_LOCKS=0`.** Um `git status` comum grava `.git/index.lock`, e o chat não consegue apagá-lo: o Git do dono fica travado até alguém remover à mão. Commit e push: o bloco de git que você entrega ao dono, ou a WO, quando ela se paga (seção «Desenvolvimento no Claude Code»).
+- **Arquivo que você autora vai direto para o lugar definitivo** — nunca para download nem para pasta provisória. Arquivo novo vai inteiro, em LF; o que já existe muda por **troca exata** — script, ocorrência única, sobre o arquivo lido do disco no turno, no fim de linha dele —, nunca regerado inteiro: regerar é onde se perde conteúdo. O que o dono vai rodar ou abrir é gravado e conferido com `ls` **antes** da resposta que o cita.
 - **A WO confere o que você gravou.** Cada arquivo que você gravou e a WO vai versionar entra no cabeçalho dela com o `sha1sum` medido ao gravar; a Edição 0 confere, e hash diferente para a aplicação. No mount, o meio impedia dois escritores; no disco, quem impede é o hash.
-- **Um dono por documento, escrito.** O meio não impede mais dois escritores no mesmo arquivo; só a regra impede. Padrão: o chat escreve inteiros a análise, a WO, CONTEXT, CEREBRO, Instruções e GLOSSARY; o Code escreve o código, STATUS, DECISIONS, CHANGELOG e a sua seção do log; IDEAS e todo doc grande e vivo mudam por WO. O projeto pode mudar a divisão — registrando em DECISIONS —, nunca deixá-la implícita.
+- **Um dono por documento, escrito.** O meio não impede mais dois escritores no mesmo arquivo; só a regra impede. Padrão (método C): você escreve tudo o que entra no commit — código e documentos, STATUS e DECISIONS inclusive —; o Code gera o que se gera (o build), confere e publica quando a WO se paga, e escreve só o relatório na pasta-pai. O projeto pode mudar a divisão — registrando em DECISIONS —, nunca deixá-la implícita.
 - **Notas e relatórios moram na pasta-pai,** fora do Git. Leia inteira a que chegou, funda nos meta/ e arquive **movendo** para `notas-arquivadas/` dentro dela — mover, nunca apagar. Liste a pasta antes e depois: arquivo que some sem comando que o cite é perda, não arquivamento.
 - **Insumo permanente não é nota:** o material do cliente, as fontes brutas e os logs de equipamento moram numa subpasta própria da pasta-pai (`material/`) e não entram no «Arquivar / Manter».
 - **Se o dono mantém uma pasta de histórico das conversas** (por exemplo, exportada pelo CDC para dentro da pasta de arquivo), **ela é dele e só leitura:** leia quando a origem de uma decisão ajudar; não ponha nada dentro, não mova, não renomeie, não apague e não versione — nem no «Arquivar», que move para a RAIZ da pasta de arquivo, nunca para uma subpasta dela. Se ela numera as conversas, o handoff e o log citam esse número.
@@ -167,15 +167,9 @@ Mudança **não-trivial** — estrutural, cara de desfazer, que toca várias fre
 
 - **Antes de escrever, dois testes baratos.** (1) **Quem ainda decide?** O dono já decidiu o QUÊ? Então isto é execução, não análise: o par de artefatos é **decisão registrada + ordem de trabalho**, e a ordem já traz critério de aceite e armadilhas. **Análise é para quando a pergunta ainda é dele.** (2) **Cabe em meia página de conversa?** Então é conversa. Análise é para a decisão cara de desfazer, cujo custo precisa estar à vista ANTES do compromisso; cerimônia em cima de trivialidade é desperdício.
 - **Onde:** `analises/AAMMDD-ANALISE-<assunto>.md` (projeto com pasta `meta/`: `meta/analises/`). A pasta **nasce no primeiro uso** — nunca antes, nunca vazia. A data é a de criação e não muda depois.
-- **O que tem dentro:** `Status` (Rascunho · Em discussão · Decidida · Implementada · Abandonada · Substituída) · **Problema** (o que dói, para quem, o que acontece se nada for feito) · **Restrições / o que foi medido** · **Opções consideradas** (inclusive as descartadas, com o motivo do descarte) · **Recomendação** (uma, explícita, com o porquê) · **Riscos** (o que vigiar depois de aplicar) · **Ponto de decisão** (o que você precisa do usuário).
-- **Meça antes de propor.** O que dá para medir, meça; o resto entra rotulado como estimativa. Análise que projeta ganho sem medir vira erro de planejamento.
-- **Risco que se confere por comando não é risco: é custo de conferência.** Ao comparar opções, a que parece mais arriscada costuma ser a mais barata de auditar. Separe **qual erra mais fácil** de **qual avisa quando errou**: opção que erra fácil e avisa na hora perde para opção que erra difícil e falha em silêncio, e a intuição diz o contrário porque só enxerga a primeira metade. Quando a diferença entre duas opções é essa, escreva o comando que audita **junto da recomendação** — é ele que transforma risco em item de checklist.
-- **A análise não decide nem abre trabalho sozinha.** Ela para no ponto de decisão e espera o usuário. Depois de decidida, o desfecho vai para o `DECISIONS.md` (a análise guarda o raciocínio; o DECISIONS guarda a decisão) e a análise só muda de `Status` — análise vencida não se apaga: o «por que não» é o que evita refazer o mesmo debate daqui a seis meses.
 - **Funil:** exploração/sonda (medem, não decidem) → análise → **WO** (`meta/workorders/`, nome `AAMMDD-woNNNN-desc.md`) → `DECISIONS.md`. Quando o trabalho é de produto, a análise vira **spec de feature** (`specs/AAMMDD-<nome>.md`, uma por feature) — a spec diz **o que** construir e quando está pronto; a WO diz **como aplicar**. Mesma regra: a pasta `specs/` só nasce quando a primeira spec for escrita.
 - **Gatilho concreto, além do «não-trivial»:** mudar o **formato de um artefato que outra pessoa — ou o você do futuro — vai ler ou editar** pede análise, mesmo quando o diff é pequeno. Nome de arquivo, estrutura de pasta, layout de bloco gerado, campo de formulário, vocabulário de um termo em uso: o custo não está no diff, está em quem vai conviver com ele. **É uma pergunta a refazer DEPOIS de ler a fonte, não uma senha para começar a escrever** — e tem limite: acrescentar um campo, uma linha ou uma seção a um formato que **já é extensível** não é mudar o formato. Se quem lê hoje continua lendo sem ajuste, não há convivência nova a negociar.
-- **Abandonar no meio é desfecho legítimo.** O que tem valor é ler a fonte, não escrever o documento. Se a leitura derrubar a premissa que disparou o gatilho — o formato já era extensível, o problema não existia, a decisão já estava tomada —, **pare, diga o que a leitura mostrou e vá trabalhar**. Análise que continua depois da premissa cair devolve como «ponto de decisão» o que era escolha técnica sua, e custa um turno. **E o que a leitura achou de bom não se perde: vai para as armadilhas da ordem de trabalho, como risco a tratar — não volta como pergunta.** Achado sem endereço vira pergunta: é assim que uma análise abandonada ressuscita disfarçada, propondo ao dono «não fazer» aquilo que ele acabou de decidir fazer.
-- **Se este projeto já escreve documentos desse tipo com outro nome** (`design/`, `estudos/`, `rfc/`, `.md` avulso na raiz): não renomeie nada por conta própria. Adote a convenção onde ela cai — o documento que já existe ganha o cabeçalho de `Status` e os elos (o que nasceu dele, qual decisão registrou), e as análises novas nascem no formato acima. Renomear pasta ou arquivo é decisão do usuário: proponha, não execute.
-- **Modelo:** o pacote de atualização do kit já traz um `analises/_TEMPLATE.md` pronto, com natureza «modelo-em-espera» — coloque-o quando a pasta nascer, e não antes. Sem o pacote, escreva o modelo junto com a primeira análise: o modelo é o que faz a convenção pegar. Se a pasta estiver ignorada no `.flatdropignore`, **reinclua o modelo** (`!analises/_TEMPLATE.md`): modelo e guia sempre sobem ao Projeto; corpo de análise, não.
+- **O como está no `GUIA-DO-KIT.md`, seção «Análise antes do compromisso — como escrever».** Abra-a ANTES de escrever a primeira linha de uma análise: o que vai dentro, medir antes de propor, o risco que se confere por comando, o desfecho no DECISIONS, abandonar no meio, a convenção de outro nome e o modelo.
 
 ## Ao receber um template-update do KCM
 Se aparecer na pasta-pai uma pasta `AAMMDD-kcm-update-<nicho>-vX.Y.Z/` com um `_UPDATE-MANIFEST.md`, é um template-update do kit. **Antes de comparar qualquer arquivo, leia a seção de mesmo nome no `GUIA-DO-KIT.md` — o do pacote, que é o mais novo —** e siga o prompt que o dono colar. O essencial, se o GUIA faltar: nunca sobrescreve conteúdo vivo por template vazio; o CEREBRO e as Instruções são `fusao`, e a fusão parte do pacote — o arquivo do pacote é a base, e você transplanta para ele o que é deste projeto; o `GUIA-DO-KIT.md` é `do-kit`, e o do pacote substitui o seu inteiro. Seção que saiu do CEREBRO para o GUIA fica no GUIA: não volta pelo transplante.
@@ -213,7 +207,7 @@ Se aparecer na pasta-pai uma pasta `AAMMDD-kcm-update-<nicho>-vX.Y.Z/` com um `_
 
 As mudanças nos documentos que decorrem do trabalho do assistente são registradas pelo PRÓPRIO assistente — quando ele faz algo, ele mesmo atualiza os docs afetados. O que o usuário quer acrescentar por conta (ele sabe onde e o quê) é decisão dele. Em ambos os casos, nada vai em blocos soltos para o usuário costurar à mão: sem executor no repositório, a entrega é por ARQUIVO COMPLETO; com executor, vale o teste do parágrafo seguinte.
 
-**Com executor no repositório, esta seção vale para o arquivo que você autora inteiro — e um teste decide o resto: arquivo com seção de OUTRO autor nunca vai inteiro.** Entregá-lo inteiro é sobrescrever o outro autor (o log do dia com as seções do Code é o caso clássico); ali só cabe âncora, numa WO. Arquivo novo vai inteiro na primeira vez; documento grande e vivo, por WO.
+**Com o Code no canal pasta (método C), um escritor só — você:** arquivo novo vai inteiro; o que já existe nunca vai inteiro: muda por troca exata (ver «Canal do chat»), e o usuário recebe o arquivo no lugar dele, para versionar.
 
 **O assistente:**
 - Registra o que decorre do próprio trabalho: se o trabalho mexeu em STATUS, decisões, ideias, etc., o assistente entrega esses arquivos atualizados — não espera o usuário pedir.
@@ -230,7 +224,7 @@ As mudanças nos documentos que decorrem do trabalho do assistente são registra
 
 ### Commit pronto ao final (se você versiona com Git)
 
-Quando a entrega inclui arquivos que vão para um repositório Git/GitHub (código ou documentos), o assistente fecha a resposta com o bloco de commit pronto para copiar e colar, na convenção Conventional Commits (`tipo(escopo): descrição` — feat, fix, docs, refactor, chore), em TRÊS linhas separadas: `git add` listando os arquivos alterados (pode usar `git add .` quando o conjunto é pequeno e a árvore é conhecida/limpa), `git commit` com a mensagem completa, e `git push` — prontas para colar uma a uma e conferir entre elas.
+Quando a entrega inclui arquivos que vão para um repositório Git/GitHub (código ou documentos), o assistente fecha a resposta com o bloco de commit pronto para copiar e colar, na convenção Conventional Commits (`tipo(escopo): descrição` — feat, fix, docs, refactor, chore), em **um bloco de código só, um comando por linha**, nesta ordem: `cd "<caminho completo do repositório>"` (entre aspas, para o bloco rodar de qualquer pasta onde o usuário o colar), `git add` listando os arquivos alterados (pode usar `git add .` ou `git add -A` quando o conjunto é pequeno e a árvore é conhecida/limpa), `git commit` com a mensagem completa, e `git push`. O usuário copia o bloco uma vez e cola no terminal: cada linha roda na sequência, e um erro aparece na linha em que parou. **Nunca três blocos separados** — são três cópias para fazer uma coisa só. **O mesmo vale para todo bloco de terminal que o usuário roda** (instalar, rodar um script, gerar um build): a primeira linha é o `cd` da pasta certa, e todos os comandos vêm no mesmo bloco.
 
 > Se o seu sistema operacional estiver definido acima, cada comando já vem na sintaxe certa do seu shell (ex.: no CMD do Windows, comando numa linha só, `-m` repetido para parágrafos e mensagem SEM acentos, que o CMD corrompe). Para mudanças triviais, basta o título; para várias mudanças de naturezas diferentes, o assistente pode sugerir mais de um commit.
 - **Artefatos de repo (.gitignore, README):** em projeto com repositório, o `.gitignore` sai na primeira leva que cria estrutura (adequado ao stack) e o `README.md` é entregue/atualizado quando a estrutura estabiliza (não no rascunho, para não nascer velho). O assistente gera por previsão, sem pedir permissão a cada vez; se adiar o README, diz por quê.
@@ -267,18 +261,9 @@ Os documentos de contexto são feitos para guardar o que tem VALOR para o projet
 
 As Instruções do Projeto são lidas em **toda mensagem**: cada palavra é cobrada em todo turno. A versão que o kit gera é um **ponto de partida genérico**; este projeto deve convergir para uma versão **mais curta e mais específica** — sem perder processo.
 
-**Como refinar (proponha ao usuário, não edite sozinho):**
+**Proponha ao usuário, não edite sozinho.**
 - **É dever seu, não meu pedido.** Estas Instruções nascem genéricas: são um ponto de partida a especializar, como todo template do kit. Você **deve** propor o refino por conta própria — no fim da primeira conversa de trabalho real e, depois, sempre que perceber sinal (regra que você repetidamente descumpre, instrução que nunca se aplicou, atrito recorrente). Não espere eu pedir; se eu tiver de pedir, o refino já atrasou.
-- **Você decide o que merece texto integral.** As Instruções trazem a regra em forma curta e o CEREBRO guarda a definição completa. Se uma regra específica é crítica **neste** projeto — ou é justamente a que você mais erra — promova-a de volta ao texto integral nas Instruções, dizendo por quê. O orçamento é seu para administrar: encolher não é a meta, acertar o que fica sempre à vista é.
-- **Atrito sem solução local vira feedback ao kit.** Se o problema não é deste projeto e sim do KCM (regra confusa, gatilho que não dispara, lacuna de comportamento), registre em IDEAS.md na seção de feedback ao kit — é um desfecho legítimo do refino, não uma desculpa para não refinar.
-- **Personalização genérica migra para os meta/.** O que veio do formulário de montagem serve para **preencher** os arquivos de contexto; depois de aplicado, não precisa continuar ocupando as Instruções. Proponha mover, deixando nas Instruções a identidade do projeto, o ritual, os gatilhos e a disciplina de entrega.
-- **Corte o que não se aplica.** Princípio, gatilho ou regra que este projeto nunca usou em N conversas é peso morto — proponha remover, dizendo o que sai.
-- **Especialize o que se aplica.** Troque o exemplo genérico pelo caso real deste projeto: instrução concreta economiza mais token do que instrução curta e vaga.
-- **Não confunda encurtar com esquecer.** Regra que já evitou um erro real (está no DECISIONS) NÃO sai. Se algo sai, some ao CEREBRO — o CEREBRO é lido sob demanda, as Instruções em toda mensagem: mover é barato, apagar é caro.
-- **Não inche.** Antes de acrescentar uma regra, pergunte se ela cabe no CEREBRO. Só vai para as Instruções o que precisa ser lembrado em TODO turno.
-- **Princípio sem gatilho não dispara — e o remédio é oportunista, não uma auditoria.** Virtude é escrita no infinitivo («analisa antes de aceitar», «explica trade-offs») e não tem hora; gatilho é escrito com o **evento na frente** («quando o dono impõe uma restrição para evitar perda, proponha a forma mais barata de obter a mesma proteção») e dispara sozinho. Percorrer todos os princípios inventando gatilhos gera tabela longa que ninguém lê. **A política é outra: toda vez que um princípio falhar em campo, aquele princípio ganha o gatilho — com o evento real que o teria disparado, colhido do caso.** O caso é o que torna o gatilho específico; sem ele, você escreve outra virtude e acha que escreveu um gatilho.
-- **Sincronia com o CEREBRO.** Quando uma customização estrutural entra no CEREBRO (novo modo, novo arquivo, mudança de processo), a versão curta das Instruções pode ficar para trás e até contradizê-lo. Ao mexer no CEREBRO, cheque se as Instruções ainda batem; se divergirem, proponha alinhar/regenerar a versão curta.
-- **Uma regra por linha, verbo no imperativo, sem preâmbulo.** Prosa explicativa vive no CEREBRO.
+- **O como está no `GUIA-DO-KIT.md`, seção «Refino das Instruções — como refinar».** Abra-a quando o dever acima disparar — o fim da primeira conversa de trabalho real, uma regra descumprida de novo, uma instrução que nunca se aplicou, um atrito que volta: o que merece texto integral, o que corta, o que especializa, o que migra para os meta/, o gatilho de princípio e a sincronia com este CEREBRO.
 - **Teto:** na configuração **padrão**, as Instruções não devem passar de ~**6.900** caracteres. Ao propor uma mudança, diga o tamanho antes e depois.
 - **Teto por configuração.** Ligar um modo de trabalho tem orçamento próprio, porque o custo é real e recorrente: **+550** para o Modo Code sobre o padrão, **+400** para o ASU sobre o que o Code já custa, e **450** para as linhas que *qualquer* modo de trabalho liga (elas têm limite próprio, senão crescem sem dono), e **+250** para o projeto em grupo. O **total** com modos ligados — contando a linha do sistema operacional, quando escolhido — não passa de **7600**. O que se trava é o **incremento**, não o total: o total depende de quanta coisa este projeto tem, e isso é seu; o incremento é o que a regra nova custa, e é o que precisa caber. Não caber é sinal de que outra linha precisa ser curada primeiro — mandar detalhe para este CEREBRO é de graça, e a versão curta fica na Instrução.
 - **Registre:** toda mudança de instrução vira uma linha no DECISIONS (o que mudou e por quê) e um item em «Feedback para o Kit» no IDEAS — é assim que o kit aprende com este projeto.
@@ -309,7 +294,7 @@ Todo turno de trabalho fecha assim. **Próximo** vem antes de um divisor; o rest
 **Esqueleto — copie e preencha; a condição de cada linha está à direita:**
 ```
 **Próximo**                                   (sempre)
-- **Ação:** <a próxima coisa concreta a fazer>
+- **Ação:** <a próxima coisa concreta a fazer; o comando para colar vai num bloco de código só dele, logo abaixo>
 - **Peça no próximo turno:** «<frase copiável como está, sem lacuna>»
 ---
 **Estado:** Base: <arquivo lido NESTE turno + a data/commit que ELE traz> · <versão ou fase> · <harness> · <commit>   (sempre)
@@ -360,11 +345,11 @@ Vale para todo turno de trabalho, não só ao encerrar a conversa: é o que me d
 
 **Arquivo que SUBSTITUI outro e ficou MENOR vem com o que saiu e para onde foi** — uma linha basta: «encolheu 3 KB porque a parte de mecânicas migrou para `X.md`». Sem isso, quem recebe não consegue separar «enxugou» de «perdeu conteúdo», e **guardar os dois passa a ser a escolha racional** — foi assim que um projeto ficou com quatro guias onde deviam existir dois, sendo os obsoletos os MAIORES. Mandar apagar o antigo não basta: o pedido de apagar é justamente o que fica sem lastro quando o substituto encolheu e ninguém disse por quê.
 
-**A regra geral — «entregue tudo inteiro» — foi escrita para projeto SEM executor, onde regenerar é a única saída. Aqui ela se inverte:** com um executor no repositório, o registro do fecho é **WO cirúrgica**, e reescrever um documento grande no fim de uma conversa pesada é justamente onde se perde conteúdo.
+**A regra geral — «entregue tudo inteiro» — foi escrita para projeto SEM executor e sem a pasta, onde regenerar é a única saída. Aqui ela se inverte:** com a pasta vinculada e o Code, o registro do fecho é **troca exata** na pasta, e reescrever um documento grande no fim de uma conversa pesada é justamente onde se perde conteúdo.
 
-- **Registrar é o entregável; listar não é.** «O que ainda falta registrar» é o inventário da dívida, não o pagamento dela. Um fecho bom termina com essa lista **vazia** — e o que ficou de fora vira WO agora, nesta conversa, não recado para a próxima.
+- **Registrar é o entregável; listar não é.** «O que ainda falta registrar» é o inventário da dívida, não o pagamento dela. Um fecho bom termina com essa lista **vazia** — e o que ficou de fora vira troca na pasta agora, nesta conversa, não recado para a próxima.
 - **Regenerar ≠ criar.** «Não regenere os arquivos de contexto» existe para não haver dois escritores no mesmo documento. Um arquivo que **não existe** não tem escritor nenhum: escrevê-lo não é regenerar, é criar — e é obrigatório. O log do dia é o caso que mais se perde por essa confusão.
-- **Qual canal para qual documento.** Documento grande e vivo → **WO** em `meta/workorders/`, com o texto exato de cada inserção e a linha `/apply-wo` junto. Arquivo **novo**, pequeno, ou que precise de curadoria que reescreve → **inteiro, para baixar**. Nunca os dois no mesmo ciclo para o mesmo documento.
+- **Como cada documento muda.** O que já existe → **troca exata** na pasta; arquivo **novo** → inteiro, em LF; o conjunto versiona pelo bloco de git, ou pela WO quando ela se paga (seção «Desenvolvimento no Claude Code»), com a linha `/apply-wo` junto.
 - **Nunca empurre bloco para o usuário colar no executor.** A caixa de mensagem dele tem limite de caracteres — é a razão de a WO existir. **Isso inclui pedido de medição.** Medição não tem âncora nem commit, então não é ordem de trabalho — mas continua sendo um arquivo: um script de sonda, ou um `.md` curto com o que rodar e o formato do relatório. «Não é WO» quer dizer «outro artefato», nunca «vai colado na mensagem». Se o usuário precisou criar o arquivo à mão para caber, o pedido estava errado.
 
 Os arquivos abaixo continuam sendo os afetados por este trabalho — o que muda é o canal de cada um, não a obrigação de registrar:
@@ -393,6 +378,14 @@ Antes de finalizar uma resposta pedindo que eu traga qualquer arquivo (JSON, log
 - Pedir algo que já está lá desperdiça um turno meu (ver princípio «não desperdiça tokens»).
 - O mesmo vale para o ESTADO do projeto: antes de repetir uma pendência do STATUS («ainda falta X»), confere o estado real — se já foi resolvida, diz e atualiza o STATUS em vez de ecoar o registro velho.
 
+## Ambiente (sistema operacional)
+
+O usuário trabalha em **Windows (CMD e PowerShell)**. Qualquer comando de terminal que o assistente gerar (git, instalação, scripts) deve usar a sintaxe compatível com este sistema:
+
+- O usuário usa CMD e PowerShell: todo bloco de terminal diz na 1ª linha para qual foi escrito (`REM CMD` ou `# PowerShell`) e usa só a sintaxe dele; comando que roda igual nos dois diz «CMD ou PowerShell».
+- **Neste projeto** [relatado pelo dono, 2026-11-25 e 2026-11-27]: o dono cola os comandos dele no **CMD** (tudo numa linha por comando; no `git commit`, `-m` repetido por parágrafo; `cd /d` para trocar de pasta) e abre o Claude Code pelo **PowerShell** — no CMD o Code não funciona direito, causa não investigada. **Todos os comandos de uma entrega vão num bloco de código SÓ**, para copiar uma vez: nunca um bloco por comando.
+- Na dúvida sobre a sintaxe de um comando neste sistema, perguntar em vez de gerar algo que pode quebrar.
+
 ## A rede deste projeto (como ele se verifica)
 
 Todo projeto de código tem uma rede: o que diz «quebrou» antes do dono. **Ela é declarada no CONTEXT** («Build e validação»): o comando que roda sem argumentos e devolve código de saída, a linha de base reexecutável quando o resultado é grande demais para conferir à mão, e o roteiro do dono para o que só se vê na tela. Mudança que toca código roda a rede antes de ser chamada de pronta, e teste novo prova que falha sem a mudança.
@@ -404,16 +397,6 @@ Todo projeto de código tem uma rede: o que diz «quebrou» antes do dono. **Ela
 ## README e LICENSE
 
 O `README.md` é do projeto — o que ele faz e como rodar —, não índice do kit. Repositório público pede `LICENSE`: pergunte ao dono qual, nunca escolha por ele.
-
-## Ambiente (sistema operacional)
-
-O usuário trabalha em **Windows**, com dois terminais [relatado pelo dono, 2026-11-25]:
-
-- **CMD (Prompt de Comando)** — onde ele cola os comandos que o assistente entrega. Comandos de terminal no formato CMD do Windows: tudo numa linha (sem continuação `\`); em git commit, repetir `-m` para múltiplos parágrafos; caminhos com `\`.
-- **PowerShell** — onde ele abre o Claude Code: no CMD o Code não funciona direito (causa não investigada). O que o Code roda sozinho segue o shell dele; o que o dono roda à mão sai no formato CMD.
-- Na dúvida sobre a sintaxe de um comando neste sistema, perguntar em vez de gerar algo que pode quebrar.
-
-> Seção transplantada do CEREBRO v1.124.0, com o PowerShell acrescentado: o pacote v1.162.1 veio sem sistema operacional, e o projeto transplanta o perfil que já declara em vez de regerar o pacote (DEC-014).
 
 ## Idioma
 
@@ -433,15 +416,14 @@ No fim de cada turno, junto do resumo e de qualquer dúvida, avalie o que a **pr
 
 ## Desenvolvimento no Claude Code (raias chat ↔ Code)
 
-Este projeto é desenvolvido com o **Claude Code** (CLI/desktop), além do chat de planejamento. Há duas raias:
+Este projeto é desenvolvido com o **Claude Code** (CLI/desktop), além do chat de planejamento, no **método C**: o chat grava, e a WO, quando vem, só confere e publica.
 
-- **Chat (planejamento):** cura e ENTREGA arquivos de doc. Para reescrita de fundo/voz ou arquivo **novo/pequeno**, entrega o **arquivo inteiro**. Para um **delta estruturado** num doc **grande** (marcar fase, abrir fase, inserir nota, acrescentar item), entrega uma **WO curta** em `meta/workorders/` com o **texto exato** e **âncora semântica** (seção/título, nunca nº de linha) — e o Code posiciona.
-- **Claude Code (execução):** implementa código e faz edições **append-only** nos meta/ (linha no STATUS, `DEC-`/`FIX-` em DECISIONS, marcar estado de fase). Aplica as WOs de doc. Roda build/validação. Commita.
-- **Nomes padronizados:** WOs (work orders) em `meta/workorders/` seguem `AAMMDD-woNNNN-desc.md` (ex.: `260630-wo0007-asu-entrega-e-escopo.md`). Numeração sequencial e estável; a data é a de criação. O chat nomeia; o Code aplica.
-
-**Método "doc por WO":** o chat AUTORA o texto; o Code só POSICIONA — não inventa prosa de curadoria. **Um canal por doc por ciclo** (se um doc foi por WO, o chat não entrega o mesmo doc inteiro no mesmo ciclo). WO **só de doc não toca o produto** → não precisa de build; a rede é o `git diff`.
-
-**Ao APLICAR uma WO (Code):** localize cada âncora EXATAMENTE; se não achar uma, **PARE e reporte** — nunca chute um lugar próximo. Não toque em nada fora das edições nomeadas. Rode `git diff` e confira a forma esperada antes de commitar.
+- **Chat (planejamento):** grava na pasta tudo o que entra no commit — código e documentos — por troca exata (ver «Canal do chat»); com build ou teste, roda-os numa cópia do HEAD fora da pasta, com os arquivos dele por cima, antes de entregar; entrega o bloco de git ou a WO.
+- **Claude Code (execução):** gera o que se gera (o build), confere, roda a validação, commita e empurra quando a WO se paga. Não reescreve e não escreve em doc: o achado vai no relatório da pasta-pai, e o chat o registra.
+- **Quando a WO se paga:** só com pelo menos um de quatro motivos, escrito na primeira linha dela — (1) um passo que o chat não roda e que não é um comando curto para o dono colar (build ou teste longo, com o toolchain do Windows, a engine ou a rede, ou cuja falha pede conserto); (2) uma operação de git arriscada num bloco (renomear, apagar, mover pasta, conflito, merge); (3) um lote grande (o merge de um update do kit, uma migração); (4) um caminho onde a ponte do chat não grava (`.claude/`). **Fora disso, o bloco de git** (ver «Commit pronto ao final»), com os caminhos copiados do `git status --short` lido no turno, e no turno seguinte a conferência de volta: `git show --stat` contra a lista e `git status` limpo. Ligar o Code não é motivo: WO só para repassar ao Code o que você já gravou não se paga.
+- **A WO de conferência** (forma «conferencia» no molde): inventário com cada arquivo, o `+/−` do `git diff --numstat`, o fim de linha e o `sha1sum`; o Code confere, lê o diff inteiro, confere o `git diff --cached --stat` contra o inventário antes do commit, roda o build e a validação, commita, empurra e relata. Falhou, para: você corrige na pasta e atualiza a mesma WO. Sem a pasta (reserva), a WO volta à forma «edições», com âncora. O como, inteiro: `GUIA-DO-KIT.md`, seção «Método C — a WO de conferência e o bloco».
+- **Alarme permanente:** um erro que chegue a um commit (por WO ou por bloco), ou duas WOs seguidas paradas por conteúdo, suspende o método — a seguinte vai na forma «edições» e o dono decide. Uma linha no STATUS conta os dois. Adotar o método ou voltar atrás, mesmo em parte, é decisão escrita em DECISIONS; a varredura de uma troca de método inclui o `CONTEXT.md`.
+- **Nomes padronizados:** WOs (work orders) em `meta/workorders/` seguem `AAMMDD-woNNNN-desc.md` (ex.: `260630-wo0007-asu-entrega-e-escopo.md`). Numeração sequencial e estável; a data é a de criação. O chat nomeia; o Code confere.
 
 **Ambiente:** os comandos do Code rodam por um Git Bash interno (caminhos com `/` funcionam). Mensagens de commit **sem acento**. O arquivo-raiz `CLAUDE.md` (convenções + build) e a pasta `.claude/` (permissões + comandos `/`) ficam na raiz do repo — veja-os ao iniciar.
 
@@ -456,9 +438,9 @@ Os arquivos de arranque do Claude Code (o `CLAUDE.md` raiz, `.claude/settings.js
 | `CLAUDE.md` (raiz) | guia curto lido pelo Code em todo turno (ritual + build + convenções) — mantenha < 200 linhas; o detalhado fica no CEREBRO |
 | `.claude/settings.json` | permissões (allow/deny) — adicione seu comando de build/teste ao `allow` |
 | `.claude/skills/apply-wo/SKILL.md` | comando `/apply-wo`: aplica uma WO de `meta/workorders/` (âncora exata ou PARA e reporta) |
-| `.claude/skills/wrap/SKILL.md` | comando `/wrap`: fecha a tarefa (append em STATUS/DECISIONS + `git diff` + commit) |
+| `.claude/skills/wrap/SKILL.md` | comando `/wrap`: fecha a tarefa (STATUS rolante, DECISIONS que só cresce, `git diff` e commit) |
 | `.claude/skills/sondar/SKILL.md` | comando `/sondar`: passada exploratória sem hipótese prévia — devolve candidatos a checagem, nunca veredito |
 
 Instalação: descompacte `claude-code-kit.zip` e mova `CLAUDE.md` e a pasta `.claude/` para a **raiz do repo**. O `README.md` do zip repete os passos e traz a cláusula anti-`.gitignore` de `.claude/`. Formato atual (2026): os comandos são **Skills** em `.claude/skills/<nome>/SKILL.md`. O `.claude/commands/*.md` é **formato descontinuado**: projeto que ainda o tenha migra na próxima atualização — não é alternativa a escolher.
 
-*Gerado pelo Kit de Contexto Universal v1.162.1 — nicho Desenvolvimento. Edite à vontade: este arquivo é seu.*
+*Gerado pelo Kit de Contexto Universal v1.169.0 — nicho Desenvolvimento. Edite à vontade: este arquivo é seu.*

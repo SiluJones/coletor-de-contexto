@@ -313,3 +313,49 @@ O dono exportava 5 arquivos por conversa (Lunoda `.json` e `.md`, `(simples).md`
 
 ### Consequências
 Por conversa, 2 arquivos em vez de 5 no uso do dono. Formato que deixou de ser exportado só se refaz exportando de novo até o reprocessar existir. As 50 brutas reais dos projetos viram corpus do teste de capturas.
+
+**Correção (2026-11-27):** os números do Contexto acima saíram de uma busca cortada em silêncio por `timeout`. Remedido sem corte: 49 pastas de histórico, 141 conversas (284,1 MB, 209,5 MB de brutas); nas 140 brutas, 45,9 milhões de caracteres nas entradas de ferramenta contra 10,0 milhões de texto, e 211 mensagens fora do ramo em 29 conversas. A decisão não muda. O teste das capturas reais passa nas 140 brutas.
+
+---
+
+## DEC-016 — Método C: o chat grava tudo; o dono versiona pelo bloco; a WO só quando se paga
+**Data:** 2026-11-27 · **Status:** aceita (proposta do kit v1.169.0, adotada pelo dono: «Adoto o método C»)
+
+### Contexto
+Até a wo0011, o chat escrevia a WO com âncora e o Code aplicava, validava e commitava; o Code também escrevia STATUS, DECISIONS e CHANGELOG. Na wo0011 o chat já tinha escrito e validado o código numa cópia do repositório (`npm ci` limpo + `npm run check`) e o traduziu em 33 âncoras só para o Code reaplicar — o Code chegou ao mesmo resultado byte a byte. As wo0009 e wo0010 eram só documentos. O kit v1.169.0 propôs o método C, com a regra de só fundir essa parte com o sim do dono.
+
+### Decisão
+- O chat grava na pasta tudo o que entra no commit — código e documentos, STATUS, DECISIONS e CHANGELOG inclusive — por troca exata (arquivo novo inteiro, em LF); com build ou teste, roda-os numa cópia do HEAD fora da pasta, com os arquivos dele por cima, antes de entregar.
+- O dono versiona pelo bloco de git: **um bloco de código só, para copiar uma vez** (pedido do dono em 2026-11-27), em CMD, abrindo com `cd /d` do repositório. O bloco pode rodar a validação do projeto antes do commit, encadeada com `&&`.
+- A WO (forma «conferência») só vem com um dos quatro motivos do CEREBRO: passo que o chat não roda, git arriscado, lote grande, ou `.claude/`.
+- Alarme: um erro que chegue a um commit, ou duas WOs seguidas paradas por conteúdo, suspende o método (linha no STATUS).
+
+### Alternativas consideradas
+- **Seguir com a WO de edições para tudo** — custo dobrado sem ganho medido: o chat já valida, e o Code só reaplicava.
+- **Método C sem a validação no bloco** — perde a segunda conferência no Windows do dono; o `npm run check` no bloco a devolve sem custo.
+
+### Consequências
+Some a leitura independente do Code nos ciclos sem WO: o que escapar ao chat só é pego pelo `npm run check` do bloco, pela leitura do dono e pela conferência de volta (`git show --stat`) no turno seguinte. O CEREBRO, as Instruções, o `CLAUDE.md` e as skills passam ao kit v1.169.0.
+
+---
+
+## DEC-017 — Reprocessar arquivos guardados numa página da extensão
+**Data:** 2026-11-27 · **Status:** aceita (aprovada pelo dono em 2026-11-26; spec `specs/261127-f2-reprocessar.md`)
+
+### Contexto
+Com a DEC-015 o dono passa a guardar só a bruta e o `(simples).md`. Para ter outro formato sem exportar de novo (e sem depender de a conversa existir no claude.ai), falta gerar a partir do arquivo guardado. Medido nos 49 históricos: da bruta, o `(simples).md` reprocessado é igual ao guardado em 128 de 140, e as 12 restantes diferem só no tamanho de imagens; do `.cdc.json`, 141 de 141.
+
+### Decisão
+- Página da extensão `reprocess.html` (entrypoint `src/entrypoints/reprocess/`), aberta numa aba pelo botão «Reprocessar arquivos guardados…» do popup, com ou sem conversa aberta.
+- Entrada: vários arquivos de uma vez (escolher ou arrastar); reconhece a resposta bruta do Claude (`chat_messages`) e o JSON do CDC versão 1. Outro conteúdo é erro só daquele arquivo.
+- Saída: os formatos marcados (simples, Lunoda, JSON do CDC; a caixa da bruta não existe ali), com os mesmos nomes do «Exportar», em `Downloads/cdc-reprocessado/<AAMMDD-HHMM>/`. Preferências compartilhadas com o popup.
+- `buildExportDownloads` passa a chamar `buildConversationDownloads` (a partir da conversa já normalizada), que o reprocessar usa — os dois dão os mesmos arquivos.
+- Teste de fidelidade por variável de ambiente (`CDC_REPROCESS_PAIRS_DIR`): reprocessado = guardado, fora a data de exportação e o tamanho de imagem.
+
+### Alternativas consideradas
+- **No popup** — ele fecha quando perde o foco, e o seletor de arquivos tira o foco.
+- **Só a bruta como entrada** — deixaria de fora a conversa que só tem `.cdc.json` (1 das 141) e o atalho para as 141 antigas.
+- **Gravar ao lado do arquivo de origem** — a extensão só escreve em Downloads.
+
+### Consequências
+Nenhuma permissão nova. O tamanho de imagem é o único ponto em que o reprocessado pode diferir de um `(simples).md` antigo (hipótese: a API às vezes omite o `size_bytes`).

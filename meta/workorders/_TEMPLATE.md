@@ -315,4 +315,35 @@ git commit -m "tipo(escopo): descricao no imperativo curto" -m "Corpo explicando
 git push
 ```
 
-*Gerado pelo Kit de Contexto Universal v1.162.1 — 2026-11-24 — esta linha e do KIT: nao funda, substitua pela do pacote mais recente.*
+---
+
+## Forma «conferencia» (metodo C, so no canal pasta)
+
+> Use quando o chat JA GRAVOU tudo na pasta e a WO so confere e publica — e so quando ela se paga (CEREBRO, «Desenvolvimento no Claude Code»; o como, no GUIA-DO-KIT, «Metodo C — a WO de conferencia e o bloco»). Sem ancora e sem texto novo: o diff e o registro.
+
+```
+# WO NNNN — [titulo]
+
+> **Por que WO:** [o motivo do teste: passo que o chat nao roda · git arriscado · lote grande · caminho onde a ponte nao grava]
+> **Forma:** conferencia · **Tipo:** [so doc | codigo]
+> **Ancoras lidas em:** HEAD `[hash]` («[titulo]»), com `GIT_OPTIONAL_LOCKS=0 git log -3 --oneline` em [data]; `git status --short` de partida: [...]
+> **Verificado pelo chat:** [build e testes na copia do HEAD com os arquivos por cima, e o resultado; ou «sem build nem teste: a rede e a troca exata e a leitura do diff»]
+> **Aprovacao do dono:** [a frase dele e a data, quando a WO depende de um sim — o sim dado so no chat nao chega a quem aplica]
+
+## Inventario
+
+| Arquivo | O que muda | + / − | EOL | sha1sum |
+|---|---|---|---|---|
+| `[caminho copiado do git status]` | [...] | [n / n] | [lf ou crlf] | `[sha1]` |
+
+## Passos
+
+1. `git pull --ff-only`; HEAD = o de «Ancoras lidas em». Diferente: PARE.
+2. `git status --short` = exatamente o inventario (mais esta WO). Faltou ou sobrou: PARE.
+3. `sha1sum` e `git diff --numstat` = o inventario; arquivo novo por `wc -l`; o fim de linha por `git ls-files --eol`, nunca por `grep` de CR. Diferente: PARE.
+4. Leia o diff inteiro, sem cortar linha. Rode o build e os testes, se houver.
+5. `git add` so dos caminhos do inventario, do gerado e desta WO; `git diff --cached --stat` conferido caminho a caminho contra o inventario ANTES do commit (no Windows, o `add` com a caixa errada nao acusa); commit; push; relatorio.
+6. Para devolver o fim de linha, nunca o checkout do git (o classificador de permissao costuma nega-lo): converta por script e confira o `sha1sum` contra `git show :<arquivo>`.
+```
+
+*Gerado pelo Kit de Contexto Universal v1.169.0 — 2026-11-27 — esta linha e do KIT: nao funda, substitua pela do pacote mais recente.*

@@ -1,6 +1,6 @@
 # SPEC — F2: reprocessar arquivos guardados
 
-> Leva da F2 aprovada pelo dono em 2026-11-26, logo depois da resposta bruta como formato (DEC-015, wo0011, conferida no navegador em 2026-11-27). A WO de aplicação ainda não existe.
+> Leva da F2 aprovada pelo dono em 2026-11-26, logo depois da resposta bruta como formato (DEC-015, wo0011, conferida no navegador em 2026-11-27). Gravado e validado pelo chat em 2026-11-27, sem WO (método C, DEC-016); decisão DEC-017.
 
 ## Problema
 O dono guarda as conversas em `- Histórico - <projeto> (CDC)/`: hoje 141 conversas em 49 pastas, e daqui em diante só a resposta bruta e o `(simples).md` (DEC-015). Quando precisar de outro formato — o Lunoda, o `.cdc.json`, o `(simples).md` com outras opções, ou um formato que ainda não existe —, a única saída é exportar de novo, e só enquanto a conversa existir no claude.ai. A bruta já tem tudo; falta o caminho para gerar dela.
@@ -34,7 +34,7 @@ O dono guarda as conversas em `- Histórico - <projeto> (CDC)/`: hoje 141 conver
 - **Aceitar também o `.cdc.json`:** a DEC-015 fez da bruta a fonte, mas as 141 conversas antigas têm `.cdc.json`, e 1 delas não tem bruta. Custa um ramo a mais no reconhecimento; a medição mostrou o `.cdc.json` fiel (141 de 141).
 - **Saída em subpasta de Downloads:** a extensão só escreve em Downloads (`chrome.downloads`); não dá para gravar ao lado do arquivo de origem.
 - **`now` = hora do reprocessamento:** a «Exportada em» do `(simples).md` e o `exportedAt` do `.cdc.json` dizem quando o arquivo foi gerado. A data da conversa continua a de criação.
-- Registro: DEC-016 quando a WO sair.
+- Registro: DEC-017.
 
 ## Fora de escopo
 - Escolher uma pasta inteira (`webkitdirectory`) e varrer subpastas: o primeiro passo é a lista de arquivos; a pasta fica como ideia.

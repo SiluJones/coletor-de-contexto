@@ -40,6 +40,8 @@ Depois, em `chrome://extensions`: ligue o **Modo do desenvolvedor**, clique em *
 
 **Copiar conversa** põe a conversa inteira em Markdown simples na área de transferência (com as mesmas opções); **Copiar última resposta** copia só o texto da última resposta da IA — bom para colar num handoff.
 
+**Reprocessar arquivos guardados…** (no popup, em qualquer aba) abre uma página onde você escolhe ou arrasta respostas brutas (`cdc-raw/…json`) ou JSONs do CDC (`.cdc.json`) já guardados e gera deles os outros formatos — sem buscar a conversa de novo, mesmo que ela não exista mais no claude.ai. Os arquivos caem em `Downloads/cdc-reprocessado/<data-hora>/`.
+
 A resposta bruta é salva antes de qualquer outro formato: se o claude.ai mudar o formato e a exportação falhar, ela já está em `Downloads/cdc-raw/` — é o que serve para consertar.
 
 ## Lunoda
@@ -55,6 +57,7 @@ Roda typecheck, ESLint, Prettier, testes (Vitest) e build. Os testes de fidelida
 
 - `CDC_LUNODA_ORACLE_DIR=<pasta>` — pares `.json` + `.md` exportados pelo próprio Lunoda; o exportador tem de reproduzi-los byte a byte.
 - `CDC_CLAUDE_CAPTURES_DIR=<pasta>` — respostas brutas do claude.ai; nenhuma pode virar turno vazio.
+- `CDC_REPROCESS_PAIRS_DIR=<pasta>` — um histórico com `cdc-raw/` e os `(simples).md`; o reprocessado tem de ser igual ao guardado.
 
 Estrutura: `src/adapters/` lê cada plataforma e devolve o modelo canônico (`src/core/model.ts`); `src/exporters/` transforma o modelo em cada formato; `src/entrypoints/popup/` é a interface. Arquitetura, decisões e armadilhas em [`meta/CONTEXT.md`](meta/CONTEXT.md) e [`meta/DECISIONS.md`](meta/DECISIONS.md).
 
@@ -63,7 +66,7 @@ Estrutura: `src/adapters/` lê cada plataforma e devolve o modelo canônico (`sr
 - `specs/` — uma spec por feature. `logs/` — um arquivo por dia.
 - `CLAUDE.md` + `.claude/` — arranque do Claude Code. `INSTRUCOES-DO-PROJETO.md` — Instruções do Projeto no claude.ai.
 
-Estrutura de contexto gerada pelo Kit de Contexto Universal v1.162.1.
+Estrutura de contexto gerada pelo Kit de Contexto Universal v1.169.0.
 
 ## Licença
 [MIT](LICENSE).

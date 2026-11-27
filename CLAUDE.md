@@ -14,14 +14,16 @@ Leia `meta/CEREBRO.md` → o doc de contexto do projeto (ex.: `meta/CONTEXT.md`)
 - Mudou `src/exporters/`? Rode também o oráculo privado do Lunoda (DEC-009): `CDC_LUNODA_ORACLE_DIR=../oraculo-lunoda npx vitest run src/exporters/lunoda-golden.test.ts` — pares exportados pelo Lunoda em `CDC/oraculo-lunoda/`, fora do repo. O `npm test` comum pula esse bloco.
 - `src/adapters/claude/fetch-raw.ts` é injetado na aba do claude.ai: nada de import ou constante de fora dentro de `fetchClaudeConversationRaw` (armadilha 14 do CONTEXT).
 - Mudou `src/adapters/claude/`? Rode também as capturas reais (DEC-011): `CDC_CLAUDE_CAPTURES_DIR=../capturas-claude/cdc-raw npx vitest run src/adapters/claude/normalize.test.ts` — respostas brutas do claude.ai fora do repo; nenhuma pode virar turno vazio.
+- Mudou o reprocessar (`src/popup/reprocess.ts`)? Rode também a fidelidade num histórico real (DEC-017): `CDC_REPROCESS_PAIRS_DIR="<pasta - Histórico - … (CDC)>" npx vitest run src/popup/reprocess.test.ts` — o reprocessado tem de ser igual ao `(simples).md` guardado.
 - Mudança só de doc (meta/) NÃO precisa de build; a rede é o `git diff`.
 - Adicione seus comandos de build/teste ao `allow` de `.claude/settings.json`.
 
 ## Convenções
 - Mensagens de commit **sem acento**.
-- **Terminal do dono:** ele abre o Claude Code pelo **PowerShell** (no CMD o Code não funciona direito, causa não investigada) e cola os comandos dele no **CMD** [relatado pelo dono, 2026-11-25]. Comando que você entrega para ELE rodar sai em sintaxe do CMD (uma linha, `-m` repetido no commit); o que você roda sozinho segue o seu shell.
-- Edições nos meta/ são **append-only** pelo Code (STATUS, DECISIONS); curadoria que reescreve vem do chat (arquivo inteiro OU WO).
+- **Terminal do dono:** ele abre o Claude Code pelo **PowerShell** (no CMD o Code não funciona direito, causa não investigada) e cola os comandos dele no **CMD** [relatado pelo dono, 2026-11-25]. Comando que você entrega para ELE rodar sai em sintaxe do CMD (uma linha por comando, `-m` repetido no commit), e TODOS os comandos de uma entrega vão num bloco só, abrindo com `cd /d` da pasta; o que você roda sozinho segue o seu shell.
+- Nos meta/, o Code atualiza o STATUS (rolante: só o agora) e **acrescenta** em DECISIONS (só cresce); curadoria que reescreve vem do chat (arquivo inteiro OU WO).
 - Ao aplicar uma WO de `meta/workorders/`: ache cada âncora exatamente; se não achar, PARE e reporte. Não mexa fora das edições nomeadas. `git diff` antes do commit.
+- WO de **conferência** (método C, «**Forma:** conferencia»): o chat já gravou tudo, STATUS e DECISIONS inclusive — você confere, gera o build, commita, empurra e relata, sem escrever em doc. A primeira linha dela diz por que ela se paga.
 - **Ao fechar a tarefa, RELATE o trabalho** — o que fez, achados e desvios do que a tarefa pedia, arquivos tocados, resultado do build/validação e o commit. **Não** copie o bloco de fecho do `meta/CEREBRO.md`: aquele é da raia de planejamento, e trocar relatório por formulário perde o que só você viu.
 
 ## Quando eu pedir medição
@@ -31,7 +33,7 @@ Leia `meta/CEREBRO.md` → o doc de contexto do projeto (ex.: `meta/CONTEXT.md`)
 
 ## Push e relatório — nesta ordem, sempre
 - **Verde** (validação passou, ou WO só de doc com o `git diff` conferido) → `add`, `commit` e **`push`, sem perguntar.** Não peça permissão para o que já está decidido.
-- **Vermelho** (validação falhou, âncora não encontrada, `git diff` com arquivo fora do previsto) → **não commite e não empurre.** E **não pergunte em prosa** («posso dar push?») — pergunta escrita no meio do texto passa despercebida. Feche com um **menu numerado** de saídas reais, a recomendada em **1** — ex.: `1) corrigir <o quê> e revalidar (recomendado)  2) reverter as edições  3) commitar local, sem push  4) empurrar assim mesmo`.
+- **Vermelho** (validação falhou, âncora não encontrada, `git diff` com arquivo fora do previsto) → **não commite e não empurre.** E **não pergunte em prosa** («posso dar push?») — pergunta escrita no meio do texto passa despercebida. Feche com o **menu de opções pela ferramenta `AskUserQuestion`**, saídas reais, a recomendada em primeiro e marcada `(Recomendado)`; sem a ferramenta, caia no menu numerado em texto e diga que caiu — ex.: `1) corrigir <o quê> e revalidar (recomendado)  2) reverter as edições  3) commitar local, sem push  4) empurrar assim mesmo`.
 - **O relatório é o ÚLTIMO passo** — só depois de resolvido o push. Ele diz o que de fato aconteceu: empurrado (com o hash), não empurrado (com o motivo), ou aguardando a escolha do menu. **Relatório escrito antes da decisão conta metade da história** e vira mentira assim que o push sai; se a escolha chegar depois, **reescreva o relatório**, não deixe a versão velha valendo.
 
 ## Relatório em arquivo (sempre, sem pedir)

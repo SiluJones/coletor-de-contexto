@@ -3,7 +3,7 @@ import { DEFAULT_EXPORT_OPTIONS } from '../core/model';
 import { SYNTHETIC_CLAUDE_RAW } from '../tests/synthetic-claude-raw';
 import { SYNTHETIC_NOW, syntheticIds } from '../tests/synthetic-conversation';
 import { normalizeClaudeConversation } from '../adapters/claude/normalize';
-import { buildExportDownloads, buildLunodaExport } from './export';
+import { buildConversationDownloads, buildExportDownloads, buildLunodaExport } from './export';
 import { DEFAULT_SETTINGS } from './settings';
 
 describe('buildLunodaExport (ponta a ponta, resposta sintetica do Claude)', () => {
@@ -92,6 +92,11 @@ describe('buildExportDownloads (formatos escolhidos)', () => {
       'America/Sao_Paulo',
     );
     expect(d.files.map((f) => f.filename)).toEqual(['Sintética 1 — contar palavras (simples).md']);
+  });
+
+  it('da conversa ja normalizada -> os mesmos arquivos (base do «Reprocessar»)', () => {
+    const c = normalizeClaudeConversation(structuredClone(SYNTHETIC_CLAUDE_RAW));
+    expect(buildConversationDownloads(c, all, ctx(), 'America/Sao_Paulo')).toEqual(out);
   });
 
   it('nenhum formato normalizado marcado (so a bruta) -> nenhum arquivo aqui', () => {

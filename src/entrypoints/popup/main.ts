@@ -1,7 +1,8 @@
 // Popup da extensao (F1 + F2). Reconhece a conversa do Claude e oferece:
 // - «Exportar»: baixa os formatos marcados — Markdown simples, resposta bruta, Lunoda, JSON do CDC
 //   (DEC-011, DEC-012, DEC-015); a bruta sai primeiro, como veio da API;
-// - «Copiar conversa» / «Copiar última resposta»: poe o texto na area de transferencia (DEC-013).
+// - «Copiar conversa» / «Copiar última resposta»: poe o texto na area de transferencia (DEC-013);
+// - «Reprocessar arquivos guardados…»: abre a pagina `reprocess.html` numa aba (DEC-017).
 // Formatos e opcoes ficam lembrados em chrome.storage.local.
 import { browser } from 'wxt/browser';
 import { fetchClaudeConversationRaw } from '../../adapters/claude/fetch-raw';
@@ -85,6 +86,13 @@ async function fetchRaw(tabId: number, conversationId: string): Promise<string |
   }
   return result.text;
 }
+
+// O «Reprocessar» funciona em qualquer aba: nao depende de conversa aberta. O endereco sai da origem
+// do proprio popup (chrome-extension://<id>/), sem depender dos tipos gerados pelo WXT.
+$<HTMLButtonElement>('reprocess').addEventListener('click', () => {
+  void browser.tabs.create({ url: new URL('/reprocess.html', location.origin).href });
+  window.close();
+});
 
 async function main(): Promise<void> {
   const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
